@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-
-const LINKS = [
-  ['#about', 'About'],
-  ['#services', 'Services'],
-  ['#method', 'Method'],
-  ['#recognition', 'Recognition'],
-  ['#team', 'Team'],
-  ['#contact', 'Contact'],
-]
+import { Link, useLocation } from 'react-router-dom'
+import { useLang } from '../i18n.jsx'
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const { lang, t, setLang } = useLang()
+  const { pathname } = useLocation()
+  const onHome = pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -21,12 +16,22 @@ export function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const anchor = (hash) => (onHome ? `#${hash}` : `/#${hash}`)
+  const LINKS = [
+    [anchor('about'), t.nav.about, false],
+    [anchor('services'), t.nav.services, false],
+    ['/model', t.nav.model, true],
+    ['/blog', t.nav.blog, true],
+    [anchor('team'), t.nav.team, false],
+    [anchor('contact'), t.nav.contact, false],
+  ]
+
   return (
-    <header className={`nav ${scrolled || open ? 'scrolled' : ''}`}>
+    <header className={`nav ${scrolled || open || !onHome ? 'scrolled' : ''}`}>
       <div className="nav-inner">
-        <a href="#top" className="nav-logo" aria-label="EFQM and Strategy Assessors — home">
+        <Link to="/" className="nav-logo" aria-label="EFQM and Strategy Assessors — home">
           <img src="/brand/wordmark-white.png" alt="EFQM and Strategy Assessors" />
-        </a>
+        </Link>
         <button
           className={`nav-burger ${open ? 'open' : ''}`}
           aria-label="Toggle menu"
@@ -36,11 +41,24 @@ export function Nav() {
           <span /><span /><span />
         </button>
         <ul className={`nav-links ${open ? 'open' : ''}`}>
-          {LINKS.map(([href, label]) => (
-            <li key={href}><a href={href} onClick={() => setOpen(false)}>{label}</a></li>
+          {LINKS.map(([href, label, isRoute]) => (
+            <li key={label}>
+              {isRoute
+                ? <Link to={href} onClick={() => setOpen(false)}>{label}</Link>
+                : <a href={href} onClick={() => setOpen(false)}>{label}</a>}
+            </li>
           ))}
           <li>
-            <Link to="/login" className="btn btn-primary nav-cta">Client zone</Link>
+            <button
+              className="lang-toggle"
+              onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+              aria-label={lang === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
+            >
+              {lang === 'en' ? 'عربي' : 'EN'}
+            </button>
+          </li>
+          <li>
+            <Link to="/login" className="btn btn-primary nav-cta">{t.nav.client}</Link>
           </li>
         </ul>
       </div>
@@ -49,40 +67,42 @@ export function Nav() {
 }
 
 export function Footer() {
+  const { t } = useLang()
+  const links = [
+    ['/#about', t.nav.about], ['/#services', t.nav.services],
+    ['/model', t.nav.model], ['/blog', t.nav.blog],
+    ['/#team', t.nav.team], ['/#contact', t.nav.contact],
+  ]
   return (
     <footer className="footer">
       <div className="wrap">
         <div className="footer-top">
           <div>
             <img src="/brand/wordmark-white.png" alt="EFQM and Strategy Assessors" />
-            <p style={{ maxWidth: '34em', fontSize: '0.92rem' }}>
-              EFQM and Strategy Assessors FZCO helps organisations achieve sustainable
-              excellence through the EFQM Model — assessment, recognition, strategy and
-              training across the Americas, Europe and MENA.
-            </p>
+            <p style={{ maxWidth: '34em', fontSize: '0.92rem' }}>{t.footer.blurb}</p>
           </div>
           <div>
-            <h4>Navigate</h4>
+            <h4>{t.footer.navigate}</h4>
             <ul>
-              {LINKS.map(([href, label]) => (
-                <li key={href}><a href={`/${href}`}>{label}</a></li>
+              {links.map(([href, label]) => (
+                <li key={label}><Link to={href}>{label}</Link></li>
               ))}
-              <li><Link to="/login">Client zone</Link></li>
+              <li><Link to="/login">{t.nav.client}</Link></li>
             </ul>
           </div>
           <div>
-            <h4>Contact</h4>
+            <h4>{t.footer.contact}</h4>
             <ul>
-              <li>Building A1, Dubai Digital Park</li>
-              <li>Dubai Silicon Oasis, Dubai, UAE</li>
-              <li><a href="tel:+971507369400">+971 50 736 9400</a></li>
+              <li>{t.footer.addr1}</li>
+              <li>{t.footer.addr2}</li>
+              <li><a href="tel:+971507369400" dir="ltr">+971 50 736 9400</a></li>
               <li><a href="mailto:hello@efqmassessors.ae">hello@efqmassessors.ae</a></li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} EFQM and Strategy Assessors FZCO · Trade License 59735 · Dubai, UAE</span>
-          <span>Part of the TuConsultor Group</span>
+          <span>© {new Date().getFullYear()} {t.footer.legal}</span>
+          <span>{t.footer.group}</span>
         </div>
       </div>
     </footer>
@@ -115,10 +135,10 @@ export function HeroWave() {
 /** Animated RADAR wheel built from the brand palette. */
 export function RadarWheel() {
   const segs = [
-    { label: 'R', name: 'Results', a: -90 },
-    { label: 'A', name: 'Approaches', a: 0 },
-    { label: 'D', name: 'Deploy', a: 90 },
-    { label: 'AR', name: 'Assess & Refine', a: 180 },
+    { label: 'R', a: -90 },
+    { label: 'A', a: 0 },
+    { label: 'D', a: 90 },
+    { label: 'AR', a: 180 },
   ]
   return (
     <div className="radar-wheel" role="img" aria-label="RADAR logic: Results, Approaches, Deploy, Assess and Refine">
@@ -138,7 +158,7 @@ export function RadarWheel() {
         >
           <animateTransform attributeName="transform" type="rotate" from="-90 200 200" to="270 200 200" dur="24s" repeatCount="indefinite" />
         </circle>
-        {segs.map(({ label, name, a }) => {
+        {segs.map(({ label, a }) => {
           const rad = (a * Math.PI) / 180
           const x = 200 + 150 * Math.cos(rad)
           const y = 200 + 150 * Math.sin(rad)
@@ -149,7 +169,6 @@ export function RadarWheel() {
                 fill="#58e0b4" fontFamily="Rubik, sans-serif" fontWeight="600" fontSize="17">
                 {label}
               </text>
-              <title>{name}</title>
             </g>
           )
         })}
@@ -164,6 +183,7 @@ export function Icon({ name }) {
   const paths = {
     compass: <><circle cx="12" cy="12" r="9" /><path d="M15.5 8.5l-2 5-5 2 2-5z" /></>,
     scan: <><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3" /><circle cx="12" cy="12" r="3.5" /></>,
+    shield: <><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z" /><path d="M9 12l2 2 4-4.5" /></>,
     academy: <><path d="M3 9l9-4.5L21 9l-9 4.5z" /><path d="M7 11.5V16c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5v-4.5" /></>,
     chart: <><path d="M4 20h16" /><path d="M7 16v-4M12 16V8M17 16v-7" /></>,
     org: <><rect x="9" y="3" width="6" height="5" rx="1" /><rect x="3" y="16" width="6" height="5" rx="1" /><rect x="15" y="16" width="6" height="5" rx="1" /><path d="M12 8v4M12 12H6v4M12 12h6v4" /></>,

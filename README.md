@@ -1,81 +1,94 @@
 # efqmassessors.ae
 
-Corporate website + client zone for **EFQM and Strategy Assessors FZCO**.
+Corporate website for **EFQM and Strategy Assessors FZCO** (Dubai Silicon Oasis, Trade License 59735) — part of the TuConsultor Group.
 
-- **Front end:** Vite + React, single Rubik variable typeface, brand palette derived from the spiral logo.
-- **Auth & data:** Supabase (email/password auth, profiles, documents, contact inquiries — all behind Row Level Security).
-- **Hosting:** Netlify (SPA redirects preconfigured in `netlify.toml`).
-
-The site works fully **without** Supabase configured (the contact form falls back to a mailto link and the client zone shows a notice), so you can deploy the marketing site first and wire up the client zone whenever you're ready.
+Stack: **Vite + React** · **Supabase** (auth + database) · **Netlify** (hosting).
 
 ---
 
-## 1 · Run locally
+## What's in the site
+
+| Route | Content |
+|---|---|
+| `/` | Home — hero, stats, about, **7 services** (incl. ISO Consultancy), RADAR method, recognition path, team, client-zone teaser, contact form |
+| `/model` | **The EFQM Model** — three Why/How/What blocks, plus an interactive explorer of all 7 criteria and their 32 sub-criteria (description + assessor's commentary) |
+| `/blog` | **The 90-day excellence programme** — one post a day by Alejandro San Nicolás, published automatically on schedule |
+| `/blog/:slug` | Single post with prev/next navigation |
+| `/login` | Client sign-in / sign-up / password reset |
+| `/portal` | Protected client zone (documents, RADAR progress, assessor contact) |
+
+**Bilingual: English + Arabic.** The language toggle in the navigation switches the whole interface and sets `dir="rtl"` for Arabic. The choice persists in `localStorage`. Blog posts themselves are published in English (a note tells Arabic readers this).
+
+---
+
+## The blog programme
+
+- 90 posts live in `src/data/posts.js`, each ~200 words, mapped to a specific sub-criterion of the EFQM Model 2025.
+- `BLOG_START = '2026-07-13'` is **Day 1**. Day *n* publishes on `BLOG_START + (n-1)` days; the last post lands on **10 October 2026**.
+- Publication is date-driven at render time: the blog shows only posts whose date is today or earlier, and teases the next one. No CMS or cron job needed.
+- To change the launch date, edit `BLOG_START`. To edit or add a post, edit the array — `day`, `ref`, `slug`, `title`, `body` (paragraphs separated by a blank line).
+
+---
+
+## Setup
+
+### 1. Supabase
+
+Project URL is already set: `https://wiraonfdufycdcqgurpx.supabase.co`
+
+1. In the Supabase dashboard, open **SQL Editor** and run `supabase/schema.sql`. It creates `profiles`, `documents` and `inquiries`, all with Row Level Security enabled.
+2. Go to **Project Settings → API** and copy the **anon / public** key.
+3. Create a `.env` file at the project root:
+
+```
+VITE_SUPABASE_URL=https://wiraonfdufycdcqgurpx.supabase.co
+VITE_SUPABASE_ANON_KEY=paste-your-anon-key-here
+```
+
+The site degrades gracefully without these: the contact form falls back to an email link and the client zone shows a "not configured" notice.
+
+### 2. Run locally
 
 ```bash
 npm install
-npm run dev          # http://localhost:5173
+npm run dev      # http://localhost:5173
+npm run build    # production build into dist/
+npm run preview  # preview the build
 ```
 
-## 2 · Create the Supabase project (client zone)
+### 3. Deploy to Netlify
 
-1. Go to [supabase.com](https://supabase.com) → **New project** (any name, e.g. `efqmassessors`). Choose a region close to Dubai (e.g. `ap-south-1` Mumbai or `eu-central-1` Frankfurt).
-2. Open **SQL Editor → New query**, paste the contents of `supabase/schema.sql`, and click **Run**. This creates:
-   - `profiles` — auto-created per user on sign-up
-   - `documents` — deliverables each client can read (only their own)
-   - `inquiries` — contact-form submissions (write-only for visitors)
-3. Go to **Authentication → Providers → Email** and confirm email sign-ups are enabled. Under **Authentication → URL Configuration**, set:
-   - Site URL: `https://efqmassessors.ae`
-   - Redirect URLs: add `https://efqmassessors.ae/login` and `http://localhost:5173/login`
-4. Copy from **Project Settings → API**:
-   - Project URL → `VITE_SUPABASE_URL`
-   - `anon` `public` key → `VITE_SUPABASE_ANON_KEY`
+1. Push this folder to a Git repository and connect it in Netlify (or drag-drop the `dist/` folder).
+2. Build command `npm run build`, publish directory `dist`.
+3. In **Site settings → Environment variables**, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+4. `netlify.toml` already handles SPA redirects and long-cache headers for brand assets.
 
-For local development, copy `.env.example` to `.env` and paste both values.
+### 4. Domain
 
-> **Sharing documents with a client:** add rows to `documents` in the Table Editor with `owner` = the client's user id (visible under Authentication → Users). They appear instantly in that client's portal.
+Point `efqmassessors.ae` at Netlify (Netlify DNS, or an `ALIAS`/`CNAME` to the Netlify subdomain). Netlify provisions the TLS certificate automatically.
 
-## 3 · Deploy on Netlify
+### 5. Client accounts
 
-1. Push this folder to a Git repository (GitHub/GitLab/Bitbucket).
-2. In [Netlify](https://app.netlify.com): **Add new site → Import an existing project** and pick the repo. Build settings are read automatically from `netlify.toml` (`npm run build`, publish `dist`).
-3. Under **Site configuration → Environment variables**, add:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Deploy. SPA routing (`/login`, `/portal`) is already handled by the redirect rule.
-
-## 4 · Point efqmassessors.ae at Netlify
-
-In Netlify: **Domain management → Add a domain** → `efqmassessors.ae`. Then, at your domain registrar, either:
-
-- switch the domain's nameservers to the four Netlify DNS nameservers shown (recommended — Netlify then manages DNS + automatic HTTPS), or
-- keep your current DNS and add the records Netlify shows (an `A`/`ALIAS` record for the apex and a `CNAME` for `www`).
-
-HTTPS certificates are provisioned automatically once DNS propagates.
+Users self-register at `/login`. To pre-approve clients instead, disable public sign-ups in **Supabase → Authentication → Providers → Email** and invite users from the dashboard. Deliverables shown in the portal come from the `documents` table.
 
 ---
+
+## Brand
+
+- **Typeface:** Rubik (300–900), the sole typeface across the site.
+- **Palette:** ink `#0E1730` · teal `#0E4C60` · mint `#1FA98A` · glow `#58E0B4` · paper `#F5FAF9`.
+- **Assets:** `public/brand/` — spiral, wordmarks, seal, favicon.
 
 ## Project structure
 
 ```
-├── index.html                 Rubik variable font + meta
-├── netlify.toml               build, SPA redirect, asset caching
-├── public/brand/              optimized logo assets (wordmarks, seal, spiral)
-├── src/
-│   ├── styles/global.css      design tokens + all styling
-│   ├── lib/supabase.js        Supabase client (env-driven, optional)
-│   ├── context/AuthContext.jsx
-│   ├── components/Chrome.jsx  Nav, Footer, HeroWave, RadarWheel, icons
-│   └── pages/                 Home · Login · Portal
-└── supabase/schema.sql        tables, triggers, RLS policies
+src/
+  i18n.jsx            EN/AR dictionaries + language provider (sets dir=rtl)
+  data/model.js       EFQM Model 2025 — 7 criteria, 32 sub-criteria (EN + AR)
+  data/posts.js       The 90 blog posts + publication schedule
+  components/Chrome.jsx   Nav, Footer, HeroWave, RadarWheel, icons
+  pages/              Home, Model, Blog, Post, Login, Portal
+  styles/global.css   Design tokens + all styles (RTL-safe logical properties)
+supabase/schema.sql   Tables + Row Level Security policies
+netlify.toml          SPA redirects + asset caching
 ```
-
-## Brand tokens
-
-| Token | Value | Source |
-|---|---|---|
-| Ink | `#0E1730` | navy plate of the white wordmark |
-| Teal | `#0E4C60` | seal ring / wordmark |
-| Mint | `#1FA98A` | ribbon mid tone |
-| Glow | `#58E0B4` | ribbon highlight |
-| Type | Rubik 300–900 (variable) | brand typeface — weight carries hierarchy |

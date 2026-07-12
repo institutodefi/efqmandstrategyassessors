@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { Icon } from '../components/Chrome.jsx'
+import { useLang } from '../i18n.jsx'
 
 export default function Portal() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [docs, setDocs] = useState([])
+  const { t } = useLang()
+  const p = t.portal
 
   useEffect(() => {
     if (!supabase || !user) return
@@ -31,26 +34,23 @@ export default function Portal() {
       <nav className="portal-nav">
         <img src="/brand/wordmark-white.png" alt="EFQM and Strategy Assessors" />
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <span className="who">Signed in as <b>{name}</b></span>
+          <span className="who">{p.signedInAs} <b>{name}</b></span>
           <button className="btn btn-ghost" onClick={signOut} style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
-            Sign out
+            {p.signOut}
           </button>
         </div>
       </nav>
 
       <main className="portal-main">
-        <h1>Welcome to your <strong>client zone</strong></h1>
-        <p className="sub">
-          Your private engagement workspace — documents, assessment progress
-          and direct contact with your assessor team.
-        </p>
+        <h1>{p.welcomeA}<strong>{p.strong}</strong></h1>
+        <p className="sub">{p.sub}</p>
 
         <div className="portal-grid">
           <section className="portal-card">
             <div className="glyph"><Icon name="doc" /></div>
-            <h3>Documents</h3>
+            <h3>{p.docs}</h3>
             {docs.length === 0 ? (
-              <p>No documents shared yet. Deliverables from your engagement will appear here.</p>
+              <p>{p.docsEmpty}</p>
             ) : (
               <ul style={{ listStyle: 'none', display: 'grid', gap: 10, marginTop: 6 }}>
                 {docs.map((d) => (
@@ -61,30 +61,27 @@ export default function Portal() {
                 ))}
               </ul>
             )}
-            <span className="tag">Deliverables</span>
+            <span className="tag">{p.docsTag}</span>
           </section>
 
           <section className="portal-card">
             <div className="glyph"><Icon name="radar" /></div>
-            <h3>Assessment progress</h3>
-            <p>
-              Track your RADAR scoring by criterion as the assessment advances,
-              from baseline diagnosis to verified recognition score.
-            </p>
-            <span className="tag">RADAR scoring</span>
+            <h3>{p.radar}</h3>
+            <p>{p.radarText}</p>
+            <span className="tag">{p.radarTag}</span>
           </section>
 
           <section className="portal-card">
             <div className="glyph"><Icon name="chat" /></div>
-            <h3>Contact your assessors</h3>
+            <h3>{p.support}</h3>
             <p>
-              Questions between sessions? Write to your engagement team at{' '}
+              {p.supportTextA}{' '}
               <a href="mailto:hello@efqmassessors.ae" style={{ color: 'var(--glow)' }}>
                 hello@efqmassessors.ae
               </a>{' '}
-              — we reply within one business day.
+              {p.supportTextB}
             </p>
-            <span className="tag">Support</span>
+            <span className="tag">{p.supportTag}</span>
           </section>
         </div>
       </main>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useLang } from '../i18n.jsx'
 
 export default function Login() {
   const [mode, setMode] = useState('signin') // signin | signup | reset
@@ -9,6 +10,8 @@ export default function Login() {
   const [busy, setBusy] = useState(false)
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { t } = useLang()
+  const a = t.auth
 
   if (user) {
     navigate('/portal', { replace: true })
@@ -19,7 +22,7 @@ export default function Login() {
     e.preventDefault()
     setStatus(null)
     if (!supabase) {
-      setStatus({ ok: false, msg: 'The client zone is not configured yet. Please contact hello@efqmassessors.ae.' })
+      setStatus({ ok: false, msg: a.notConfigured })
       return
     }
     const form = e.target
@@ -39,36 +42,32 @@ export default function Login() {
           options: { data: { full_name: fullName } },
         })
         if (error) throw error
-        setStatus({ ok: true, msg: 'Account created. Check your inbox to confirm your email, then sign in.' })
+        setStatus({ ok: true, msg: a.created })
         setMode('signin')
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/login`,
         })
         if (error) throw error
-        setStatus({ ok: true, msg: 'Password reset link sent. Check your inbox.' })
+        setStatus({ ok: true, msg: a.resetSent })
       }
     } catch (err) {
-      setStatus({ ok: false, msg: err.message || 'Sign-in failed. Please try again.' })
+      setStatus({ ok: false, msg: err.message || a.failed })
     } finally {
       setBusy(false)
     }
   }
 
   const titles = {
-    signin: <>Client <strong>zone</strong></>,
-    signup: <>Create your <strong>account</strong></>,
-    reset: <>Reset <strong>password</strong></>,
+    signin: <>{a.signinTitleA}<strong>{a.signinStrong}</strong></>,
+    signup: <>{a.signupTitleA}<strong>{a.signupStrong}</strong></>,
+    reset: <>{a.resetTitleA}<strong>{a.resetStrong}</strong></>,
   }
-  const subs = {
-    signin: 'Sign in to access your engagement workspace.',
-    signup: 'Request access to your private engagement workspace.',
-    reset: 'We will email you a secure reset link.',
-  }
+  const subs = { signin: a.signinSub, signup: a.signupSub, reset: a.resetSub }
 
   return (
     <div className="auth-page">
-      <Link to="/" className="auth-back">← Back to efqmassessors.ae</Link>
+      <Link to="/" className="auth-back">{a.back}</Link>
       <form className="auth-card" onSubmit={onSubmit}>
         <img className="seal" src="/brand/spiral.png" alt="" aria-hidden="true" />
         <h1>{titles[mode]}</h1>
@@ -76,17 +75,17 @@ export default function Login() {
 
         {mode === 'signup' && (
           <div className="field">
-            <label htmlFor="a-name">Full name</label>
+            <label htmlFor="a-name">{a.fullName}</label>
             <input id="a-name" name="fullName" autoComplete="name" required />
           </div>
         )}
         <div className="field">
-          <label htmlFor="a-email">Email</label>
+          <label htmlFor="a-email">{a.email}</label>
           <input id="a-email" name="email" type="email" autoComplete="email" required />
         </div>
         {mode !== 'reset' && (
           <div className="field">
-            <label htmlFor="a-pass">Password</label>
+            <label htmlFor="a-pass">{a.password}</label>
             <input
               id="a-pass" name="password" type="password"
               autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
@@ -96,7 +95,7 @@ export default function Login() {
         )}
 
         <button className="btn btn-primary" type="submit" disabled={busy}>
-          {busy ? 'Working…' : mode === 'signin' ? 'Sign in' : mode === 'signup' ? 'Create account' : 'Send reset link'}
+          {busy ? a.working : mode === 'signin' ? a.signin : mode === 'signup' ? a.signup : a.reset}
         </button>
 
         {status && (
@@ -106,16 +105,16 @@ export default function Login() {
         {mode === 'signin' && (
           <>
             <p className="auth-switch">
-              New client? <button type="button" onClick={() => { setMode('signup'); setStatus(null) }}>Create an account</button>
+              {a.newClient} <button type="button" onClick={() => { setMode('signup'); setStatus(null) }}>{a.createLink}</button>
             </p>
             <p className="auth-switch">
-              <button type="button" onClick={() => { setMode('reset'); setStatus(null) }}>Forgot your password?</button>
+              <button type="button" onClick={() => { setMode('reset'); setStatus(null) }}>{a.forgot}</button>
             </p>
           </>
         )}
         {mode !== 'signin' && (
           <p className="auth-switch">
-            <button type="button" onClick={() => { setMode('signin'); setStatus(null) }}>Back to sign in</button>
+            <button type="button" onClick={() => { setMode('signin'); setStatus(null) }}>{a.backToSignin}</button>
           </p>
         )}
       </form>
