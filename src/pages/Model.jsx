@@ -2,10 +2,16 @@ import { useEffect, useState } from 'react'
 import { Nav, Footer } from '../components/Chrome.jsx'
 import { useLang } from '../i18n.jsx'
 import { MODEL } from '../data/model.js'
+import { useSeo } from '../lib/seo.js'
 
 export default function Model() {
   const { lang, t } = useLang()
   const criteria = MODEL[lang] || MODEL.en
+  useSeo(
+    'The EFQM Model 2025 explained — EFQM and Strategy Assessors',
+    'A clear guide to the EFQM Model 2025: three blocks, seven criteria and 32 sub-criteria, with assessor commentary. In English and Arabic.',
+    '/model'
+  )
   const [active, setActive] = useState('1')
   const [openSub, setOpenSub] = useState(null)
 

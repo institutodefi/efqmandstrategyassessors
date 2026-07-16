@@ -49,13 +49,24 @@ export function Nav() {
             </li>
           ))}
           <li>
-            <button
-              className="lang-toggle"
-              onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
-              aria-label={lang === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
-            >
-              {lang === 'en' ? 'عربي' : 'EN'}
-            </button>
+            <div className="lang-switch" role="group" aria-label="Language / اللغة">
+              <button
+                className={`lang-opt ${lang === 'en' ? 'on' : ''}`}
+                onClick={() => setLang('en')}
+                aria-pressed={lang === 'en'}
+                lang="en"
+              >
+                English
+              </button>
+              <button
+                className={`lang-opt ${lang === 'ar' ? 'on' : ''}`}
+                onClick={() => setLang('ar')}
+                aria-pressed={lang === 'ar'}
+                lang="ar"
+              >
+                العربية
+              </button>
+            </div>
           </li>
           <li>
             <Link to="/login" className="btn btn-primary nav-cta">{t.nav.client}</Link>
@@ -97,6 +108,16 @@ export function Footer() {
               <li>{t.footer.addr2}</li>
               <li><a href="tel:+971507369400" dir="ltr">+971 50 736 9400</a></li>
               <li><a href="mailto:hello@efqmassessors.ae">hello@efqmassessors.ae</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>{t.footer.legalHeading}</h4>
+            <ul>
+              <li><Link to="/privacy">{t.legalNav.privacy}</Link></li>
+              <li><Link to="/cookies">{t.legalNav.cookies}</Link></li>
+              <li><Link to="/terms">{t.legalNav.terms}</Link></li>
+              <li><Link to="/legal-notice">{t.legalNav.notice}</Link></li>
+              <li><Link to="/accessibility">{t.legalNav.accessibility}</Link></li>
             </ul>
           </div>
         </div>

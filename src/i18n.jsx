@@ -109,10 +109,36 @@ export const STRINGS = {
     },
     footer: {
       blurb: 'EFQM and Strategy Assessors FZCO helps organisations achieve sustainable excellence through the EFQM Model — assessment, recognition, strategy and training across the Americas, Europe and MENA.',
-      navigate: 'Navigate', contact: 'Contact',
+      navigate: 'Navigate', contact: 'Contact', legalHeading: 'Legal',
       addr1: 'Building A1, Dubai Digital Park', addr2: 'Dubai Silicon Oasis, Dubai, UAE',
       legal: 'EFQM and Strategy Assessors FZCO · Trade License 59735 · Dubai, UAE',
       group: 'Part of the TuConsultor Group',
+    },
+    legalNav: {
+      privacy: 'Privacy Policy',
+      cookies: 'Cookie Policy',
+      terms: 'Terms of Use',
+      notice: 'Legal Notice',
+      accessibility: 'Accessibility',
+    },
+    cookie: {
+      title: 'Your privacy',
+      text: 'We use only strictly necessary storage to remember your language and this choice. No analytics, no advertising, no tracking.',
+      accept: 'Got it',
+      more: 'Cookie Policy',
+    },
+    consent: {
+      label: 'I agree to the ',
+      privacyLink: 'Privacy Policy',
+      and: ' and consent to my details being used to respond to my enquiry.',
+      required: 'Please accept the Privacy Policy to send your enquiry.',
+    },
+    notFound: {
+      code: '404',
+      title: 'Page not found',
+      text: 'The page you are looking for does not exist or has moved.',
+      home: 'Back to home',
+      blog: 'Read the blog',
     },
     model: {
       eyebrow: 'The framework',
@@ -135,12 +161,11 @@ export const STRINGS = {
     blog: {
       eyebrow: 'EFQM, one concept a day',
       titleA: 'The ', strong: '90-day', titleB: ' excellence programme',
-      sub: 'A daily post by Alejandro San Nicolás — each one explains a single concept of the EFQM Model 2025 in plain language, from purpose and vision to strategic results. A new post is published every morning.',
+      sub: 'A daily post by Alejandro San Nicolás — each one explains a single concept of the EFQM Model 2025 in plain language, from purpose and vision to strategic results. A new post is published every morning, in English and Arabic.',
       by: 'By', readMore: 'Read',
       day: 'Day', of: 'of 90',
       upcoming: 'Coming up', upcomingSub: 'The programme continues — one concept a day.',
       backToBlog: '← All posts', prev: '← Previous', next: 'Next →',
-      langNote: 'Posts are published in English.',
       empty: 'The programme starts soon — the first post publishes on 13 July 2026.',
     },
     auth: {
@@ -274,10 +299,36 @@ export const STRINGS = {
     },
     footer: {
       blurb: 'تساعد EFQM and Strategy Assessors FZCO المؤسسات على تحقيق التميّز المستدام من خلال نموذج EFQM — تقييم واعتراف واستراتيجية وتدريب في الأمريكتين وأوروبا والشرق الأوسط وشمال أفريقيا.',
-      navigate: 'روابط', contact: 'اتصل بنا',
+      navigate: 'روابط', contact: 'اتصل بنا', legalHeading: 'الشؤون القانونية',
       addr1: 'مبنى A1، حديقة دبي الرقمية', addr2: 'واحة دبي للسيليكون، دبي، الإمارات',
       legal: 'EFQM and Strategy Assessors FZCO · رخصة تجارية 59735 · دبي، الإمارات',
       group: 'جزء من مجموعة TuConsultor',
+    },
+    legalNav: {
+      privacy: 'سياسة الخصوصية',
+      cookies: 'سياسة ملفات تعريف الارتباط',
+      terms: 'شروط الاستخدام',
+      notice: 'البيان القانوني',
+      accessibility: 'إمكانية الوصول',
+    },
+    cookie: {
+      title: 'خصوصيتكم',
+      text: 'نستخدم فقط التخزين الضروري تماماً لتذكّر لغتكم وهذا الاختيار. بلا تحليلات ولا إعلانات ولا تتبّع.',
+      accept: 'حسناً',
+      more: 'سياسة ملفات تعريف الارتباط',
+    },
+    consent: {
+      label: 'أوافق على ',
+      privacyLink: 'سياسة الخصوصية',
+      and: ' وأوافق على استخدام بياناتي للردّ على استفساري.',
+      required: 'يرجى الموافقة على سياسة الخصوصية لإرسال استفساركم.',
+    },
+    notFound: {
+      code: '404',
+      title: 'الصفحة غير موجودة',
+      text: 'الصفحة التي تبحثون عنها غير موجودة أو تم نقلها.',
+      home: 'العودة إلى الرئيسية',
+      blog: 'اقرأ المدونة',
     },
     model: {
       eyebrow: 'الإطار المرجعي',
@@ -300,12 +351,11 @@ export const STRINGS = {
     blog: {
       eyebrow: 'EFQM، مفهوم واحد كل يوم',
       titleA: 'برنامج التميّز في ', strong: '90 يوماً', titleB: '',
-      sub: 'مقال يومي بقلم أليخاندرو سان نيكولاس — يشرح كل مقال مفهوماً واحداً من نموذج EFQM 2025 بلغة بسيطة، من الغاية والرؤية إلى النتائج الاستراتيجية. يُنشر مقال جديد كل صباح.',
+      sub: 'مقال يومي بقلم أليخاندرو سان نيكولاس — يشرح كل مقال مفهوماً واحداً من نموذج EFQM 2025 بلغة بسيطة، من الغاية والرؤية إلى النتائج الاستراتيجية. يُنشر مقال جديد كل صباح، بالعربية والإنجليزية.',
       by: 'بقلم', readMore: 'اقرأ',
       day: 'اليوم', of: 'من 90',
       upcoming: 'قادم قريباً', upcomingSub: 'يستمر البرنامج — مفهوم واحد كل يوم.',
       backToBlog: '→ جميع المقالات', prev: '→ السابق', next: 'التالي ←',
-      langNote: 'تُنشر المقالات باللغة الإنجليزية.',
       empty: 'يبدأ البرنامج قريباً — يُنشر المقال الأول في 13 يوليو 2026.',
     },
     auth: {

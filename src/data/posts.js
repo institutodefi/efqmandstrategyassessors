@@ -10,6 +10,7 @@ export function postDate(day) {
 }
 
 export const AUTHOR = 'Alejandro San Nicolás'
+export const AUTHOR_AR = 'أليخاندرو سان نيكولاس'
 
 export const POSTS = [
 { day: 1, ref: 'Series', slug: 'what-is-the-efqm-model', title: 'What is the EFQM Model?', body: `After twenty years and more than 250 assessments, I still describe the EFQM Model the same way: it is a mirror. Not a standard you pass or fail, but a structured way for an organisation to look at itself honestly.
@@ -930,3 +931,14 @@ What now? I suggest the smallest serious step: a self-assessment. Take the seven
 
 Excellence is a discipline, not a destination. Thank you for the ninety days. If your organisation is ready for its mirror — you know where to find us.` },
 ]
+
+/* ------------------------------------------------------------------
+   Language-aware accessor. Returns the post with title/body in the
+   requested language, falling back to English if a translation is
+   missing.
+------------------------------------------------------------------- */
+export function localisePost(post, lang, dict) {
+  if (lang !== 'ar' || !dict || !dict[post.slug]) return post
+  const tr = dict[post.slug]
+  return { ...post, title: tr.title, body: tr.body }
+}

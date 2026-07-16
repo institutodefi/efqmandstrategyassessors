@@ -14,19 +14,44 @@ Stack: **Vite + React** · **Supabase** (auth + database) · **Netlify** (hostin
 | `/model` | **The EFQM Model** — three Why/How/What blocks, plus an interactive explorer of all 7 criteria and their 32 sub-criteria (description + assessor's commentary) |
 | `/blog` | **The 90-day excellence programme** — one post a day by Alejandro San Nicolás, published automatically on schedule |
 | `/blog/:slug` | Single post with prev/next navigation |
+| `/privacy` · `/cookies` · `/terms` · `/legal-notice` · `/accessibility` | **Legal & compliance** — GDPR/UAE-PDPL-aligned documents, bilingual, with per-page table of contents |
 | `/login` | Client sign-in / sign-up / password reset |
 | `/portal` | Protected client zone (documents, RADAR progress, assessor contact) |
+| `*` | Custom 404 page |
 
-**Bilingual: English + Arabic.** The language toggle in the navigation switches the whole interface and sets `dir="rtl"` for Arabic. The choice persists in `localStorage`. Blog posts themselves are published in English (a note tells Arabic readers this).
+**Fully bilingual: English + Arabic.** The `English / العربية` switch in the navigation changes the entire site — interface, the EFQM Model content, and all 90 blog posts — and sets `dir="rtl"` for Arabic. The choice persists in `localStorage`.
+
+---
+
+## Compliance & privacy
+
+The site ships with a complete legal layer, written to align with the **UAE Personal Data Protection Law** (Federal Decree-Law No. 45 of 2021) and the **EU GDPR** for EU/EEA data subjects. All documents are bilingual (EN/AR) and live in `src/data/legal.js` — edit them there and both languages update from one place.
+
+- **Privacy Policy** (`/privacy`) — data controller identity, legal bases, purposes, retention periods, international transfers, and the full list of data-subject rights (access, rectification, erasure, restriction, portability, withdrawal of consent).
+- **Cookie Policy** (`/cookies`) — the site uses **only strictly necessary storage** (`lang`, `cookie-consent`, and the Supabase auth session). No analytics, advertising, profiling or third-party tracking.
+- **Terms of Use**, **Legal Notice** (imprint), **Accessibility Statement** (WCAG 2.1 AA target).
+- **Cookie notice** — an informational banner (`src/components/CookieNotice.jsx`) shown once and remembered; since no optional cookies are set, it records acknowledgement rather than gating tracking.
+- **Consent checkbox** on the contact form — submission is blocked until the visitor agrees to the Privacy Policy, and the agreement is required client-side.
+
+**One action item before launch:** create the `privacy@efqmassessors.ae` mailbox (or alias to `hello@`), since the policies direct data-subject requests there. To change the "last updated" date shown on every legal page, edit `LEGAL_UPDATED` in `src/data/legal.js`.
+
+## SEO, performance & security
+
+- **Per-page metadata** — every route sets its own `<title>`, description, canonical URL and `og:` tags via the `useSeo` hook (`src/lib/seo.js`), plus `hreflang` alternates (en / ar / x-default).
+- **`sitemap.xml`** is regenerated on every build (`npm run prebuild` → `scripts/gen-sitemap.mjs`) and lists all pages and blog posts with `lastmod`. **`robots.txt`** points to it and disallows `/portal` and `/login`.
+- **Structured data** — `ProfessionalService` JSON-LD in `index.html`; **web manifest** and `theme-color` for installability.
+- **Security headers** (`netlify.toml`) — Content-Security-Policy, HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options`, `Referrer-Policy`, and a `Permissions-Policy` that disables geolocation/camera/mic and opts out of FLoC.
+- **Code-splitting** — the landing page bundle is ~69 kB gzip; the heavy blog data and secondary routes load on demand.
+- **Accessibility** — semantic HTML, keyboard-operable nav, visible focus states, `aria` labels, and full RTL support.
 
 ---
 
 ## The blog programme
 
-- 90 posts live in `src/data/posts.js`, each ~200 words, mapped to a specific sub-criterion of the EFQM Model 2025.
+- 90 posts live in `src/data/posts.js` (English) and `src/data/posts_ar.js` (Arabic, keyed by slug), each ~200 words, mapped to a specific sub-criterion of the EFQM Model 2025.
 - `BLOG_START = '2026-07-13'` is **Day 1**. Day *n* publishes on `BLOG_START + (n-1)` days; the last post lands on **10 October 2026**.
 - Publication is date-driven at render time: the blog shows only posts whose date is today or earlier, and teases the next one. No CMS or cron job needed.
-- To change the launch date, edit `BLOG_START`. To edit or add a post, edit the array — `day`, `ref`, `slug`, `title`, `body` (paragraphs separated by a blank line).
+- To change the launch date, edit `BLOG_START`. To edit or add a post, edit the array — `day`, `ref`, `slug`, `title`, `body` (paragraphs separated by a blank line) — and add the matching Arabic entry under the same slug in `posts_ar.js`. If an Arabic translation is missing, the site falls back to English for that post.
 
 ---
 
@@ -83,12 +108,23 @@ Users self-register at `/login`. To pre-approve clients instead, disable public 
 
 ```
 src/
-  i18n.jsx            EN/AR dictionaries + language provider (sets dir=rtl)
-  data/model.js       EFQM Model 2025 — 7 criteria, 32 sub-criteria (EN + AR)
-  data/posts.js       The 90 blog posts + publication schedule
-  components/Chrome.jsx   Nav, Footer, HeroWave, RadarWheel, icons
-  pages/              Home, Model, Blog, Post, Login, Portal
-  styles/global.css   Design tokens + all styles (RTL-safe logical properties)
-supabase/schema.sql   Tables + Row Level Security policies
-netlify.toml          SPA redirects + asset caching
+  i18n.jsx                EN/AR dictionaries + language provider (sets dir=rtl)
+  App.jsx                 Routes (code-split) + cookie notice
+  lib/seo.js              Per-page title / description / canonical / hreflang
+  lib/supabase.js         Supabase client (null-safe when unconfigured)
+  data/model.js           EFQM Model 2025 — 7 criteria, 32 sub-criteria (EN + AR)
+  data/posts.js           The 90 blog posts (EN) + publication schedule + localisePost
+  data/posts_ar.js        The 90 blog posts (AR), keyed by slug
+  data/legal.js           Privacy, Cookies, Terms, Legal Notice, Accessibility (EN + AR)
+  components/Chrome.jsx    Nav, Footer (with legal column), HeroWave, RadarWheel, icons
+  components/CookieNotice.jsx   Informational, remembered consent banner
+  pages/                  Home, Model, Blog, Post, Legal, Login, Portal, NotFound
+  styles/global.css       Design tokens + all styles (RTL-safe logical properties)
+scripts/gen-sitemap.mjs   Build-time sitemap generator (runs on prebuild)
+public/robots.txt         Crawler rules → sitemap
+public/sitemap.xml        Generated; all pages + posts with hreflang
+public/site.webmanifest   PWA manifest
+supabase/schema.sql       Tables + Row Level Security policies
+netlify.toml              SPA redirects, security headers (CSP/HSTS), caching
+index.html                Meta, Open Graph, JSON-LD, noscript fallback
 ```

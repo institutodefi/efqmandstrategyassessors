@@ -1,0 +1,16 @@
+{
+  "name": "EFQM and Strategy Assessors",
+  "short_name": "EFQM Assessors",
+  "description": "Consultancy based on the EFQM Model 2025 — assessment, recognition, strategy and training. Dubai, UAE.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0E1730",
+  "theme_color": "#0E1730",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    { "src": "/brand/favicon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/brand/seal.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

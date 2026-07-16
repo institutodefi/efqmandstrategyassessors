@@ -3,9 +3,15 @@ import { Link } from 'react-router-dom'
 import { Nav, Footer, HeroWave, RadarWheel, Icon } from '../components/Chrome.jsx'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../i18n.jsx'
+import { useSeo } from '../lib/seo.js'
 
 export default function Home() {
   const { t } = useLang()
+  useSeo(
+    'EFQM and Strategy Assessors — Dubai · UAE',
+    'Consultancy based on the EFQM Model 2025 — external assessments, international recognition, strategy, ISO and training. Based in Dubai Silicon Oasis.',
+    '/'
+  )
 
   useEffect(() => {
     const els = document.querySelectorAll('.reveal')
@@ -191,6 +197,7 @@ function ContactSection() {
   const { t } = useLang()
   const [status, setStatus] = useState(null)
   const [sending, setSending] = useState(false)
+  const [consent, setConsent] = useState(false)
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -203,6 +210,10 @@ function ContactSection() {
     }
     if (!payload.name || !payload.email || !payload.message) {
       setStatus({ ok: false, msg: t.contact.valMsg })
+      return
+    }
+    if (!consent) {
+      setStatus({ ok: false, msg: t.consent.required })
       return
     }
     if (!supabase) {
@@ -218,6 +229,7 @@ function ContactSection() {
       setStatus({ ok: false, msg: t.contact.errMsg })
     } else {
       form.reset()
+      setConsent(false)
       setStatus({ ok: true, msg: t.contact.okMsg })
     }
   }
@@ -260,13 +272,25 @@ function ContactSection() {
             <label htmlFor="c-msg">{t.contact.fMsg}</label>
             <textarea id="c-msg" name="message" rows="4" required />
           </div>
+          <label className="consent">
+            <input
+              type="checkbox"
+              name="consent"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+            />
+            <span>
+              {t.consent.label}
+              <Link to="/privacy">{t.consent.privacyLink}</Link>
+              {t.consent.and}
+            </span>
+          </label>
           <button className="btn btn-primary" type="submit" disabled={sending}>
             {sending ? t.contact.sending : t.contact.send}
           </button>
           {status && (
             <p className={`form-status ${status.ok ? 'ok' : 'err'}`} role="status">{status.msg}</p>
           )}
-          <p className="form-note">{t.contact.note}</p>
         </form>
       </div>
     </section>
