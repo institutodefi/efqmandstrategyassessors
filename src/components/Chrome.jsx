@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
+import { openCookieSettings } from './CookieNotice.jsx'
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
@@ -20,9 +21,9 @@ export function Nav() {
   const LINKS = [
     [anchor('about'), t.nav.about, false],
     [anchor('services'), t.nav.services, false],
+    [anchor('models'), t.nav.models, false],
     ['/model', t.nav.model, true],
     ['/blog', t.nav.blog, true],
-    [anchor('team'), t.nav.team, false],
     [anchor('contact'), t.nav.contact, false],
   ]
 
@@ -69,7 +70,7 @@ export function Nav() {
             </div>
           </li>
           <li>
-            <Link to="/login" className="btn btn-primary nav-cta">{t.nav.client}</Link>
+            <Link to="/login" className="btn btn-primary nav-cta client-flash">{t.nav.client}</Link>
           </li>
         </ul>
       </div>
@@ -99,6 +100,7 @@ export function Footer() {
                 <li key={label}><Link to={href}>{label}</Link></li>
               ))}
               <li><Link to="/login">{t.nav.client}</Link></li>
+              <li><a href="/rss.xml" target="_blank" rel="noopener noreferrer">{t.blog.rss}</a></li>
             </ul>
           </div>
           <div>
@@ -118,6 +120,7 @@ export function Footer() {
               <li><Link to="/terms">{t.legalNav.terms}</Link></li>
               <li><Link to="/legal-notice">{t.legalNav.notice}</Link></li>
               <li><Link to="/accessibility">{t.legalNav.accessibility}</Link></li>
+              <li><button type="button" className="footer-linkbtn" onClick={openCookieSettings}>{t.cookie.settings}</button></li>
             </ul>
           </div>
         </div>
@@ -213,11 +216,93 @@ export function Icon({ name }) {
     doc: <><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4M10 12h5M10 16h5" /></>,
     radar: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><path d="M12 3v4.5M12 12l6 -3" /></>,
     chat: <><path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H9l-5 4z" /></>,
+    layers: <><path d="M12 3l9 5-9 5-9-5z" /><path d="M3 13l9 5 9-5" /><path d="M3 17l9 5 9-5" /></>,
   }
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
       strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {paths[name]}
     </svg>
+  )
+}
+
+/**
+ * ExcellenceOrbit — animated SVG for the About section.
+ * Seven criteria of the EFQM Model 2025 orbiting a spiral core, grouped
+ * into the three blocks (Direction / Execution / Results) by colour.
+ * Pure SVG + SMIL/CSS animation; no images, no licence text.
+ */
+export function ExcellenceOrbit() {
+  // 7 criteria positioned on a ring; colour by block.
+  const nodes = [
+    { n: '1', block: 'dir' }, { n: '2', block: 'dir' },
+    { n: '3', block: 'exe' }, { n: '4', block: 'exe' }, { n: '5', block: 'exe' },
+    { n: '6', block: 'res' }, { n: '7', block: 'res' },
+  ]
+  const cx = 200, cy = 200, R = 132
+  const colour = { dir: '#58E0B4', exe: '#1FA98A', res: '#0E4C60' }
+
+  return (
+    <div className="excellence-orbit" role="img"
+      aria-label="The seven criteria of the EFQM Model 2025 orbiting a central core">
+      <svg viewBox="0 0 400 400">
+        <defs>
+          <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#58E0B4" stopOpacity="0.55" />
+            <stop offset="60%" stopColor="#1FA98A" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#0E4C60" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="orbit-ring" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#58E0B4" />
+            <stop offset="1" stopColor="#0E4C60" />
+          </linearGradient>
+        </defs>
+
+        {/* soft core glow */}
+        <circle cx={cx} cy={cy} r="150" fill="url(#core-glow)">
+          <animate attributeName="r" values="140;158;140" dur="6s" repeatCount="indefinite" />
+        </circle>
+
+        {/* concentric guide rings */}
+        <circle cx={cx} cy={cy} r={R} fill="none" stroke="rgba(88,224,180,0.20)" strokeWidth="1.5" />
+        <circle cx={cx} cy={cy} r={R - 34} fill="none" stroke="rgba(88,224,180,0.10)" strokeWidth="1" strokeDasharray="3 7" />
+
+        {/* rotating dashed accent ring */}
+        <circle cx={cx} cy={cy} r={R + 20} fill="none" stroke="url(#orbit-ring)" strokeWidth="2"
+          strokeLinecap="round" strokeDasharray="80 300" opacity="0.7">
+          <animateTransform attributeName="transform" type="rotate"
+            from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="28s" repeatCount="indefinite" />
+        </circle>
+
+        {/* the whole node ring rotates slowly */}
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="46s" repeatCount="indefinite" />
+          {nodes.map((node, i) => {
+            const a = (i / nodes.length) * Math.PI * 2 - Math.PI / 2
+            const x = cx + R * Math.cos(a)
+            const y = cy + R * Math.sin(a)
+            return (
+              <g key={node.n}>
+                <line x1={cx} y1={cy} x2={x} y2={y} stroke="rgba(88,224,180,0.16)" strokeWidth="1" />
+                <circle cx={x} cy={y} r="24" fill="#0E1730" stroke={colour[node.block]} strokeWidth="2.5">
+                  <animate attributeName="r" values="24;26;24" dur="4s" begin={`${i * 0.3}s`} repeatCount="indefinite" />
+                </circle>
+                {/* counter-rotate the label so numbers stay upright */}
+                <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle"
+                  fill={colour[node.block]} fontFamily="Rubik, sans-serif" fontWeight="600" fontSize="17">
+                  {node.n}
+                  <animateTransform attributeName="transform" type="rotate"
+                    from={`0 ${x} ${y}`} to={`-360 ${x} ${y}`} dur="46s" repeatCount="indefinite" />
+                </text>
+              </g>
+            )
+          })}
+        </g>
+
+        {/* spiral core emblem */}
+        <image href="/brand/spiral.png" x="150" y="150" width="100" height="100" />
+      </svg>
+    </div>
   )
 }

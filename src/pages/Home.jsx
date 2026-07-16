@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Nav, Footer, HeroWave, RadarWheel, Icon } from '../components/Chrome.jsx'
+import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit } from '../components/Chrome.jsx'
+import Newsletter from '../components/Newsletter.jsx'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../i18n.jsx'
 import { useSeo } from '../lib/seo.js'
@@ -74,9 +75,9 @@ export default function Home() {
             </ul>
           </div>
           <div className="about-card reveal">
-            <img src="/brand/seal.png" alt="EFQM and Strategy Assessors FZCO seal — Trade License 59735" />
+            <ExcellenceOrbit />
             <p style={{ textAlign: 'center', fontSize: '0.88rem', color: 'var(--muted)' }}>
-              {t.about.sealCaption}
+              {t.about.visualCaption}
             </p>
           </div>
         </div>
@@ -99,6 +100,67 @@ export default function Home() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ISO NORMS PORTFOLIO */}
+      <section className="section" id="norms">
+        <div className="wrap">
+          <div className="section-head reveal">
+            <span className="eyebrow">{t.norms.eyebrow}</span>
+            <h2 className="section-title">{t.norms.titleA}<strong>{t.norms.strong}</strong>{t.norms.titleB}</h2>
+            <p>{t.norms.sub}</p>
+          </div>
+          <div className="norms-grid">
+            {t.norms.items.map((iso) => (
+              <article className="norm-card reveal" key={iso.code}>
+                <div className="norm-head">
+                  <span className="norm-code">ISO<b>{iso.code}</b></span>
+                  <h3>{iso.name}</h3>
+                </div>
+                <p>{iso.text}</p>
+                <div className="norm-subs">
+                  <span className="norm-subs-label">{t.norms.subLabel}</span>
+                  <p>{iso.subs}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MODELS / PRICING */}
+      <section className="section models" id="models">
+        <div className="wrap">
+          <div className="section-head reveal">
+            <span className="eyebrow" style={{ color: 'var(--glow)' }}>{t.models.eyebrow}</span>
+            <h2 className="section-title">{t.models.titleA}<strong>{t.models.strong}</strong>{t.models.titleB}</h2>
+            <p>{t.models.sub}</p>
+          </div>
+          <div className="models-grid">
+            {t.models.tiers.map((tier) => (
+              <article className={`model-card reveal ${tier.popular ? 'featured' : ''}`} key={tier.name}>
+                {tier.popular && <span className="model-badge">{t.models.popular}</span>}
+                <h3 className="model-name">{tier.name}</h3>
+                <span className="model-ai">{t.models.eyebrow.split('·').pop().trim()}</span>
+                <p className="model-tagline">{tier.tagline}</p>
+                <div className="model-price">
+                  <span className="model-from">{t.models.from}</span>
+                  <span className="model-amount">{tier.price}<em>{t.models.currency}</em></span>
+                  <span className="model-unit">{t.models.unit}</span>
+                </div>
+                <ul className="model-features">
+                  {tier.features.map((f) => (
+                    <li key={f}><Icon name="check" />{f}</li>
+                  ))}
+                </ul>
+                <a href="#contact" className={`btn ${tier.popular ? 'btn-primary' : 'btn-ghost'} model-cta`}>
+                  {t.models.cta}
+                </a>
+              </article>
+            ))}
+          </div>
+          <p className="models-note reveal">{t.models.note}</p>
         </div>
       </section>
 
@@ -187,6 +249,7 @@ export default function Home() {
         </div>
       </section>
 
+      <Newsletter />
       <ContactSection />
       <Footer />
     </div>

@@ -10,10 +10,10 @@ Stack: **Vite + React** · **Supabase** (auth + database) · **Netlify** (hostin
 
 | Route | Content |
 |---|---|
-| `/` | Home — hero, stats, about, **7 services** (incl. ISO Consultancy), RADAR method, recognition path, team, client-zone teaser, contact form |
+| `/` | Home — hero, stats, about, **8 services** (incl. Consultancy as a Service & ISO), **ISO norms portfolio**, **three pricing models**, RADAR method, 4-stage recognition path, team, newsletter, contact form |
 | `/model` | **The EFQM Model** — three Why/How/What blocks, plus an interactive explorer of all 7 criteria and their 32 sub-criteria (description + assessor's commentary) |
-| `/blog` | **The 90-day excellence programme** — one post a day by Alejandro San Nicolás, published automatically on schedule |
-| `/blog/:slug` | Single post with prev/next navigation |
+| `/blog` | **The 120-day programme** — 90 posts on the EFQM Model + 30 ISO standards cases, one a day, published automatically on schedule |
+| `/blog/:slug` | Single post with prev/next navigation, a per-article **contact form + WhatsApp** CTA |
 | `/privacy` · `/cookies` · `/terms` · `/legal-notice` · `/accessibility` | **Legal & compliance** — GDPR/UAE-PDPL-aligned documents, bilingual, with per-page table of contents |
 | `/login` | Client sign-in / sign-up / password reset |
 | `/portal` | Protected client zone (documents, RADAR progress, assessor contact) |
@@ -35,6 +35,27 @@ The site ships with a complete legal layer, written to align with the **UAE Pers
 
 **One action item before launch:** create the `privacy@efqmassessors.ae` mailbox (or alias to `hello@`), since the policies direct data-subject requests there. To change the "last updated" date shown on every legal page, edit `LEGAL_UPDATED` in `src/data/legal.js`.
 
+### Cookie consent manager
+
+The banner (`src/components/CookieNotice.jsx`) offers **Accept all / Reject all / Customise**. "Customise" opens a preferences modal with four categories — Strictly necessary (always on), Preferences, Analytics and Marketing — stored as a JSON consent record in `localStorage`. A **Cookie settings** link in the footer reopens it any time. The analytics/marketing toggles are wired and ready for when you add such tools; nothing tracks until a visitor opts in.
+
+## Home-page sections added
+
+- **Dynamic About visual** — an animated SVG "excellence orbit" (the 7 EFQM criteria orbiting the spiral core, coloured by block) replaces the static licence seal. Lives in `ExcellenceOrbit` in `src/components/Chrome.jsx`.
+- **Consultancy as a Service** — a service card describing the AI-boosted subscription model.
+- **ISO norms portfolio** (`#norms`) — six standards (ISO 9001, 14001, 27001, 45001, 42001, 56001), each with description and differential sub-processes, mirroring the Consultify.Pro architecture.
+- **Three pricing models** (`#models`) — Relationship (€350), Involvement (€625, "most chosen"), Commitment (€800), from the "AI-boosted · Consultant as a Service" model. Prices and features live in the `models` block of `src/i18n.jsx`.
+- **4-stage recognition path** — GAP Analysis → Self-Assessment → Support · Action Plan → Support · External Recognition.
+- **Newsletter** — Brevo-ready sign-up (see `BREVO-SETUP.md`).
+
+## WhatsApp & newsletter
+
+- **WhatsApp button** (`src/components/WhatsAppButton.jsx`) — a floating chat button on every page, pointing to **+971 50 736 9400** (`wa.me/971507369400`) with a pre-filled, bilingual message and a dismissible greeting bubble.
+- **Per-post contact + WhatsApp** (`src/components/PostContact.jsx`) — every blog article ends with a compact contact form (submits to the Supabase `inquiries` table, tagged with the article) and a WhatsApp button pre-filled with the article title.
+- **RSS feed** — `public/rss.xml`, regenerated on every build (`scripts/gen-rss.mjs`) with the published posts, newest first. Linked from the blog page, the footer and `index.html` (`<link rel="alternate" type="application/rss+xml">`). Customers can subscribe in any reader.
+- **Flashing client-zone button** — the nav "Client zone" button pulses to draw attention (respects `prefers-reduced-motion`).
+- **Brevo newsletter** (`src/components/Newsletter.jsx`) — posts to a Brevo hosted form via a hidden iframe (double opt-in). Set `VITE_BREVO_FORM_ACTION` to switch it on; until then it falls back to the Supabase `subscribers` table. Full instructions in **`BREVO-SETUP.md`**.
+
 ## SEO, performance & security
 
 - **Per-page metadata** — every route sets its own `<title>`, description, canonical URL and `og:` tags via the `useSeo` hook (`src/lib/seo.js`), plus `hreflang` alternates (en / ar / x-default).
@@ -48,8 +69,8 @@ The site ships with a complete legal layer, written to align with the **UAE Pers
 
 ## The blog programme
 
-- 90 posts live in `src/data/posts.js` (English) and `src/data/posts_ar.js` (Arabic, keyed by slug), each ~200 words, mapped to a specific sub-criterion of the EFQM Model 2025.
-- `BLOG_START = '2026-07-13'` is **Day 1**. Day *n* publishes on `BLOG_START + (n-1)` days; the last post lands on **10 October 2026**.
+- 120 posts live in `src/data/posts.js` (English) and `src/data/posts_ar.js` (Arabic, keyed by slug), each ~170–200 words. Days 1–90 map to the EFQM Model 2025; days 91–120 are real-world cases across the six ISO standards (9001, 14001, 27001, 45001, 42001, 56001).
+- `BLOG_START = '2026-07-13'` is **Day 1**. Day *n* publishes on `BLOG_START + (n-1)` days; the last post lands on **9 November 2026** (day 120).
 - Publication is date-driven at render time: the blog shows only posts whose date is today or earlier, and teases the next one. No CMS or cron job needed.
 - To change the launch date, edit `BLOG_START`. To edit or add a post, edit the array — `day`, `ref`, `slug`, `title`, `body` (paragraphs separated by a blank line) — and add the matching Arabic entry under the same slug in `posts_ar.js`. If an Arabic translation is missing, the site falls back to English for that post.
 

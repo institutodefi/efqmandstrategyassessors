@@ -5,6 +5,7 @@ import { useLang } from '../i18n.jsx'
 import { POSTS, postDate, AUTHOR, AUTHOR_AR, localisePost } from '../data/posts.js'
 import { POSTS_AR } from '../data/posts_ar.js'
 import { useSeo } from '../lib/seo.js'
+import PostContact from '../components/PostContact.jsx'
 
 const fmt = (d, lang) =>
   d.toLocaleDateString(lang === 'ar' ? 'ar-AE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -62,6 +63,8 @@ export default function Post() {
               ? <Link to={`/blog/${next.slug}`} className="post-nav-link next"><span>{t.blog.next}</span><b>{next.title}</b></Link>
               : <span />}
           </nav>
+
+          <PostContact title={post.title} />
         </div>
       </article>
 

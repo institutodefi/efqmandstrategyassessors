@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>EFQM and Strategy Assessors — Blog</title>
+    <link>https://efqmassessors.ae/blog</link>
+    <atom:link href="https://efqmassessors.ae/rss.xml" rel="self" type="application/rss+xml" />
+    <description>Daily insights on the EFQM Model 2025 and the ISO standards, by Alejandro San Nicolás.</description>
+    <language>en</language>
+    <copyright>© EFQM and Strategy Assessors FZCO</copyright>
+    <lastBuildDate>Thu, 16 Jul 2026 16:08:02 GMT</lastBuildDate>
+    <ttl>720</ttl>
+    <item>
+      <title>Criterion 1: Purpose, Vision &amp; Strategy</title>
+      <link>https://efqmassessors.ae/blog/criterion-1-purpose-vision-strategy</link>
+      <guid isPermaLink="true">https://efqmassessors.ae/blog/criterion-1-purpose-vision-strategy</guid>
+      <dc:creator>Alejandro San Nicolás</dc:creator>
+      <category>Criterion 1</category>
+      <pubDate>Thu, 16 Jul 2026 00:00:00 GMT</pubDate>
+      <description>We begin the journey through the Model where every excellent organisation begins: Criterion 1, Purpose, Vision &amp; Strategy.</description>
+    </item>
+    <item>
+      <title>RADAR: how excellence is assessed</title>
+      <link>https://efqmassessors.ae/blog/radar-how-excellence-is-assessed</link>
+      <guid isPermaLink="true">https://efqmassessors.ae/blog/radar-how-excellence-is-assessed</guid>
+      <dc:creator>Alejandro San Nicolás</dc:creator>
+      <category>Series</category>
+      <pubDate>Wed, 15 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Every EFQM assessment runs on one engine: RADAR. It stands for Results, Approaches, Deploy, Assess and Refine — and it is the logic I apply in every organisation I evaluate.</description>
+    </item>
+    <item>
+      <title>Why, How, What: the three questions</title>
+      <link>https://efqmassessors.ae/blog/why-how-what-three-questions</link>
+      <guid isPermaLink="true">https://efqmassessors.ae/blog/why-how-what-three-questions</guid>
+      <dc:creator>Alejandro San Nicolás</dc:creator>
+      <category>Series</category>
+      <pubDate>Tue, 14 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Strip away the diagrams and the EFQM Model 2025 asks an organisation just three questions.</description>
+    </item>
+    <item>
+      <title>What is the EFQM Model?</title>
+      <link>https://efqmassessors.ae/blog/what-is-the-efqm-model</link>
+      <guid isPermaLink="true">https://efqmassessors.ae/blog/what-is-the-efqm-model</guid>
+      <dc:creator>Alejandro San Nicolás</dc:creator>
+      <category>Series</category>
+      <pubDate>Mon, 13 Jul 2026 00:00:00 GMT</pubDate>
+      <description>After twenty years and more than 250 assessments, I still describe the EFQM Model the same way: it is a mirror. Not a standard you pass or fail, but a structured way for an organisation to look at itself honestly.</description>
+    </item>
+  </channel>
+</rss>

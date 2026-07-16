@@ -39,6 +39,10 @@ export default function Blog() {
           <span className="eyebrow" style={{ color: 'var(--glow)' }}>{t.blog.eyebrow}</span>
           <h1 className="display">{t.blog.titleA}<strong>{t.blog.strong}</strong>{t.blog.titleB}</h1>
           <p className="lead">{t.blog.sub}</p>
+          <a className="rss-link" href="/rss.xml" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="5" cy="19" r="2" fill="currentColor"/><path d="M4 11a9 9 0 019 9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M4 4a16 16 0 0116 16" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+            {t.blog.rss}
+          </a>
         </div>
       </section>
 

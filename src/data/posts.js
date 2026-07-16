@@ -930,6 +930,220 @@ If one thread runs through all ninety posts, it is this: excellence is coherence
 What now? I suggest the smallest serious step: a self-assessment. Take the seven criteria and ask, per criterion, the RADAR questions from day 3 — what approach, deployed where, refined how, evidenced by which results? A candid management workshop can produce your first maturity map in a day. From there, the path of day 4 onwards is yours to walk: diagnosis, improvement, and when the evidence is ready, external assessment and international recognition.
 
 Excellence is a discipline, not a destination. Thank you for the ninety days. If your organisation is ready for its mirror — you know where to find us.` },
+{ day: 91, ref: 'ISO 9001', slug: 'iso-9001-quality-that-shows', title: 'ISO 9001: quality that shows up in results', body: `For ninety days we walked the EFQM Model. For the next thirty I want to change register: real cases, one standard at a time, starting with the one almost every organisation meets first — ISO 9001.
+
+ISO 9001 is the world's most implemented management standard, and also the most misunderstood. Treated as a certificate to hang in reception, it becomes a folder of procedures nobody reads. Treated as a system, it becomes the backbone that makes quality repeatable when the founder is on holiday and the best operator has left.
+
+The difference is visible in a single question I ask every audit: show me a decision this system changed. In excellent organisations the answer is immediate — a supplier dropped, a process redesigned, a complaint pattern fixed at the root. In paper ones, silence.
+
+Over the next four days, four short cases from real engagements — anonymised — showing ISO 9001 doing actual work: an audit, a non-conformity, a supplier, a management review.` },
+{ day: 92, ref: 'ISO 9001', slug: 'iso-9001-case-the-audit-that-found-nothing', title: 'Case: the internal audit that found nothing', body: `A manufacturer proudly showed me a year of internal audits. Every one closed clean: no findings. They expected praise. I gave them a worry.
+
+An internal audit that never finds anything is not evidence of a perfect system — it is evidence of an audit that isn't looking. Usually one of three things is true: auditors check documents exist rather than whether the work matches them; they audit their own areas and grade politely; or the sample is chosen to pass.
+
+We changed three things. Auditors were rotated so no one audited their own process. The checklist shifted from "does a procedure exist?" to "follow one real order end to end and show me where reality diverges." And findings were reframed as fuel, not blame.
+
+The next cycle produced fourteen findings. The quality manager was alarmed; I was reassured. Within two quarters, on-time delivery rose four points. The audit had finally started doing its job: finding the truth before the customer does.` },
+{ day: 93, ref: 'ISO 9001', slug: 'iso-9001-case-nonconformity-as-a-gift', title: 'Case: a non-conformity as a gift', body: `A logistics firm treated non-conformities like accusations. Raise one and you were the problem. So people stopped raising them — and the same errors quietly recurred, invisible, expensive.
+
+ISO 9001 asks for control of non-conformities and, crucially, corrective action that reaches the root cause. But a system only sees what people are willing to report, and reporting dies where blame lives.
+
+We separated the person from the process, out loud and repeatedly. A non-conformity became a gift: free information about a weakness before it reached a customer. We made raising one easy — thirty seconds, no form marathon — and made root-cause analysis a shared, blameless ritual with a simple five-whys discipline.
+
+Reports rose sharply, which looks like decline and is the opposite. Because now each one ended in a standard that changed, recurrence fell. A year on, repeat non-conformities were down by more than half. The lesson generalises: you cannot fix what your culture won't let people name.` },
+{ day: 94, ref: 'ISO 9001', slug: 'iso-9001-case-supplier-that-became-a-partner', title: 'Case: the supplier that became a partner', body: `A food producer managed suppliers with one lever: price, renegotiated annually, hardest with the weakest. Quality incidents kept arriving from exactly those squeezed suppliers. Nobody connected the two.
+
+ISO 9001's control of externally provided processes is often reduced to a certificate on file and an annual scorecard. Real supplier management asks a different question: which relationships are strategic, and are we managing them as partners or as commodities?
+
+We segmented the supplier base. Transactional buys stayed lean. But for a handful of suppliers whose quality shaped the final product, we shifted from squeezing to developing — shared specifications understood the same way on both sides, joint problem-solving, early involvement when a recipe changed.
+
+One troublesome supplier, treated as a partner rather than a culprit, cut defect rates by two-thirds in six months and brought us a packaging idea that reduced waste. The standard didn't demand partnership. But read seriously, it pointed straight at it — and the results followed.` },
+{ day: 95, ref: 'ISO 9001', slug: 'iso-9001-case-management-review-that-mattered', title: 'Case: a management review that changed the plan', body: `In most organisations the ISO 9001 management review is theatre: a slide deck read aloud once a year, minutes filed, nothing decided. Attendance is grudging. The standard's most powerful requirement is wasted.
+
+A services company let me redesign theirs. We cut the retrospective slides to a single dashboard and spent the time on three questions the standard implies but rarely gets: what are the data telling us that we're ignoring, what should we stop doing, and what one change would most improve the customer's experience?
+
+The review stopped being a report and became a decision meeting. That first session killed two low-value services, reallocated a team, and set a single measurable priority for the quarter. The quality manager, used to presenting to silence, watched the executives argue — a good sign.
+
+Management review, done properly, is where a quality system earns its keep: the moment evidence becomes strategy. Anything less is an annual ritual with excellent minutes and no consequences.` },
+{ day: 96, ref: 'ISO 14001', slug: 'iso-14001-environment-beyond-compliance', title: 'ISO 14001: environment beyond compliance', body: `The next five cases move to ISO 14001, environmental management — a standard often bought for a customer requirement and then run as pure paperwork, missing most of its value.
+
+At its floor, ISO 14001 keeps you legal: aspects and impacts identified, permits current, discharges controlled, emergencies rehearsed. That alone matters; a single breach can cost a licence. But treated only as legal defence, the standard becomes a filing exercise that bores everyone and changes nothing.
+
+Read as a management system, it does more. It forces an honest map of how your operations touch the world — energy, water, materials, waste, emissions — and turns that map into priorities. And here environmental and financial logic converge more often than sceptics expect: the same tonne of material wasted is a cost and an impact at once.
+
+Over the next four days: the aspect nobody had mapped, a drill that paid for itself, savings found as a by-product, and how permits and discharges quietly build — or break — community trust.` },
+{ day: 97, ref: 'ISO 14001', slug: 'iso-14001-case-the-aspect-nobody-mapped', title: 'Case: the environmental aspect nobody had mapped', body: `A metal-finishing plant had a tidy ISO 14001 aspects register — energy, water, the obvious emissions. All controlled, all documented. Then a neighbour complained about an intermittent smell, and the register had no answer.
+
+The missing aspect was a small solvent process, run occasionally, never significant enough to make the list. Off the radar, it had no controls, no monitoring, and now a community relations problem and a regulator asking questions.
+
+ISO 14001 lives or dies on the completeness of its aspects-and-impacts analysis. The failure mode is always the same: the register captures the routine and misses the occasional, the small, the "we hardly ever do that." But impact doesn't care how often you do something.
+
+We rebuilt the register by walking the site with operators, not from a desk — asking at every step, what goes in, what comes out, what could go wrong. Eleven unmapped aspects surfaced. The smell was controlled within a month. A register built from the floor, not the office, is the whole game.` },
+{ day: 98, ref: 'ISO 14001', slug: 'iso-14001-case-the-spill-drill', title: 'Case: the spill drill that paid for itself', body: `A chemical distributor had an emergency-preparedness procedure — thorough, laminated, never rehearsed. ISO 14001 asks you to test such procedures; they treated it as a formality and ran a tick-box drill each year.
+
+I asked them to run a real one: unannounced, mid-shift, a simulated drum spill near a drain. It went badly. The spill kit was locked in an office nobody could open quickly. Two staff didn't know which drain led to the watercourse. The clock ran far past the point where a real spill would have reached the river.
+
+Nobody was blamed — that was the point. The drill's job is to fail on paper so it doesn't fail for real. We moved the kits, drilled the drain map, and repeated the exercise quarterly.
+
+Eight months later an actual spill occurred. It was contained in minutes, well short of the drain. The regulator noted the response approvingly. One honest drill had turned a potential prosecution into a non-event.` },
+{ day: 99, ref: 'ISO 14001', slug: 'iso-14001-case-energy-as-a-by-product', title: 'Case: energy savings as a by-product', body: `A packaging firm implemented ISO 14001 to satisfy a major customer. They expected cost — audits, paperwork, a certificate to renew. They didn't expect the standard to pay for itself.
+
+Building the aspects register forced them, for the first time, to measure energy and material flows precisely rather than as a single monthly bill. Measurement is clarifying. It revealed compressed-air leaks running around the clock, ovens heating through unproductive nights, and off-cuts scrapped that a small change in nesting could have saved.
+
+None of this was exotic. It was simply invisible until the environmental system made someone look. The objectives-and-targets discipline then turned findings into owned actions with deadlines.
+
+In the first year, energy use fell nine percent and material waste seven — savings that dwarfed the cost of certification. The environmental manager stopped being seen as an overhead and started being invited to operations meetings. Sustainability and cost, so often framed as rivals, turned out to be reading the same meter.` },
+{ day: 100, ref: 'ISO 14001', slug: 'iso-14001-case-permits-and-trust', title: 'Case: permits, discharges and community trust', body: `Day 100. A water-intensive processor sat beside a residential area that had learned, over years, to distrust it. Every permit renewal became a fight; every rumour of a discharge drew complaints. The relationship was pure friction.
+
+Their ISO 14001 system was technically sound — discharges within limits, permits current, legal control solid. But compliance and trust are different currencies. The community didn't have the data; they had the memories.
+
+We used the environmental system as a bridge. Monitoring data that already existed for the regulator was published, plainly, for neighbours too — including the ordinary days when everything was within limits. A quarterly open note explained what the plant did, what it discharged, and what it was improving. When an exceedance happened, they reported it first, themselves, with the fix attached.
+
+Nothing in the discharges changed much. The relationship changed completely. Permit renewals stopped being ambushes. The lesson: environmental legal control keeps you operating, but transparency is what earns the licence the permit alone never grants.` },
+{ day: 101, ref: 'ISO 27001', slug: 'iso-27001-security-as-a-system', title: 'ISO 27001: security as a system, not a firewall', body: `The next five cases turn to ISO 27001, information security — the standard most likely to be mistaken for an IT project. It is not. It is a management system that happens to protect information.
+
+The tell is who owns it. Where 27001 is run by IT alone, it becomes a pile of technical controls defending against yesterday's threats while the real exposures — a careless process, an over-privileged contractor, a supplier with your data — sit untouched, because they aren't IT's to fix.
+
+Read properly, 27001 starts not with firewalls but with a question: what information matters, what could go wrong with it, and what will we do about each risk — accept, mitigate, transfer or avoid? The Annex A controls come after that analysis, chosen because a risk demanded them, not because a checklist listed them.
+
+Four cases follow: a risk nobody owned, continuity tested for real, the human layer, and Annex A controls that actually fit the business instead of strangling it.` },
+{ day: 102, ref: 'ISO 27001', slug: 'iso-27001-case-the-risk-nobody-owned', title: 'Case: the information risk nobody owned', body: `A professional-services firm had a mature-looking ISO 27001 risk register. Dozens of entries, neat scores, all with a treatment. But one of their biggest exposures wasn't on it: a practice of emailing sensitive client files to personal accounts to work from home.
+
+Everyone knew it happened. It wasn't on the register because it wasn't anyone's job to own — not IT's (the staff were technically allowed email), not the partners' (they did it too), not compliance's (no one had raised it).
+
+ISO 27001's risk assessment only works when every significant risk has a named owner with the authority to act. Orphan risks — known, unowned — are where breaches are born.
+
+We assigned ownership at partner level, provided a secure remote-work alternative that was actually easier than the workaround, and the behaviour stopped because the safe path was the convenient one. The register isn't a list of controls; it's a map of who is accountable for what could go wrong. Fill the ownership gaps first.` },
+{ day: 103, ref: 'ISO 27001', slug: 'iso-27001-case-continuity-tested-for-real', title: 'Case: business continuity, tested for real', body: `A fintech had a business-continuity plan that read beautifully. Recovery time objectives, backup sites, call trees — all documented for their ISO 27001 certification, none ever exercised under realistic conditions.
+
+I asked to test it properly: assume the primary system is down and unrecoverable, now, during business hours. Walk me through it. Within twenty minutes the plan had unravelled. Backups existed but no one had restored one in a year — and the last restore, we discovered, would have failed. The call tree listed a key engineer who'd left. The "alternate site" needed access nobody present could grant.
+
+None of this is unusual. A continuity plan that has never been tested is a hypothesis, not a capability. The standard asks for testing precisely because paper plans hide these gaps.
+
+We ran quarterly restores, fixed the tree, and rehearsed a full failover. Six months later a real outage hit. Recovery took under an hour. The plan finally described what the organisation could actually do — because it had done it.` },
+{ day: 104, ref: 'ISO 27001', slug: 'iso-27001-case-the-human-layer', title: 'Case: the human layer of security', body: `A retailer had spent heavily on ISO 27001 technical controls — segmentation, encryption, monitoring. Then a finance clerk wired a large sum to a fraudster who had simply emailed, posing as the CEO, with a plausible urgent request. No firewall was breached. The human was.
+
+Most real incidents I see enter through people, not systems: a convincing email, a reused password, a helpful employee holding a door. ISO 27001 knows this — awareness and human controls sit right alongside the technical ones — but organisations spend on the visible layer and neglect the human one because technology feels like control and culture feels soft.
+
+We shifted investment. Short, frequent, realistic awareness sessions replaced the annual slideshow. A simple verification rule — any payment change confirmed by a second channel — was made non-negotiable and, crucially, praised rather than mocked when someone used it to slow a real request.
+
+The next impersonation attempt failed at the second-channel check. The strongest control cost almost nothing: a habit.` },
+{ day: 105, ref: 'ISO 27001', slug: 'iso-27001-case-annex-a-that-fit', title: 'Case: Annex A controls that actually fit', body: `A small software company adopted ISO 27001 and, terrified of missing something, implemented nearly every Annex A control at full strength. Two things happened: developers drowned in process, and shipping slowed to a crawl. Security had become the enemy of the business it was meant to protect.
+
+Annex A is a menu, not a mandate. The Statement of Applicability exists precisely so you can justify what you apply and what you don't, proportionate to your actual risks. Applying everything maximally isn't rigour — it's a failure to do the risk analysis that decides what matters.
+
+We went back to the risks. For a cloud software firm, source-code integrity, access management and secure development mattered enormously; certain physical and legacy controls barely applied. We right-sized accordingly, documented the reasoning, and handed developers controls that fit how they actually worked.
+
+Certification held. Velocity recovered. Security improved, because controls people can live with get used. Proportion, not maximalism, is what the standard actually asks for.` },
+{ day: 106, ref: 'ISO 45001', slug: 'iso-45001-safety-is-a-culture', title: 'ISO 45001: safety is a culture, not a poster', body: `The next five cases turn to ISO 45001, occupational health and safety — the standard where the gap between paperwork and reality is measured in injuries.
+
+Every organisation I visit has safety posters. Many have thick manuals and low incident numbers on paper. Yet the felt reality on the floor can be entirely different: near-misses unreported, shortcuts normalised, protective equipment worn for the auditor and removed after. A low recorded rate can mean a safe site — or a silent one.
+
+ISO 45001's quiet revolution is worker participation. Safety designed by a manager at a desk and issued downward rarely sticks. Safety designed with the people who face the hazard does, because they know where the real risks hide and they own the rules they helped write.
+
+Four cases follow: a near-miss that finally spoke up, workers who redesigned their own safety, maintenance understood as risk management, and a drill that changed behaviour rather than ticking a box.` },
+{ day: 107, ref: 'ISO 45001', slug: 'iso-45001-case-the-near-miss-that-spoke', title: 'Case: the near-miss that spoke up', body: `A warehouse had gone two years without a recordable injury and was proud of it. The ISO 45001 numbers looked excellent. Then a pallet fell from height, narrowly missing a worker, and the investigation revealed the near-miss had almost happened a dozen times before — unreported every time.
+
+Why unreported? Because reporting a near-miss took a form, a supervisor's frown, and a suspicion that it counted against your team. So people stayed quiet, and the organisation flew blind toward the injury that was clearly coming.
+
+Near-misses are free lessons — the accident without the harm. A safety system that doesn't harvest them is waiting for the real thing. ISO 45001's incident process is meant to catch exactly these.
+
+We made reporting a near-miss thirty seconds and blameless, and — the key move — visibly acted on them, fixing the racking that kept almost-failing. Reports jumped from near-zero to dozens a month. That looks like a worse site. It was a far safer one, finally able to see its own risks.` },
+{ day: 108, ref: 'ISO 45001', slug: 'iso-45001-case-workers-who-design-safety', title: 'Case: workers who design their own safety', body: `A food factory kept having the same hand injuries at one machine, despite escalating warnings, stricter rules and sterner posters. Management's response was always more control from above. The injuries continued.
+
+ISO 45001 asks for worker participation not as a courtesy but because it works. So we tried it. Instead of issuing another rule, we put the operators who ran the machine in a room and asked them to redesign the task safely. They knew instantly why the rules were ignored: the guard made a frequent adjustment impossibly slow, so people reached past it under time pressure.
+
+The operators proposed a simple guard modification that made the safe way also the fast way. Engineering built it. The injuries stopped — not because compliance improved, but because the conflict between safe and quick was designed out by the people who lived it.
+
+Safety imposed downward fights human nature. Safety designed with the exposed aligns with it. The standard points squarely at the second, and the second is what holds.` },
+{ day: 109, ref: 'ISO 45001', slug: 'iso-45001-case-maintenance-and-risk', title: 'Case: maintenance as risk management', body: `A manufacturer treated maintenance and safety as separate departments with separate systems. Their ISO 45001 covered procedures and PPE; maintenance was a cost line to be minimised. Then a deferred repair on a conveyor caused a serious injury, and the two worlds collided.
+
+The failure was predictable in hindsight. A guard interlock had been intermittently faulty for weeks. Maintenance, under pressure to cut spend, had kept deferring it as "not critical." No one had connected an equipment defect to a safety risk, because the systems that tracked each never spoke.
+
+ISO 45001 treats plant integrity as a safety matter, not just an availability one. We linked the two: any defect with a safety dimension jumped the maintenance queue automatically, with a safety owner able to stop the line.
+
+Downtime rose slightly; injuries and near-misses fell sharply, and — the pleasant surprise — unplanned breakdowns dropped too, because deferred maintenance had been quietly causing those as well. Safe equipment and reliable equipment turned out to be the same equipment.` },
+{ day: 110, ref: 'ISO 45001', slug: 'iso-45001-case-the-drill-that-changed-behaviour', title: 'Case: the emergency drill that changed behaviour', body: `A logistics site ran its annual fire drill the same way for years: pre-announced, mid-morning, everyone strolling to the car park, a tick in the ISO 45001 box. It proved nothing except that people could walk.
+
+We ran one differently — unannounced, with one exit realistically blocked. The result was sobering. People bunched at the blocked door instead of using alternatives. Two visitors were forgotten entirely. The assembly point headcount didn't reconcile for eleven minutes — eleven minutes in which, in a real fire, no one would have known who was still inside.
+
+A drill's value is exactly this discomfort. A comfortable drill teaches nothing; an honest one exposes what the plan assumed and the building disproves.
+
+We fixed the signage, drilled alternate routes, and gave visitors a clear owner. The next unannounced drill reconciled in under three minutes. The point of emergency preparedness isn't the document; it's the behaviour under stress — and behaviour only changes when the practice feels real.` },
+{ day: 111, ref: 'ISO 42001', slug: 'iso-42001-governing-ai', title: 'ISO 42001: governing AI before it governs you', body: `The next five cases turn to the newest standard in this series — ISO 42001, the first certifiable management system for artificial intelligence. It arrives exactly as organisations are deploying AI faster than they can govern it.
+
+The pattern is familiar from every earlier technology wave, only faster. Teams adopt powerful tools locally, informally, invisibly. Value appears quickly; so does exposure — a model making decisions no one can explain, trained on data no one vetted, drifting quietly out of accuracy while everyone trusts its output.
+
+ISO 42001 asks the governance questions that enthusiasm skips: what AI systems do we actually run, what could each one get wrong and who would it harm, who is accountable, and how do we oversee systems that learn and change? Not to slow AI down, but to let an organisation scale it without sleepwalking into harm.
+
+Four cases follow: the AI system nobody had listed, an impact assessment before launch, human oversight that actually worked, and data governance as the real foundation.` },
+{ day: 112, ref: 'ISO 42001', slug: 'iso-42001-case-the-model-nobody-listed', title: 'Case: the AI system nobody had listed', body: `A mid-sized insurer began its ISO 42001 journey confident it used AI in two places: a chatbot and a pricing model. The inventory exercise found nine.
+
+The other seven had crept in unnoticed. A marketing team using a generative tool on customer data. A spreadsheet macro quietly upgraded to a machine-learning plugin. A recruitment filter embedded in an HR platform, screening candidates by criteria no one had reviewed. Each adopted locally, for good reasons, with no governance and no one accountable.
+
+ISO 42001 starts, like most management systems, with knowing what you have. You cannot govern, assess or oversee AI systems you don't know exist — and shadow AI proliferates precisely because these tools are easy to switch on and invisible once running.
+
+The recruitment filter was the wake-up call: it turned out to be quietly disadvantaging a protected group, a legal and ethical exposure no one had chosen. Building the inventory wasn't bureaucracy. It was the moment the organisation could finally see, and govern, what it was already doing.` },
+{ day: 113, ref: 'ISO 42001', slug: 'iso-42001-case-impact-before-launch', title: 'Case: an impact assessment before launch', body: `A bank was weeks from launching an AI system to flag loan applications for review. Technically it worked well. Under ISO 42001, before deployment, they ran an impact assessment — and paused.
+
+The assessment asked plain questions the build phase hadn't: who is affected by this system's decisions, how could it be wrong, and who bears the cost when it is? The model, it emerged, had learned from historical decisions that carried historical bias. Left unexamined, it would have automated and scaled that bias, flagging some applicants disproportionately while wearing the authority of objective maths.
+
+This is exactly what impact assessment is for: catching harm before launch, when it is cheap to fix, rather than after, when it is a scandal and a lawsuit. The team retrained on corrected data, added monitoring for disparate impact, and kept a human decision on every flag.
+
+The launch slipped six weeks. That delay was the cheapest insurance the bank bought all year. Governance before deployment is not friction — it is the difference between a tool and a liability.` },
+{ day: 114, ref: 'ISO 42001', slug: 'iso-42001-case-human-oversight-that-worked', title: 'Case: human oversight that actually worked', body: `"There's always a human in the loop," a healthcare provider assured me about their AI triage tool. On paper, true — a nurse confirmed every recommendation. In practice, the oversight was hollow.
+
+The tool was right often enough that confirming it became reflex. Hundreds of times a shift, the nurse clicked accept. Genuine human oversight had decayed into rubber-stamping — the well-known automation trap, where a reliable system trains its overseer to stop overseeing.
+
+ISO 42001 asks for meaningful human oversight, and meaningful is the operative word. A human who cannot realistically disagree is not oversight; they are decoration providing false comfort.
+
+We redesigned it. The tool now surfaced its confidence and its reasoning, not just a verdict. Low-confidence or unusual cases were flagged for genuine review; routine ones flowed faster. The nurse's attention was spent where judgement actually mattered, and disagreeing was made easy and blameless.
+
+Override rates rose from near-zero to meaningful — proof that oversight was finally real. The lesson: a human in the loop is worthless unless the loop is designed for them to matter.` },
+{ day: 115, ref: 'ISO 42001', slug: 'iso-42001-case-data-governance-foundation', title: 'Case: data governance as the foundation', body: `A retailer's demand-forecasting AI had quietly degraded for months. Forecasts drifted, stock decisions worsened, and no one noticed until the losses showed up in inventory. The model hadn't broken. Its data had.
+
+A supplier had changed how a category was coded upstream. The model, trained on the old coding, kept confidently producing wrong answers from newly-meaningless inputs. Nobody was watching the data feeding the system, because governance had focused entirely on the model and treated its inputs as a given.
+
+ISO 42001 keeps returning to data governance because AI systems are only as trustworthy as what flows into them. A perfect model on drifting data is a confident liar. The failure is rarely dramatic; it is silent, gradual, and invisible until it's expensive.
+
+We instituted data-quality monitoring at the model's inputs — schema checks, distribution alerts, an owner for each critical feed. The next upstream change triggered an alert in a day, not a quarter. Governing AI, it turns out, is mostly governing the data beneath it. Everything else sits on that foundation.` },
+{ day: 116, ref: 'ISO 56001', slug: 'iso-56001-innovation-as-a-system', title: 'ISO 56001: making innovation repeatable', body: `The final five cases turn to ISO 56001, innovation management — and to the paradox at its heart. Can something as unruly as innovation really be systematised without being killed?
+
+The answer, done well, is yes — because the standard doesn't try to systematise the creative spark. It systematises everything around it: how ideas are captured so they aren't lost, how they're selected without politics, how they're funded proportionately to test cheaply, and how the organisation learns whether any of it worked.
+
+Most organisations don't lack ideas. They lack the plumbing between an idea and a result. Good thoughts die in inboxes, or in approval processes designed for factory expansions, or for want of a small budget and a fast test. ISO 56001 is that plumbing.
+
+Four cases follow: ideas that finally found a home, an innovation portfolio rather than a punt, strategic intelligence that changed direction, and — on day 120 — measuring the innovation that actually matters, and a word on where these 120 days leave you.` },
+{ day: 117, ref: 'ISO 56001', slug: 'iso-56001-case-ideas-that-found-a-home', title: 'Case: the ideas that finally found a home', body: `An engineering firm was sure its people had stopped innovating. Suggestion numbers were near zero. Leadership blamed culture and considered a motivational push.
+
+The truth, we found, was simpler and more damning. People had plenty of ideas. They had simply learned that raising one led nowhere: a suggestion box that fed a black hole, no response, no visible outcome, ever. The organisation had trained its own staff into silence, then mistaken the silence for apathy.
+
+ISO 56001's idea-management process exists precisely to prevent this. An idea system that doesn't respond is worse than none — it actively teaches cynicism.
+
+We built the minimum that works: an easy way to submit, a promise of a response within two weeks, and — the crucial part — visible outcomes. A few early ideas were funded, tested and credited publicly to the people who raised them.
+
+Submissions went from a trickle to a flood within a quarter. The ideas had always been there. What was missing was the belief that raising one mattered. Restore that, and the pipeline fills itself.` },
+{ day: 118, ref: 'ISO 56001', slug: 'iso-56001-case-a-portfolio-not-a-punt', title: 'Case: an innovation portfolio, not a punt', body: `A consumer-goods company innovated in the most dangerous way: occasional big bets, each championed by a senior sponsor, each funded to the hilt, each all-or-nothing. When one failed, as most did, the loss was large and the appetite for the next shrank.
+
+ISO 56001 encourages managing innovation as a portfolio rather than a series of punts — a spread of small, cheap experiments alongside fewer larger bets, with funding released in stages as evidence accumulates.
+
+We restructured accordingly. Instead of one big annual bet, dozens of small experiments ran with modest budgets and clear kill criteria. Most were stopped early and cheaply — which is success, not failure, when a wrong idea dies for the price of a prototype. The few that showed promise earned their next tranche.
+
+Within a year the company launched more, lost less on failures, and — because small tests surface surprises — stumbled onto a product line no big-bet process would have imagined. Innovation isn't gambling. Managed as a portfolio, it's closer to disciplined investing.` },
+{ day: 119, ref: 'ISO 56001', slug: 'iso-56001-case-strategic-intelligence', title: 'Case: strategic intelligence that changed direction', body: `A specialist manufacturer prided itself on deep expertise in its niche — expertise that had, without anyone noticing, curdled into a blind spot. They innovated busily, but only within the assumptions of a market that was quietly shifting beneath them.
+
+ISO 56001 asks for strategic intelligence: a deliberate, outward-looking scan of trends, technologies, customers and adjacent markets that feeds innovation choices. Without it, organisations optimise brilliantly toward an obsolete target — the classic fate of the expert who mistakes yesterday's map for today's territory.
+
+We built a light, regular intelligence rhythm: a small cross-functional group scanning signals outside the niche each quarter and bringing findings into the innovation portfolio. One scan surfaced a shift in how customers wanted to buy — a change that threatened the core business within five years.
+
+Because they saw it early, they could act deliberately rather than react in crisis. The most valuable innovation that year wasn't a product. It was noticing, in time, that the direction itself had to change. Intelligence is what points innovation at the right problem.` },
+{ day: 120, ref: 'ISO 56001', slug: 'iso-56001-case-measuring-what-matters', title: 'Day 120: measuring innovation — and where this leaves you', body: `The final case, and the final day. A technology firm measured innovation proudly: number of ideas submitted, projects launched, R&D spend. The numbers rose every year. Yet almost nothing reached customers or moved results. They were measuring activity and calling it innovation.
+
+ISO 56001 pushes toward outcome metrics — value created, not motion generated. We changed what they counted: revenue from products launched in the last three years, time from idea to market, the rate at which experiments produced usable learning. Uncomfortable numbers, at first. But they redirected effort from looking busy to creating value, and within a year the pipeline told the truth instead of a flattering story.
+
+That closes 120 days. Ninety on the EFQM Model 2025 — purpose to sustainability — and thirty on the ISO standards doing real work in real organisations. One thread runs through all of it: a management system earns its keep only when it changes a decision. Everything else is paperwork.
+
+Thank you for reading. If your organisation is ready to turn any of this from reading into practice, you know where to find us.` },
 ]
 
 /* ------------------------------------------------------------------

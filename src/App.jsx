@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { LangProvider } from './i18n.jsx'
 import CookieNotice from './components/CookieNotice.jsx'
+import WhatsAppButton from './components/WhatsAppButton.jsx'
 import Home from './pages/Home.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
@@ -52,6 +53,7 @@ export default function App() {
           </Routes>
         </Suspense>
         <CookieNotice />
+        <WhatsAppButton />
       </AuthProvider>
     </LangProvider>
   )

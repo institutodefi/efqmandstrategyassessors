@@ -88,3 +88,22 @@ create policy "Anyone can submit an inquiry"
 -- create policy "Users read own folder"
 --   on storage.objects for select
 --   using (bucket_id = 'client-docs' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- 5) SUBSCRIBERS — newsletter sign-ups (fallback when Brevo isn't wired yet)
+create table if not exists public.subscribers (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  locale text default 'en',
+  consent boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+alter table public.subscribers enable row level security;
+
+-- Anyone may subscribe (insert only)…
+create policy "Anyone can subscribe"
+  on public.subscribers for insert
+  with check (true);
+
+-- …but nobody can read the list through the anon key.
+-- Read it in the Supabase dashboard or with the service-role key.
