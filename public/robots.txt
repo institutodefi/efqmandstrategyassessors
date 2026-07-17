@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /portal
-Disallow: /login
-
-Sitemap: https://efqmassessors.ae/sitemap.xml
