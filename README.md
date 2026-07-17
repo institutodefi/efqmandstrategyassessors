@@ -157,3 +157,11 @@ index.html                Meta, Open Graph, JSON-LD, noscript fallback
 - **Client-zone button** carries a padlock icon and an attention pulse.
 - **Cookie consent** appears as a centred pop-up (dimmed backdrop) on first visit — Accept all / Reject all / Customise — reopenable from the footer.
 - The team section currently features Alejandro San Nicolás; Rosa García Sánchez is kept in `src/i18n.jsx` but not rendered (change `[t.team.alex]` back to `[t.team.alex, t.team.rosa]` in `src/pages/Home.jsx` to show her again).
+
+## Social, sharing & localisation
+
+- **Social profiles** — `SOCIAL` array in `src/lib/site.js` (LinkedIn, X, Instagram, Facebook), rendered as icons in the footer. **Update the URLs with the real handles.**
+- **Automatic social posting** — a static site can't post to networks itself; connect the RSS feed to Zapier / Make / Buffer to auto-publish each new post. Full instructions in `SOCIAL-AUTOMATION.md`. The RSS feed now includes each post's preview image (`<enclosure>` + `<media:content>`).
+- **Per-post share bar** — every blog post has share buttons (LinkedIn, X, Facebook, WhatsApp, copy-link).
+- **Blog preview images** — 120 branded 1200×630 PNGs in `public/blog/<slug>.png`, generated for each post. Used as the blog-card thumbnail, the post hero image, and the per-post link-preview (OG) image.
+- **Country detection + local currency** — `src/context/CurrencyContext.jsx` looks up the visitor's country by IP (via `ipwho.is`) once and shows prices in the local currency (Dubai → AED), with a manual currency selector on the pricing section. Rates and the country→currency map live in `src/lib/site.js` (EUR base; EUR→AED ≈ 4.20). Only the resolved currency is stored (never the IP); noted in the privacy policy. The geolocation domain is allow-listed in the CSP (`netlify.toml`).

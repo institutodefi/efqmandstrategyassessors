@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { LangProvider } from './i18n.jsx'
+import { CurrencyProvider } from './context/CurrencyContext.jsx'
 import CookieNotice from './components/CookieNotice.jsx'
 import WhatsAppButton from './components/WhatsAppButton.jsx'
 import Home from './pages/Home.jsx'
@@ -24,6 +25,7 @@ export default function App() {
   return (
     <LangProvider>
       <AuthProvider>
+        <CurrencyProvider>
         <Suspense fallback={<Fallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -54,6 +56,7 @@ export default function App() {
         </Suspense>
         <CookieNotice />
         <WhatsAppButton />
+        </CurrencyProvider>
       </AuthProvider>
     </LangProvider>
   )

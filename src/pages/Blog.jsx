@@ -54,6 +54,9 @@ export default function Blog() {
             <div className="post-list">
               {published.map((p) => (
                 <article className="post-card" key={p.slug}>
+                  <Link to={`/blog/${p.slug}`} className="post-thumb" aria-hidden="true" tabIndex="-1">
+                    <img src={`/blog/${p.slug}.png`} width="1200" height="630" alt="" loading="lazy" />
+                  </Link>
                   <div className="post-meta">
                     <span className="post-day">{t.blog.day} {p.day} <em>{t.blog.of}</em></span>
                     <span className="post-ref">{p.ref}</span>

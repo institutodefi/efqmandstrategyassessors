@@ -110,7 +110,7 @@ export const STRINGS = {
     },
     footer: {
       blurb: 'EFQM and Strategy Assessors FZCO helps organisations achieve sustainable excellence through the EFQM Model — assessment, recognition, strategy and training across the Americas, Europe and MENA.',
-      navigate: 'Navigate', contact: 'Contact', legalHeading: 'Legal',
+      navigate: 'Navigate', contact: 'Contact', legalHeading: 'Legal', follow: 'Follow us',
       addr1: 'Building A1, Dubai Digital Park', addr2: 'Dubai Silicon Oasis, Dubai, UAE',
       legal: 'EFQM and Strategy Assessors FZCO · Trade License 59735 · Dubai, UAE',
       group: 'Part of the TuConsultor Group',
@@ -155,6 +155,7 @@ export const STRINGS = {
       sub: 'A prepaid subscription to a team of AI-boosted consultants. A fixed monthly price, no surprises — you choose how intensively we work alongside you.',
       from: 'From', unit: '/month', currency: '€', popular: 'Most chosen', cta: 'Choose this model',
       note: 'Prepaid monthly subscription · prices exclude VAT · 12-month minimum term.',
+      priceIn: 'Prices in', fromEur: 'converted from EUR at indicative rates',
       tiers: [
         { name: 'Relationship', tagline: 'To start exploring', price: '350', features: ['TuConsultor AI platform', '1 specialised consultant', 'On-demand sessions', 'Free initial diagnosis', '24/7 chat support'] },
         { name: 'Involvement', tagline: 'To advance with focus', price: '625', popular: true, features: ['Everything in Relationship, +', '2 dedicated consultants', '6 h/month of consultancy', 'Personalised roadmap', 'Premium templates', 'Monthly review', 'Teams & SharePoint'] },
@@ -211,7 +212,7 @@ export const STRINGS = {
       eyebrow: 'EFQM, one concept a day',
       titleA: 'The ', strong: '120-day', titleB: ' excellence programme',
       sub: 'A daily post by Alejandro San Nicolás — 90 days on the EFQM Model 2025, then 30 real cases across the ISO standards (9001, 14001, 27001, 45001, 42001, 56001). A new post every morning, in English and Arabic.',
-      by: 'By', readMore: 'Read', rss: 'RSS feed',
+      by: 'By', readMore: 'Read', rss: 'RSS feed', share: 'Share', copy: 'Copy link', copied: 'Link copied',
       day: 'Day', of: 'of 120',
       upcoming: 'Coming up', upcomingSub: 'The programme continues — one concept a day.',
       backToBlog: '← All posts', prev: '← Previous', next: 'Next →',
@@ -355,7 +356,7 @@ export const STRINGS = {
     },
     footer: {
       blurb: 'تساعد EFQM and Strategy Assessors FZCO المؤسسات على تحقيق التميّز المستدام من خلال نموذج EFQM — تقييم واعتراف واستراتيجية وتدريب في الأمريكتين وأوروبا والشرق الأوسط وشمال أفريقيا.',
-      navigate: 'روابط', contact: 'اتصل بنا', legalHeading: 'الشؤون القانونية',
+      navigate: 'روابط', contact: 'اتصل بنا', legalHeading: 'الشؤون القانونية', follow: 'تابعونا',
       addr1: 'مبنى A1، حديقة دبي الرقمية', addr2: 'واحة دبي للسيليكون، دبي، الإمارات',
       legal: 'EFQM and Strategy Assessors FZCO · رخصة تجارية 59735 · دبي، الإمارات',
       group: 'جزء من مجموعة TuConsultor',
@@ -400,6 +401,7 @@ export const STRINGS = {
       sub: 'اشتراك مدفوع مسبقاً في فريق من المستشارين المدعومين بالذكاء الاصطناعي. سعر شهري ثابت بلا مفاجآت — أنتم تختارون مدى كثافة عملنا معكم.',
       from: 'ابتداءً من', unit: '/شهر', currency: '€', popular: 'الأكثر اختياراً', cta: 'اختر هذا النموذج',
       note: 'اشتراك شهري مدفوع مسبقاً · الأسعار لا تشمل ضريبة القيمة المضافة · حدّ أدنى 12 شهراً.',
+      priceIn: 'الأسعار بعملة', fromEur: 'محوّلة من اليورو بأسعار استرشادية',
       tiers: [
         { name: 'العلاقة', tagline: 'للبدء في الاستكشاف', price: '350', features: ['منصّة TuConsultor للذكاء الاصطناعي', 'مستشار متخصص واحد', 'جلسات عند الطلب', 'تشخيص أولي مجاني', 'دعم محادثة 24/7'] },
         { name: 'المشاركة', tagline: 'للتقدّم بتركيز', price: '625', popular: true, features: ['كل ما في «العلاقة»، +', 'مستشاران مخصّصان', '6 ساعات استشارة شهرياً', 'خارطة طريق مخصّصة', 'قوالب متميّزة', 'مراجعة شهرية', 'Teams وSharePoint'] },
@@ -456,7 +458,7 @@ export const STRINGS = {
       eyebrow: 'EFQM، مفهوم واحد كل يوم',
       titleA: 'برنامج التميّز في ', strong: '120 يوماً', titleB: '',
       sub: 'مقال يومي بقلم أليخاندرو سان نيكولاس — 90 يوماً حول نموذج EFQM 2025، ثم 30 حالة عملية عبر مواصفات ISO (9001 و14001 و27001 و45001 و42001 و56001). مقال جديد كل صباح، بالعربية والإنجليزية.',
-      by: 'بقلم', readMore: 'اقرأ', rss: 'خلاصة RSS',
+      by: 'بقلم', readMore: 'اقرأ', rss: 'خلاصة RSS', share: 'مشاركة', copy: 'نسخ الرابط', copied: 'تم نسخ الرابط',
       day: 'اليوم', of: 'من 120',
       upcoming: 'قادم قريباً', upcomingSub: 'يستمر البرنامج — مفهوم واحد كل يوم.',
       backToBlog: '→ جميع المقالات', prev: '→ السابق', next: 'التالي ←',

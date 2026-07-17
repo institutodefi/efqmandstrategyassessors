@@ -25,6 +25,7 @@ const items = POSTS
   .slice(0, MAX_ITEMS)
   .map((p) => {
     const url = `${ORIGIN}/blog/${p.slug}`
+    const img = `${ORIGIN}/blog/${p.slug}.png`
     const summary = p.body.split('\n\n')[0]
     const pub = postDate(p.day).toUTCString()
     return `    <item>
@@ -34,6 +35,9 @@ const items = POSTS
       <dc:creator>${esc(AUTHOR)}</dc:creator>
       <category>${esc(p.ref)}</category>
       <pubDate>${pub}</pubDate>
+      <enclosure url="${img}" type="image/png" length="0" />
+      <media:content url="${img}" medium="image" type="image/png" />
+      <media:thumbnail url="${img}" />
       <description>${esc(summary)}</description>
     </item>`
   })
@@ -44,6 +48,7 @@ const lastBuild = new Date().toUTCString()
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:media="http://search.yahoo.com/mrss/"
      xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>EFQM and Strategy Assessors — Blog</title>

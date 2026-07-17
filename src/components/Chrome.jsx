@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
 import { openCookieSettings } from './CookieNotice.jsx'
+import { SOCIAL } from '../lib/site.js'
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
@@ -94,6 +95,14 @@ export function Footer() {
           <div>
             <img src="/brand/wordmark-white.png" alt="EFQM and Strategy Assessors" />
             <p style={{ maxWidth: '34em', fontSize: '0.92rem' }}>{t.footer.blurb}</p>
+            <div className="footer-social" aria-label={t.footer.follow}>
+              {SOCIAL.map((s) => (
+                <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer"
+                   aria-label={s.name} title={s.name}>
+                  <SocialIcon name={s.icon} />
+                </a>
+              ))}
+            </div>
           </div>
           <div>
             <h4>{t.footer.navigate}</h4>
@@ -307,5 +316,20 @@ export function ExcellenceOrbit() {
         <image href="/brand/spiral.png" x="150" y="150" width="100" height="100" />
       </svg>
     </div>
+  )
+}
+
+// Filled brand glyphs for social links (separate from the stroke-based Icon).
+export function SocialIcon({ name }) {
+  const glyphs = {
+    linkedin: <path d="M4.98 3.5a2.5 2.5 0 11-.02 5.001A2.5 2.5 0 014.98 3.5zM3 8.98h4V21H3zM9 8.98h3.83v1.64h.05c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.14V21h-4v-5.38c0-1.28-.02-2.94-1.79-2.94-1.79 0-2.06 1.4-2.06 2.85V21H9z" />,
+    x: <path d="M17.53 3H20.5l-6.49 7.42L21.75 21h-6l-4.7-6.14L5.66 21H2.68l6.94-7.93L2.25 3h6.16l4.25 5.62L17.53 3zm-1.05 16.2h1.65L7.6 4.71H5.83z" />,
+    facebook: <path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z" />,
+    instagram: <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.52.01-4.76.07-1.15.05-1.77.24-2.19.4-.55.22-.94.47-1.35.88-.41.41-.66.8-.88 1.35-.16.42-.35 1.04-.4 2.19-.06 1.24-.07 1.61-.07 4.76s.01 3.52.07 4.76c.05 1.15.24 1.77.4 2.19.22.55.47.94.88 1.35.41.41.8.66 1.35.88.42.16 1.04.35 2.19.4 1.24.06 1.61.07 4.76.07s3.52-.01 4.76-.07c1.15-.05 1.77-.24 2.19-.4.55-.22.94-.47 1.35-.88.41-.41.66-.8.88-1.35.16-.42.35-1.04.4-2.19.06-1.24.07-1.61.07-4.76s-.01-3.52-.07-4.76c-.05-1.15-.24-1.77-.4-2.19a3.6 3.6 0 00-.88-1.35 3.6 3.6 0 00-1.35-.88c-.42-.16-1.04-.35-2.19-.4-1.24-.06-1.61-.07-4.76-.07zm0 2.76a5.29 5.29 0 110 10.58 5.29 5.29 0 010-10.58zm0 1.62a3.67 3.67 0 100 7.34 3.67 3.67 0 000-7.34zm5.48-.29a1.24 1.24 0 11-2.47 0 1.24 1.24 0 012.47 0z" />,
+  }
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      {glyphs[name]}
+    </svg>
   )
 }

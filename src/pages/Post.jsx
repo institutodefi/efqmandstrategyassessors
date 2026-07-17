@@ -6,6 +6,7 @@ import { POSTS, postDate, AUTHOR, AUTHOR_AR, localisePost } from '../data/posts.
 import { POSTS_AR } from '../data/posts_ar.js'
 import { useSeo } from '../lib/seo.js'
 import PostContact from '../components/PostContact.jsx'
+import ShareBar from '../components/ShareBar.jsx'
 
 const fmt = (d, lang) =>
   d.toLocaleDateString(lang === 'ar' ? 'ar-AE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -29,7 +30,8 @@ export default function Post() {
   useSeo(
     found ? `${found.title} — EFQM Blog` : 'EFQM Blog',
     found ? found.body.split('\n\n')[0].slice(0, 155) : '',
-    `/blog/${slug}`
+    `/blog/${slug}`,
+    found ? `/blog/${slug}.png` : null
   )
   if (idx === -1) return <Navigate to="/blog" replace />
 
@@ -50,6 +52,11 @@ export default function Post() {
           </div>
           <h1>{post.title}</h1>
           <p className="post-byline">{t.blog.by} <strong>{author}</strong> · {fmt(postDate(post.day), lang)}</p>
+
+          <img className="post-hero-img" src={`/blog/${post.slug}.png`} width="1200" height="630"
+               alt={post.title} loading="lazy" />
+
+          <ShareBar slug={post.slug} title={post.title} />
 
           <div className="post-body">
             {post.body.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}

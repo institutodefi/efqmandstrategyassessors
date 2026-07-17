@@ -4,10 +4,13 @@ import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit } from '../com
 import Newsletter from '../components/Newsletter.jsx'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../i18n.jsx'
+import { useCurrency } from '../context/CurrencyContext.jsx'
+import { priceParts, SELECTABLE } from '../lib/site.js'
 import { useSeo } from '../lib/seo.js'
 
 export default function Home() {
   const { t } = useLang()
+  const { currency, setCurrency, format } = useCurrency()
   useSeo(
     'EFQM and Strategy Assessors — Dubai · UAE',
     'Consultancy based on the EFQM Model 2025 — external assessments, international recognition, strategy, ISO and training. Based in Dubai Silicon Oasis.',
@@ -146,7 +149,14 @@ export default function Home() {
                 <p className="model-tagline">{tier.tagline}</p>
                 <div className="model-price">
                   <span className="model-from">{t.models.from}</span>
-                  <span className="model-amount">{tier.price}<em>{t.models.currency}</em></span>
+                  <span className="model-amount">
+                    {(() => {
+                      const pp = priceParts(tier.price, currency)
+                      return pp.position === 'prefix'
+                        ? <><em>{pp.symbol}</em>{pp.amount}</>
+                        : <>{pp.amount}<em>{pp.symbol}</em></>
+                    })()}
+                  </span>
                   <span className="model-unit">{t.models.unit}</span>
                 </div>
                 <ul className="model-features">
@@ -160,7 +170,23 @@ export default function Home() {
               </article>
             ))}
           </div>
-          <p className="models-note reveal">{t.models.note}</p>
+          <div className="models-foot reveal">
+            <label className="currency-picker">
+              <span>{t.models.priceIn}</span>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                aria-label={t.models.priceIn}
+              >
+                {Array.from(new Set([currency, ...SELECTABLE])).map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </label>
+            <p className="models-note">
+              {t.models.note}{currency !== 'EUR' ? ` · ${t.models.fromEur}` : ''}
+            </p>
+          </div>
         </div>
       </section>
 
