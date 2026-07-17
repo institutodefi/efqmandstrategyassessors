@@ -35,7 +35,7 @@ export default function CookieNotice() {
   useEffect(() => {
     const existing = readConsent()
     if (!existing) {
-      const id = setTimeout(() => setDecided(false), 500)
+      const id = setTimeout(() => setDecided(false), 300)
       return () => clearTimeout(id)
     } else {
       setPrefs({
@@ -90,14 +90,22 @@ export default function CookieNotice() {
 
   return (
     <>
-      {/* Banner (only before a first choice) */}
+      {/* First-visit consent — centred pop-up with backdrop */}
       {!decided && !showPrefs && (
-        <div className="consent-banner" role="dialog" aria-live="polite" aria-label={c.title}>
-          <div className="consent-inner">
-            <div className="consent-copy">
-              <strong>{c.title}</strong>
-              <p>{c.intro} <Link to="/cookies" className="consent-link">{c.more}</Link></p>
+        <div className="consent-popup-overlay" role="dialog" aria-modal="true" aria-label={c.title}>
+          <div className="consent-popup">
+            <div className="consent-popup-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="30" height="30">
+                <path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 00-2.7-19.6 2.6 2.6 0 003.2 3.4 2.6 2.6 0 002.2 2.9A2.6 2.6 0 0018 8.4 10 10 0 0012 2z" opacity="0.18"/>
+                <path fill="none" stroke="currentColor" strokeWidth="1.6" d="M20.8 11.3a10 10 0 11-8.1-9.1"/>
+                <circle cx="9" cy="10" r="1.3" fill="currentColor"/>
+                <circle cx="14" cy="14" r="1.3" fill="currentColor"/>
+                <circle cx="10.5" cy="16" r="1" fill="currentColor"/>
+                <circle cx="15.5" cy="8.5" r="1" fill="currentColor"/>
+              </svg>
             </div>
+            <strong>{c.title}</strong>
+            <p>{c.intro} <Link to="/cookies" className="consent-link">{c.more}</Link></p>
             <div className="consent-actions">
               <button className="btn btn-ghost consent-sm" onClick={() => setShowPrefs(true)}>{c.customize}</button>
               <button className="btn btn-ghost consent-sm" onClick={rejectAll}>{c.rejectAll}</button>

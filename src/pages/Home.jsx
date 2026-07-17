@@ -216,8 +216,8 @@ export default function Home() {
             <span className="eyebrow">{t.team.eyebrow}</span>
             <h2 className="section-title">{t.team.titleA}<strong>{t.team.strong}</strong>{t.team.titleB}</h2>
           </div>
-          <div className="team-grid">
-            {[t.team.alex, t.team.rosa].map((p) => (
+          <div className="team-grid solo">
+            {[t.team.alex].map((p) => (
               <article className="person reveal" key={p.name}>
                 <span className="role">{p.role}</span>
                 <h3>{p.name}</h3>

@@ -1137,3 +1137,48 @@ body.consent-banner-open .wa-fab { opacity: 0; pointer-events: none; visibility:
 }
 .rss-link:hover { border-color: var(--glow); background: rgba(88,224,180,0.08); color: var(--glow); }
 .rss-link svg { flex: none; }
+
+/* Client-zone button icon */
+.nav-cta.client-flash { display: inline-flex; align-items: center; gap: 8px; }
+.nav-cta.client-flash svg { width: 16px; height: 16px; flex: none; }
+.nav-cta.client-flash svg rect,
+.nav-cta.client-flash svg path,
+.nav-cta.client-flash svg circle { stroke: currentColor; }
+
+/* Single-person team grid — centre the card */
+.team-grid.solo { grid-template-columns: minmax(0, 640px); justify-content: center; }
+
+/* ============================================================
+   Cookie consent — first-visit centred pop-up
+============================================================ */
+.consent-popup-overlay {
+  position: fixed; inset: 0; z-index: 250;
+  background: rgba(11, 22, 40, 0.5); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: fade-in 0.25s ease;
+}
+.consent-popup {
+  background: var(--white); border-radius: 20px; max-width: 460px; width: 100%;
+  padding: 30px 28px; box-shadow: var(--shadow-lg); text-align: center;
+  animation: popup-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--line);
+}
+@keyframes popup-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.consent-popup-icon {
+  width: 60px; height: 60px; margin: 0 auto 16px; border-radius: 50%;
+  background: var(--paper-2); color: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+}
+.consent-popup strong { display: block; font-size: 1.2rem; color: var(--ink); margin-bottom: 8px; }
+.consent-popup p { font-size: 0.9rem; line-height: 1.6; color: var(--body); margin-bottom: 22px; }
+.consent-popup .consent-link { color: var(--teal); text-decoration: underline; text-underline-offset: 2px; }
+.consent-popup .consent-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.consent-popup .consent-sm { flex: 1 1 auto; min-width: 110px; }
+
+@media (max-width: 480px) {
+  .consent-popup .consent-actions { flex-direction: column-reverse; }
+  .consent-popup .consent-sm { width: 100%; }
+}

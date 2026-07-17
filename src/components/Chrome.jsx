@@ -70,7 +70,9 @@ export function Nav() {
             </div>
           </li>
           <li>
-            <Link to="/login" className="btn btn-primary nav-cta client-flash">{t.nav.client}</Link>
+            <Link to="/login" className="btn btn-primary nav-cta client-flash">
+              <Icon name="lock" /><span>{t.nav.client}</span>
+            </Link>
           </li>
         </ul>
       </div>
@@ -217,6 +219,7 @@ export function Icon({ name }) {
     radar: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><path d="M12 3v4.5M12 12l6 -3" /></>,
     chat: <><path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H9l-5 4z" /></>,
     layers: <><path d="M12 3l9 5-9 5-9-5z" /><path d="M3 13l9 5 9-5" /><path d="M3 17l9 5 9-5" /></>,
+    lock: <><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" /><circle cx="12" cy="15.5" r="1.4" /></>,
   }
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"

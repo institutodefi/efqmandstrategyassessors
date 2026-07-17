@@ -149,3 +149,11 @@ supabase/schema.sql       Tables + Row Level Security policies
 netlify.toml              SPA redirects, security headers (CSP/HSTS), caching
 index.html                Meta, Open Graph, JSON-LD, noscript fallback
 ```
+
+## Brand & social assets
+
+- **Link preview (Open Graph) image** — `public/brand/og-image.png` (1200×630), a branded card used when the site is shared on WhatsApp, LinkedIn, X, etc. Referenced via `og:image` / `twitter:image` in `index.html`.
+- **Favicon set** — `public/favicon.ico` (multi-size) plus `favicon.png`, `apple-touch-icon.png` and `icon-192/512.png` under `public/brand/`, wired into `index.html` and `site.webmanifest`.
+- **Client-zone button** carries a padlock icon and an attention pulse.
+- **Cookie consent** appears as a centred pop-up (dimmed backdrop) on first visit — Accept all / Reject all / Customise — reopenable from the footer.
+- The team section currently features Alejandro San Nicolás; Rosa García Sánchez is kept in `src/i18n.jsx` but not rendered (change `[t.team.alex]` back to `[t.team.alex, t.team.rosa]` in `src/pages/Home.jsx` to show her again).
