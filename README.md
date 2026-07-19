@@ -340,3 +340,48 @@ padlock icon. It points to `/orbital360` rather than straight to `/login`, so vi
 who don't yet have an account learn what the tool is; the page carries a prominent
 **Sign in to Orbital360** button to `/login`, so existing clients still reach the portal
 in one extra click. The footer link was updated to match.
+
+## Link previews (LinkedIn, WhatsApp, Facebook, X)
+
+**The problem this solves.** Social crawlers do not execute JavaScript. In a single-page
+app every URL serves the same `index.html`, so the per-page `og:image` set at runtime by
+`useSeo()` was never visible to them — every shared link fell back to the generic homepage
+card, or to no image at all.
+
+**The fix.** `scripts/prerender.mjs` runs automatically after `vite build` (npm `postbuild`
+hook) and writes a real HTML file per route — `dist/<path>/index.html` — with the correct
+`<title>`, description, `og:image`, `og:url`, canonical and Twitter tags baked into the
+markup. Netlify serves static files before applying the SPA redirect, so crawlers get the
+right tags while visitors still land in the React app.
+
+Covered: every published blog post (its own 1200×630 preview image), `/services` and its
+three tabs, `/model`, `/blog`, `/request` and `/orbital360` (which has a purpose-built
+`public/orbital360/og-orbital360.png`). Unpublished future posts are skipped, and
+`/contact` is intentionally excluded.
+
+> **Do not add `force = true`** to the SPA redirect in `netlify.toml` — it would bypass
+> these files and break previews again.
+
+### After deploying
+
+LinkedIn caches aggressively and will keep showing an old (or empty) card for roughly a
+week. Force a refresh per URL with the **LinkedIn Post Inspector**
+(`https://www.linkedin.com/post-inspector/`). Equivalents: Facebook Sharing Debugger,
+X Card Validator. WhatsApp caches too, but clears faster.
+
+## Orbital360 access (`/login`)
+
+The former "Client zone" sign-in is now the **Orbital360 access** page, styled as a
+premium two-column entry point:
+
+- **Left panel** — dark, with the Orbital360 logo, the product line, the four pillars
+  (Implement · Maintain · Assess · Audit) as pills, faint orbital rings, and a footer line
+  noting the encrypted connection and ISO 27001 governance.
+- **Right** — an elevated white card carrying the orbital mark and the sign-in form.
+  Sign in / create account / reset password all still work through Supabase auth, and the
+  card footers link to *What is Orbital360?* (`/orbital360`) and *Request access*
+  (`/request?service=Orbital360 AI PMTool`).
+
+The layout mirrors correctly in Arabic RTL and stacks on mobile. Copy lives in the `auth`
+block of `src/i18n.jsx` (EN + AR); styling is under "Orbital360 access" in
+`src/styles/global.css`.

@@ -7,7 +7,8 @@
     "dev": "vite",
     "prebuild": "node scripts/gen-sitemap.mjs && node scripts/gen-rss.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postbuild": "node scripts/prerender.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

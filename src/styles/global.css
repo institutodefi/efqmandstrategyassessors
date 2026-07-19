@@ -1691,3 +1691,122 @@ body.consent-banner-open .wa-fab { opacity: 0; pointer-events: none; visibility:
   .orb-hero-art img { width: min(240px, 60%); }
   .orb-what { grid-template-columns: 1fr; gap: 14px; }
 }
+
+/* ============================================================
+   Orbital360 access (/login) — premium split layout
+============================================================ */
+.orb-auth {
+  min-height: 100vh;
+  display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  background: var(--paper);
+}
+
+/* ---- left: branded panel ---- */
+.orb-auth-panel {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(760px 460px at 24% 22%, rgba(31,169,138,0.20), transparent 62%),
+    radial-gradient(620px 420px at 82% 88%, rgba(88,224,180,0.12), transparent 60%),
+    var(--ink);
+  color: var(--white);
+  padding: clamp(28px, 4vw, 52px);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+/* faint orbital rings */
+.orb-auth-panel::before {
+  content: ''; position: absolute; inset-inline-end: -180px; top: -140px;
+  width: 620px; height: 620px; border-radius: 50%;
+  border: 1px solid rgba(88,224,180,0.10);
+  box-shadow: inset 0 0 0 60px rgba(88,224,180,0.03), 0 0 0 90px rgba(88,224,180,0.04);
+  pointer-events: none;
+}
+.orb-auth-back {
+  position: relative; z-index: 1;
+  font-size: 0.82rem; font-weight: 500; color: var(--muted-on-dark);
+  transition: color 0.2s ease; align-self: flex-start;
+}
+.orb-auth-back:hover { color: var(--glow); }
+.orb-auth-panel-body { position: relative; z-index: 1; max-width: 30em; }
+.orb-auth-logo {
+  width: min(260px, 52%); height: auto; display: block; margin-bottom: 26px;
+  filter: drop-shadow(0 22px 46px rgba(0,0,0,0.45));
+}
+.orb-auth-eyebrow {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--glow); margin-bottom: 12px;
+}
+.orb-auth-panel h2 {
+  font-size: clamp(1.5rem, 2.5vw, 2.05rem); font-weight: 300;
+  letter-spacing: -0.02em; line-height: 1.18; margin-bottom: 14px;
+}
+.orb-auth-panel p {
+  font-size: 0.93rem; line-height: 1.72; color: var(--muted-on-dark);
+}
+.orb-auth-points {
+  list-style: none; margin: 24px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.orb-auth-points li {
+  font-size: 0.76rem; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--glow); border: 1px solid rgba(88,224,180,0.30);
+  border-radius: 999px; padding: 6px 14px;
+}
+.orb-auth-secure {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.76rem !important; color: var(--muted-on-dark) !important;
+}
+
+/* ---- right: form ---- */
+.orb-auth-main {
+  display: grid; place-items: center; padding: clamp(30px, 5vw, 60px) clamp(20px, 4vw, 48px);
+  background: var(--paper);
+}
+.orb-auth-card {
+  width: 100%; max-width: 400px;
+  background: var(--white); border: 1px solid var(--line); border-radius: 18px;
+  padding: clamp(28px, 3.4vw, 40px);
+  box-shadow: 0 24px 60px rgba(14,23,48,0.08);
+  display: grid; gap: 14px;
+}
+.orb-auth-mark { display: block; margin-bottom: 2px; }
+.orb-auth-card h1 {
+  font-size: 1.5rem; font-weight: 300; letter-spacing: -0.02em; color: var(--teal); line-height: 1.15;
+}
+.orb-auth-card h1 strong { font-weight: 650; color: var(--ink); }
+.orb-auth-card .sub { font-size: 0.87rem; line-height: 1.6; color: var(--muted); margin-top: -6px; }
+.orb-auth-card .field { display: grid; gap: 6px; }
+.orb-auth-card label { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+.orb-auth-card input {
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+  font-family: inherit; font-size: 0.93rem; background: var(--white); color: var(--ink); width: 100%;
+  transition: border-color 0.2s ease;
+}
+.orb-auth-card input:focus-visible {
+  outline: 3px solid var(--glow); outline-offset: 1px; border-color: var(--mint);
+}
+.orb-auth-card .btn { width: 100%; justify-content: center; margin-top: 4px; }
+.orb-auth-card .auth-switch { font-size: 0.83rem; color: var(--muted); text-align: center; margin: 0; }
+.orb-auth-card .auth-switch button {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: inherit; color: var(--teal); font-weight: 600;
+}
+.orb-auth-card .auth-switch button:hover { color: var(--mint); text-decoration: underline; }
+.orb-auth-foot {
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 6px; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+.orb-auth-foot a { color: var(--muted); font-weight: 500; }
+.orb-auth-foot a:hover { color: var(--mint); }
+.orb-auth-foot span { color: var(--line); }
+
+@media (max-width: 900px) {
+  .orb-auth { grid-template-columns: 1fr; min-height: auto; }
+  .orb-auth-panel { padding: 24px 22px 30px; }
+  .orb-auth-logo { width: 150px; margin-bottom: 18px; }
+  .orb-auth-panel h2 { font-size: 1.35rem; }
+  .orb-auth-panel-body { max-width: none; }
+  .orb-auth-secure { margin-top: 22px; }
+  .orb-auth-main { padding: 30px 20px 48px; }
+}

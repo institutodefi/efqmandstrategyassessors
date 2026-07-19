@@ -3,6 +3,11 @@
   publish = "dist"
 
 # SPA routing — every path serves the app; the app renders 404 itself.
+# SPA fallback. IMPORTANT: do NOT add force = true here.
+# Netlify serves real static files before applying redirects, which is what
+# lets the prerendered per-route index.html files (scripts/prerender.mjs)
+# reach social crawlers. force = true would bypass them and break link
+# previews on LinkedIn, WhatsApp, Facebook and X.
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -10,7 +10,7 @@ export default function Orbital() {
   const { lang } = useLang()
   const o = ORBITAL[lang] || ORBITAL.en
 
-  useSeo(o.seoTitle, o.seoDesc, '/orbital360', '/orbital360/favicon-512.png', o.keywords)
+  useSeo(o.seoTitle, o.seoDesc, '/orbital360', '/orbital360/og-orbital360.png', o.keywords)
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
   return (

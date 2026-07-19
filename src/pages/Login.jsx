@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useLang } from '../i18n.jsx'
+import { useSeo } from '../lib/seo.js'
 
 export default function Login() {
   const [mode, setMode] = useState('signin') // signin | signup | reset
@@ -10,8 +11,16 @@ export default function Login() {
   const [busy, setBusy] = useState(false)
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { t } = useLang()
+  const { lang, t } = useLang()
   const a = t.auth
+  useSeo(
+    lang === 'ar' ? 'الدخول إلى Orbital360 — EFQM and Strategy Assessors'
+                  : 'Orbital360 access — EFQM and Strategy Assessors',
+    lang === 'ar' ? 'سجّلوا الدخول إلى مساحة عملكم في Orbital360.'
+                  : 'Sign in to your Orbital360 workspace — the AI PMTool for management, governance and excellence systems.',
+    '/login',
+    '/orbital360/og-orbital360.png'
+  )
 
   if (user) {
     navigate('/portal', { replace: true })
@@ -66,58 +75,89 @@ export default function Login() {
   const subs = { signin: a.signinSub, signup: a.signupSub, reset: a.resetSub }
 
   return (
-    <div className="auth-page">
-      <Link to="/" className="auth-back">{a.back}</Link>
-      <form className="auth-card" onSubmit={onSubmit}>
-        <img className="seal" src="/brand/spiral.png" alt="" aria-hidden="true" />
-        <h1>{titles[mode]}</h1>
-        <p className="sub">{subs[mode]}</p>
-
-        {mode === 'signup' && (
-          <div className="field">
-            <label htmlFor="a-name">{a.fullName}</label>
-            <input id="a-name" name="fullName" autoComplete="name" required />
-          </div>
-        )}
-        <div className="field">
-          <label htmlFor="a-email">{a.email}</label>
-          <input id="a-email" name="email" type="email" autoComplete="email" required />
+    <div className="orb-auth">
+      {/* branded panel */}
+      <aside className="orb-auth-panel">
+        <Link to="/" className="orb-auth-back">{a.back}</Link>
+        <div className="orb-auth-panel-body">
+          <img className="orb-auth-logo" src="/orbital360/logo-on-dark.svg"
+               alt="Orbital360 — AI PMTool" width="300" height="300" />
+          <span className="orb-auth-eyebrow">{a.eyebrow}</span>
+          <h2>{a.panelTitle}</h2>
+          <p>{a.panelLead}</p>
+          <ul className="orb-auth-points">
+            {a.panelPoints.map((p) => <li key={p}>{p}</li>)}
+          </ul>
         </div>
-        {mode !== 'reset' && (
+        <p className="orb-auth-secure">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+               strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="4" y="10.5" width="16" height="10" rx="2" />
+            <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+          </svg>
+          {a.secure}
+        </p>
+      </aside>
+
+      {/* form */}
+      <main className="orb-auth-main">
+        <form className="orb-auth-card" onSubmit={onSubmit}>
+          <img className="orb-auth-mark" src="/orbital360/mark.svg" alt="" width="52" height="52" aria-hidden="true" />
+          <h1>{titles[mode]}</h1>
+          <p className="sub">{subs[mode]}</p>
+
+          {mode === 'signup' && (
+            <div className="field">
+              <label htmlFor="a-name">{a.fullName}</label>
+              <input id="a-name" name="fullName" autoComplete="name" required />
+            </div>
+          )}
           <div className="field">
-            <label htmlFor="a-pass">{a.password}</label>
-            <input
-              id="a-pass" name="password" type="password"
-              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-              minLength="8" required
-            />
+            <label htmlFor="a-email">{a.email}</label>
+            <input id="a-email" name="email" type="email" autoComplete="email" required />
           </div>
-        )}
+          {mode !== 'reset' && (
+            <div className="field">
+              <label htmlFor="a-pass">{a.password}</label>
+              <input
+                id="a-pass" name="password" type="password"
+                autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+                minLength="8" required
+              />
+            </div>
+          )}
 
-        <button className="btn btn-primary" type="submit" disabled={busy}>
-          {busy ? a.working : mode === 'signin' ? a.signin : mode === 'signup' ? a.signup : a.reset}
-        </button>
+          <button className="btn btn-primary" type="submit" disabled={busy}>
+            {busy ? a.working : mode === 'signin' ? a.signin : mode === 'signup' ? a.signup : a.reset}
+          </button>
 
-        {status && (
-          <p className={`form-status ${status.ok ? 'ok' : 'err'}`} role="status">{status.msg}</p>
-        )}
+          {status && (
+            <p className={`form-status ${status.ok ? 'ok' : 'err'}`} role="status">{status.msg}</p>
+          )}
 
-        {mode === 'signin' && (
-          <>
+          {mode === 'signin' && (
+            <>
+              <p className="auth-switch">
+                {a.newClient} <button type="button" onClick={() => { setMode('signup'); setStatus(null) }}>{a.createLink}</button>
+              </p>
+              <p className="auth-switch">
+                <button type="button" onClick={() => { setMode('reset'); setStatus(null) }}>{a.forgot}</button>
+              </p>
+            </>
+          )}
+          {mode !== 'signin' && (
             <p className="auth-switch">
-              {a.newClient} <button type="button" onClick={() => { setMode('signup'); setStatus(null) }}>{a.createLink}</button>
+              <button type="button" onClick={() => { setMode('signin'); setStatus(null) }}>{a.backToSignin}</button>
             </p>
-            <p className="auth-switch">
-              <button type="button" onClick={() => { setMode('reset'); setStatus(null) }}>{a.forgot}</button>
-            </p>
-          </>
-        )}
-        {mode !== 'signin' && (
-          <p className="auth-switch">
-            <button type="button" onClick={() => { setMode('signin'); setStatus(null) }}>{a.backToSignin}</button>
-          </p>
-        )}
-      </form>
+          )}
+
+          <div className="orb-auth-foot">
+            <Link to="/orbital360">{a.whatIs}</Link>
+            <span aria-hidden="true">·</span>
+            <Link to="/request?service=Orbital360 AI PMTool">{a.requestAccess}</Link>
+          </div>
+        </form>
+      </main>
     </div>
   )
 }
