@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { Icon } from '../components/Chrome.jsx'
@@ -90,6 +90,10 @@ export default function Portal() {
       <nav className="portal-nav">
         <img src="/brand/wordmark-white.png" alt="EFQM and Strategy Assessors" />
         <div className="portal-nav-right">
+          <Link to="/portal/account" className="btn btn-ghost portal-signout">{s.account}</Link>
+          {['superadmin','admin'].includes(role) && (
+            <Link to="/portal/users" className="btn btn-ghost portal-signout">{s.users}</Link>
+          )}
           <span className="who">
             {s.signedInAs} <b>{name}</b>
             {roleLabel && <span className="role-badge">{roleLabel}</span>}
