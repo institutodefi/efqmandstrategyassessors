@@ -166,27 +166,27 @@ index.html                Meta, Open Graph, JSON-LD, noscript fallback
 - **Blog preview images** — 120 branded 1200×630 PNGs in `public/blog/<slug>.png`, generated for each post. Used as the blog-card thumbnail, the post hero image, and the per-post link-preview (OG) image.
 - **Country detection + local currency** — `src/context/CurrencyContext.jsx` looks up the visitor's country by IP (via `ipwho.is`) once and shows prices in the local currency (Dubai → AED), with a manual currency selector on the pricing section. Rates and the country→currency map live in `src/lib/site.js` (EUR base; EUR→AED ≈ 4.20). Only the resolved currency is stored (never the IP); noted in the privacy policy. The geolocation domain is allow-listed in the CSP (`netlify.toml`).
 
-## Service pages (restructure)
+## Services (single page, three subtabs)
 
-The single Services section was split into three dedicated pages. The home page keeps the
-**intro** and now shows three cards linking into them.
+All service content lives on **one page** with three subtabs, in this order:
 
-| Route | Contents |
-| --- | --- |
-| `/consultancy` | **Consultancy Services** — two main services: *Consultancy as a Service* (long-form explanation + the three pricing models, shown in the visitor's local currency) and *ISO Standards Consultancy* (long-form explanation + the six ISO cards + a 5-step engagement flow). Also carries the **digital AI environment** section that applies to every model. |
-| `/assessments` | **Assessments** — Strategic Consulting, EFQM Model Assessment, High-Value Support and C-Class Coaching, each with a full write-up, plus the RADAR method block. |
-| `/training` | **Workshops & Training** — how we run a workshop (4 principles) and 8 programmes with duration and audience. |
+| Tab | Route | Contents |
+| --- | --- | --- |
+| Assessments | `/services/assessments` (default) | Strategic Consulting, EFQM Model Assessment, High-Value Support, C-Class Coaching |
+| Consultancy as a Service | `/services/consultancy` | CaaS explanation + three pricing models (local currency) + the digital AI environment + ISO consultancy across six standards + 5-step engagement flow |
+| Workshops & Training | `/services/training` | How a workshop runs + eight programmes with duration and audience |
 
-Content for all three lives in `src/data/services.js` (bilingual EN/AR, code-split), so copy can be
-edited without touching the components. The ISO cards and pricing tiers are still sourced from
-`src/i18n.jsx` (`norms` and `models`) so there is a single source of truth for prices.
+- The nav carries a single **Services** entry; `/services` opens on Assessments.
+- Legacy URLs `/assessments`, `/consultancy` and `/training` still resolve and open the
+  matching tab, so older links and indexed pages keep working.
+- Each tab has its own `<title>`, description, keywords and canonical URL, and all four
+  routes are in `sitemap.xml`.
+- Content is in `src/data/services.js` (bilingual EN/AR); pricing tiers and ISO cards are
+  still sourced from `src/i18n.jsx` so there is one source of truth.
 
-### SEO
+### Visual language
 
-- Keyword-rich `<title>` and description on every page, plus a per-page `keywords` meta
-  (`useSeo(title, desc, path, image, keywords)`).
-- `index.html` carries a site-wide keyword set, `geo.region`/`geo.placename` for Dubai,
-  `max-snippet`/`max-image-preview` robots directives, and expanded JSON-LD:
-  a `hasOfferCatalog` listing all three service areas and their services, plus `sameAs`
-  links to the four social profiles.
-- The three new pages are in `sitemap.xml` at priority 0.9–0.95.
+The service pages use a deliberately compact scale: a short dark page head, a sticky
+subtab bar, lean two-column service blocks (rail + text), and small bordered cards
+(`.mini-card`, `.flow`, `.prog-row`) instead of large padded panels. Type sits at
+~0.95rem body / 1.24rem item headings so pages read densely without feeling cramped.

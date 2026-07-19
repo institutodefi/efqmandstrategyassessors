@@ -10,9 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 // Heavy / less-frequent routes are code-split so the landing page loads lean.
 const Model = lazy(() => import('./pages/Model.jsx'))
-const Consultancy = lazy(() => import('./pages/Consultancy.jsx'))
-const Assessments = lazy(() => import('./pages/Assessments.jsx'))
-const Training = lazy(() => import('./pages/Training.jsx'))
+const Services = lazy(() => import('./pages/Services.jsx'))
 const Blog = lazy(() => import('./pages/Blog.jsx'))
 const Post = lazy(() => import('./pages/Post.jsx'))
 const Legal = lazy(() => import('./pages/Legal.jsx'))
@@ -33,9 +31,14 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/model" element={<Model />} />
-            <Route path="/consultancy" element={<Consultancy />} />
-            <Route path="/assessments" element={<Assessments />} />
-            <Route path="/training" element={<Training />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/assessments" element={<Services />} />
+            <Route path="/services/consultancy" element={<Services />} />
+            <Route path="/services/training" element={<Services />} />
+            {/* legacy paths keep working and open the matching tab */}
+            <Route path="/consultancy" element={<Services />} />
+            <Route path="/assessments" element={<Services />} />
+            <Route path="/training" element={<Services />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Post />} />
 

@@ -38,9 +38,9 @@ export const STRINGS = {
       sub: 'Three practice areas, one method — the EFQM Model 2025 and its RADAR logic. Explore each in depth.',
       more: 'Explore',
       hub: [
-        { icon: 'layers', title: 'Consultancy Services', href: '/consultancy', text: 'Two ways to build a management system that works: an AI-boosted Consultancy as a Service subscription, and ISO consultancy across ISO 9001, 14001, 27001, 45001, 42001 and 56001 — all delivered inside our digital AI environment, priced in your local currency.' },
-        { icon: 'scan', title: 'Assessments', href: '/assessments', text: 'Strategic consulting, certified EFQM Model 2025 assessment, high-value implementation support and confidential C-class coaching — a scored, evidence-based picture of where you stand and what to do next.' },
-        { icon: 'academy', title: 'Workshops & Training', href: '/training', text: 'High-impact workshops and certified training built on your own evidence — EFQM foundation, RADAR in practice, internal assessor training, executive programmes and ISO courses, in English and Arabic.' },
+        { icon: 'scan', title: 'Assessments', href: '/services/assessments', text: 'Strategic consulting, certified EFQM Model 2025 assessment, high-value support and C-class coaching — a scored picture of where you stand and what to do next.' },
+        { icon: 'layers', title: 'Consultancy as a Service', href: '/services/consultancy', text: 'An AI-boosted consulting subscription and ISO consultancy across six standards — fixed monthly pricing in your local currency.' },
+        { icon: 'academy', title: 'Workshops & Training', href: '/services/training', text: 'High-impact workshops built on your own evidence — EFQM foundation, RADAR, assessor training and executive programmes, in English and Arabic.' },
       ],
       items: [
         { icon: 'layers', title: 'Consultancy as a Service', text: 'An AI-boosted consulting subscription — a dedicated team, a fixed monthly price and no surprises. You choose the intensity; we implement and certify alongside you. See the three models below.' },
@@ -290,9 +290,9 @@ export const STRINGS = {
       sub: 'ثلاثة مجالات ممارسة ومنهجية واحدة — نموذج EFQM 2025 ومنطق RADAR. استكشفوا كلاً منها بالتفصيل.',
       more: 'استكشف',
       hub: [
-        { icon: 'layers', title: 'الخدمات الاستشارية', href: '/consultancy', text: 'طريقتان لبناء نظام إدارة يعمل فعلاً: اشتراك «الاستشارة كخدمة» المدعوم بالذكاء الاصطناعي، واستشارات ISO عبر 9001 و14001 و27001 و45001 و42001 و56001 — تُنفَّذ جميعها داخل بيئتنا الرقمية الذكية، وبأسعار بعملتكم المحلية.' },
-        { icon: 'scan', title: 'التقييمات', href: '/assessments', text: 'استشارات استراتيجية، وتقييم معتمد وفق نموذج EFQM 2025، ودعم تنفيذ عالي القيمة، وتوجيه سرّي للإدارة العليا — صورة مُقيَّمة قائمة على الأدلة لموقعكم وما ينبغي فعله تالياً.' },
-        { icon: 'academy', title: 'ورش العمل والتدريب', href: '/training', text: 'ورش عمل عالية الأثر وتدريب معتمد مبنيّ على أدلّتكم — أساسيات EFQM، وRADAR في الممارسة، وتدريب المقيّمين الداخليين، وبرامج تنفيذية ودورات ISO، بالعربية والإنجليزية.' },
+        { icon: 'scan', title: 'التقييمات', href: '/services/assessments', text: 'استشارات استراتيجية، وتقييم معتمد وفق نموذج EFQM 2025، ودعم عالي القيمة، وتوجيه للإدارة العليا — صورة مُقيَّمة لموقعكم وما ينبغي فعله تالياً.' },
+        { icon: 'layers', title: 'الاستشارة كخدمة', href: '/services/consultancy', text: 'اشتراك استشاري مدعوم بالذكاء الاصطناعي واستشارات ISO عبر ست مواصفات — بسعر شهري ثابت وبعملتكم المحلية.' },
+        { icon: 'academy', title: 'ورش العمل والتدريب', href: '/services/training', text: 'ورش عالية الأثر مبنيّة على أدلّتكم — أساسيات EFQM، وRADAR، وتدريب المقيّمين، وبرامج تنفيذية، بالعربية والإنجليزية.' },
       ],
       items: [
         { icon: 'layers', title: 'الاستشارة كخدمة', text: 'اشتراك استشاري مدعوم بالذكاء الاصطناعي — فريق مخصّص وسعر شهري ثابت بلا مفاجآت. أنتم تختارون الكثافة، ونحن ننفّذ ونعتمد معكم. اطّلعوا على النماذج الثلاثة أدناه.' },

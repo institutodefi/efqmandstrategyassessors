@@ -8,6 +8,12 @@
 
 export const SERVICES = {
   en: {
+    tabs: { assessments: 'Assessments', consultancy: 'Consultancy as a Service', training: 'Workshops & Training' },
+    hub: {
+      eyebrow: 'Our services',
+      titleA: 'Three ways we ', strong: 'work with you', titleB: '',
+      lead: 'Assessment tells you where you stand. Consultancy moves you forward. Training makes it stick. Most engagements use all three.',
+    },
     consultancy: {
       seoTitle: 'Consultancy Services — ISO Standards & Consultancy as a Service | Dubai',
       seoDesc:
@@ -172,6 +178,12 @@ export const SERVICES = {
   },
 
   ar: {
+    tabs: { assessments: 'التقييمات', consultancy: 'الاستشارة كخدمة', training: 'ورش العمل والتدريب' },
+    hub: {
+      eyebrow: 'خدماتنا',
+      titleA: 'ثلاث طرق ', strong: 'نعمل بها معكم', titleB: '',
+      lead: 'التقييم يخبركم أين تقفون. والاستشارة تدفعكم إلى الأمام. والتدريب يجعل الأثر يدوم. ومعظم المشاريع تستخدم الثلاث.',
+    },
     consultancy: {
       seoTitle: 'الخدمات الاستشارية — مواصفات ISO والاستشارة كخدمة | دبي',
       seoDesc:
