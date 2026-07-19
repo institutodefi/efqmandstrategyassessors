@@ -165,3 +165,28 @@ index.html                Meta, Open Graph, JSON-LD, noscript fallback
 - **Per-post share bar** — every blog post has share buttons (LinkedIn, X, Facebook, WhatsApp, copy-link).
 - **Blog preview images** — 120 branded 1200×630 PNGs in `public/blog/<slug>.png`, generated for each post. Used as the blog-card thumbnail, the post hero image, and the per-post link-preview (OG) image.
 - **Country detection + local currency** — `src/context/CurrencyContext.jsx` looks up the visitor's country by IP (via `ipwho.is`) once and shows prices in the local currency (Dubai → AED), with a manual currency selector on the pricing section. Rates and the country→currency map live in `src/lib/site.js` (EUR base; EUR→AED ≈ 4.20). Only the resolved currency is stored (never the IP); noted in the privacy policy. The geolocation domain is allow-listed in the CSP (`netlify.toml`).
+
+## Service pages (restructure)
+
+The single Services section was split into three dedicated pages. The home page keeps the
+**intro** and now shows three cards linking into them.
+
+| Route | Contents |
+| --- | --- |
+| `/consultancy` | **Consultancy Services** — two main services: *Consultancy as a Service* (long-form explanation + the three pricing models, shown in the visitor's local currency) and *ISO Standards Consultancy* (long-form explanation + the six ISO cards + a 5-step engagement flow). Also carries the **digital AI environment** section that applies to every model. |
+| `/assessments` | **Assessments** — Strategic Consulting, EFQM Model Assessment, High-Value Support and C-Class Coaching, each with a full write-up, plus the RADAR method block. |
+| `/training` | **Workshops & Training** — how we run a workshop (4 principles) and 8 programmes with duration and audience. |
+
+Content for all three lives in `src/data/services.js` (bilingual EN/AR, code-split), so copy can be
+edited without touching the components. The ISO cards and pricing tiers are still sourced from
+`src/i18n.jsx` (`norms` and `models`) so there is a single source of truth for prices.
+
+### SEO
+
+- Keyword-rich `<title>` and description on every page, plus a per-page `keywords` meta
+  (`useSeo(title, desc, path, image, keywords)`).
+- `index.html` carries a site-wide keyword set, `geo.region`/`geo.placename` for Dubai,
+  `max-snippet`/`max-image-preview` robots directives, and expanded JSON-LD:
+  a `hasOfferCatalog` listing all three service areas and their services, plus `sameAs`
+  links to the four social profiles.
+- The three new pages are in `sitemap.xml` at priority 0.9–0.95.

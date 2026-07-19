@@ -4,17 +4,16 @@ import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit } from '../com
 import Newsletter from '../components/Newsletter.jsx'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../i18n.jsx'
-import { useCurrency } from '../context/CurrencyContext.jsx'
-import { priceParts, SELECTABLE } from '../lib/site.js'
 import { useSeo } from '../lib/seo.js'
 
 export default function Home() {
   const { t } = useLang()
-  const { currency, setCurrency, format } = useCurrency()
   useSeo(
-    'EFQM and Strategy Assessors — Dubai · UAE',
-    'Consultancy based on the EFQM Model 2025 — external assessments, international recognition, strategy, ISO and training. Based in Dubai Silicon Oasis.',
-    '/'
+    'EFQM Assessment & ISO Consultancy in Dubai | EFQM and Strategy Assessors',
+    'Certified EFQM Model 2025 assessment, management consultancy and ISO certification support in Dubai — ISO 9001, 14001, 27001, 45001, 42001, 56001 — plus strategic consulting, executive coaching and training across the UAE, MENA, Europe and the Americas.',
+    '/',
+    '/brand/og-image.png',
+    'EFQM Dubai, EFQM Model 2025, EFQM assessment UAE, EFQM certified assessor, organisational excellence Dubai, business excellence MENA, management consultancy Dubai, ISO consultancy UAE, ISO 9001 Dubai, ISO 27001 UAE, quality management consultant Dubai, strategic consulting UAE, executive coaching Dubai, EFQM training Dubai, RADAR logic, consultancy as a service'
   )
 
   useEffect(() => {
@@ -94,98 +93,15 @@ export default function Home() {
             <h2 className="section-title">{t.services.titleA}<strong>{t.services.strong}</strong>{t.services.titleB}</h2>
             <p>{t.services.sub}</p>
           </div>
-          <div className="services-grid">
-            {t.services.items.map((s) => (
-              <article className="service reveal" key={s.title}>
+          <div className="hub-grid">
+            {t.services.hub.map((s) => (
+              <Link className="hub-card reveal" to={s.href} key={s.title}>
                 <div className="glyph"><Icon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.text}</p>
-              </article>
+                <span className="hub-link">{t.services.more} →</span>
+              </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ISO NORMS PORTFOLIO */}
-      <section className="section" id="norms">
-        <div className="wrap">
-          <div className="section-head reveal">
-            <span className="eyebrow">{t.norms.eyebrow}</span>
-            <h2 className="section-title">{t.norms.titleA}<strong>{t.norms.strong}</strong>{t.norms.titleB}</h2>
-            <p>{t.norms.sub}</p>
-          </div>
-          <div className="norms-grid">
-            {t.norms.items.map((iso) => (
-              <article className="norm-card reveal" key={iso.code}>
-                <div className="norm-head">
-                  <span className="norm-code">ISO<b>{iso.code}</b></span>
-                  <h3>{iso.name}</h3>
-                </div>
-                <p>{iso.text}</p>
-                <div className="norm-subs">
-                  <span className="norm-subs-label">{t.norms.subLabel}</span>
-                  <p>{iso.subs}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MODELS / PRICING */}
-      <section className="section models" id="models">
-        <div className="wrap">
-          <div className="section-head reveal">
-            <span className="eyebrow" style={{ color: 'var(--glow)' }}>{t.models.eyebrow}</span>
-            <h2 className="section-title">{t.models.titleA}<strong>{t.models.strong}</strong>{t.models.titleB}</h2>
-            <p>{t.models.sub}</p>
-          </div>
-          <div className="models-grid">
-            {t.models.tiers.map((tier) => (
-              <article className={`model-card reveal ${tier.popular ? 'featured' : ''}`} key={tier.name}>
-                {tier.popular && <span className="model-badge">{t.models.popular}</span>}
-                <h3 className="model-name">{tier.name}</h3>
-                <span className="model-ai">{t.models.eyebrow.split('·').pop().trim()}</span>
-                <p className="model-tagline">{tier.tagline}</p>
-                <div className="model-price">
-                  <span className="model-from">{t.models.from}</span>
-                  <span className="model-amount">
-                    {(() => {
-                      const pp = priceParts(tier.price, currency)
-                      return pp.position === 'prefix'
-                        ? <><em>{pp.symbol}</em>{pp.amount}</>
-                        : <>{pp.amount}<em>{pp.symbol}</em></>
-                    })()}
-                  </span>
-                  <span className="model-unit">{t.models.unit}</span>
-                </div>
-                <ul className="model-features">
-                  {tier.features.map((f) => (
-                    <li key={f}><Icon name="check" />{f}</li>
-                  ))}
-                </ul>
-                <a href="#contact" className={`btn ${tier.popular ? 'btn-primary' : 'btn-ghost'} model-cta`}>
-                  {t.models.cta}
-                </a>
-              </article>
-            ))}
-          </div>
-          <div className="models-foot reveal">
-            <label className="currency-picker">
-              <span>{t.models.priceIn}</span>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                aria-label={t.models.priceIn}
-              >
-                {Array.from(new Set([currency, ...SELECTABLE])).map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </label>
-            <p className="models-note">
-              {t.models.note}{currency !== 'EUR' ? ` · ${t.models.fromEur}` : ''}
-            </p>
           </div>
         </div>
       </section>

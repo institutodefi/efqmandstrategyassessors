@@ -21,8 +21,9 @@ export function Nav() {
   const anchor = (hash) => (onHome ? `#${hash}` : `/#${hash}`)
   const LINKS = [
     [anchor('about'), t.nav.about, false],
-    [anchor('services'), t.nav.services, false],
-    [anchor('models'), t.nav.models, false],
+    ['/consultancy', t.nav.consultancy, true],
+    ['/assessments', t.nav.assessments, true],
+    ['/training', t.nav.training, true],
     ['/model', t.nav.model, true],
     ['/blog', t.nav.blog, true],
     [anchor('contact'), t.nav.contact, false],
@@ -84,9 +85,10 @@ export function Nav() {
 export function Footer() {
   const { t } = useLang()
   const links = [
-    ['/#about', t.nav.about], ['/#services', t.nav.services],
+    ['/#about', t.nav.about], ['/consultancy', t.nav.consultancy],
+    ['/assessments', t.nav.assessments], ['/training', t.nav.training],
     ['/model', t.nav.model], ['/blog', t.nav.blog],
-    ['/#team', t.nav.team], ['/#contact', t.nav.contact],
+    ['/#contact', t.nav.contact],
   ]
   return (
     <footer className="footer">

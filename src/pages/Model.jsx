@@ -10,7 +10,9 @@ export default function Model() {
   useSeo(
     'The EFQM Model 2025 explained — EFQM and Strategy Assessors',
     'A clear guide to the EFQM Model 2025: three blocks, seven criteria and 32 sub-criteria, with assessor commentary. In English and Arabic.',
-    '/model'
+    '/model',
+    '/brand/og-image.png',
+    'EFQM Model 2025, EFQM criteria, EFQM sub-criteria, RADAR logic, EFQM Direction Execution Results, business excellence framework, EFQM explained Arabic, نموذج EFQM'
   )
   const [active, setActive] = useState('1')
   const [openSub, setOpenSub] = useState(null)

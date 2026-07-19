@@ -12,9 +12,11 @@ const fmt = (d, lang) =>
 export default function Blog() {
   const { lang, t } = useLang()
   useSeo(
-    'The 90-day EFQM excellence programme — Blog',
-    'A daily post by Alejandro San Nicolás explaining one concept of the EFQM Model 2025 in plain language. In English and Arabic.',
-    '/blog'
+    'The 120-day EFQM & ISO excellence programme — Blog',
+    'A daily post by Alejandro San Nicolás: 90 days on the EFQM Model 2025, then 30 real-world ISO cases (9001, 14001, 27001, 45001, 42001, 56001). In English and Arabic.',
+    '/blog',
+    '/brand/og-image.png',
+    'EFQM blog, EFQM Model 2025 explained, ISO case studies, organisational excellence articles, quality management insights, business excellence Dubai, EFQM Arabic'
   )
   useEffect(() => { window.scrollTo(0, 0) }, [])
 

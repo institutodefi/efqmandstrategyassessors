@@ -32,11 +32,12 @@ function upsertLink(rel, href, hreflang) {
  * The same URL serves both languages (language is a client preference),
  * so hreflang points at the same canonical URL for en, ar and x-default.
  */
-export function useSeo(title, description, path = '/', image = null) {
+export function useSeo(title, description, path = '/', image = null, keywords = null) {
   useEffect(() => {
     const url = ORIGIN + (path === '/' ? '' : path)
     if (title) document.title = title
     upsertMeta('name', 'description', description)
+    if (keywords) upsertMeta('name', 'keywords', keywords)
     upsertMeta('property', 'og:title', title)
     upsertMeta('property', 'og:description', description)
     upsertMeta('property', 'og:url', url)
@@ -49,5 +50,5 @@ export function useSeo(title, description, path = '/', image = null) {
     upsertLink('alternate', url, 'en')
     upsertLink('alternate', url, 'ar')
     upsertLink('alternate', url, 'x-default')
-  }, [title, description, path, image])
+  }, [title, description, path, image, keywords])
 }

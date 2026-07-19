@@ -1246,3 +1246,75 @@ body.consent-banner-open .wa-fab { opacity: 0; pointer-events: none; visibility:
 .share-copied { font-size: 0.82rem; color: var(--mint); font-weight: 600; }
 
 @media (max-width: 620px) { .post-thumb { margin-bottom: 14px; } }
+
+/* ============================================================
+   Service pages — hub cards, prose, steps, programmes
+============================================================ */
+
+/* Home: three service hub cards */
+.hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.hub-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: 18px;
+  padding: 30px 28px; display: flex; flex-direction: column; gap: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.hub-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--mint); }
+.hub-card h3 { font-size: 1.22rem; color: var(--ink); font-weight: 650; letter-spacing: -0.01em; }
+.hub-card p { font-size: 0.94rem; line-height: 1.66; color: var(--body); flex: 1; }
+.hub-link { font-size: 0.88rem; font-weight: 600; color: var(--mint); margin-top: 4px; }
+.hub-card:hover .hub-link { color: var(--teal); }
+
+/* Long-form prose blocks on service pages */
+.prose { max-width: 46em; }
+.prose p { font-size: 1rem; line-height: 1.78; color: var(--body); margin-bottom: 17px; }
+.prose p:last-child { margin-bottom: 0; }
+.prose .prose-lead {
+  font-size: 1.14rem; line-height: 1.7; color: var(--ink); font-weight: 500; margin-bottom: 22px;
+}
+.sub-head {
+  font-size: 1.5rem; font-weight: 650; color: var(--ink); letter-spacing: -0.01em;
+  margin: 54px 0 26px;
+}
+.models-inner { margin-top: 52px; }
+.section-sub { font-size: 0.98rem; line-height: 1.68; color: var(--muted); max-width: 44em; }
+
+/* Numbered approach steps (ISO engagement) */
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 18px; }
+.step-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 24px 22px;
+  border-top: 3px solid var(--mint);
+}
+.step-num {
+  font-size: 0.78rem; font-weight: 700; color: var(--mint); letter-spacing: 0.1em; display: block; margin-bottom: 10px;
+}
+.step-card h4 { font-size: 1.02rem; color: var(--ink); font-weight: 650; margin-bottom: 8px; }
+.step-card p { font-size: 0.9rem; line-height: 1.62; color: var(--body); }
+
+/* Assessments: one block per service */
+.svc-block { display: grid; grid-template-columns: 340px 1fr; gap: 46px; align-items: start; }
+.svc-head .card-icon { margin-bottom: 16px; }
+.svc-head .section-title { margin-bottom: 12px; }
+.svc-lead { font-size: 1rem; line-height: 1.66; color: var(--muted); }
+
+/* Training: programme cards */
+.prog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.prog-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 26px 24px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.prog-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+.prog-card h3 { font-size: 1.08rem; color: var(--ink); font-weight: 650; margin-bottom: 10px; }
+.prog-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.prog-dur {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.76rem; font-weight: 700; color: var(--teal);
+  background: var(--paper-2); border-radius: 999px; padding: 4px 11px;
+}
+.prog-dur svg { width: 13px; height: 13px; }
+.prog-who { font-size: 0.79rem; color: var(--muted); }
+.prog-card p { font-size: 0.92rem; line-height: 1.64; color: var(--body); }
+
+@media (max-width: 980px) {
+  .hub-grid { grid-template-columns: 1fr; }
+  .svc-block { grid-template-columns: 1fr; gap: 24px; }
+}
