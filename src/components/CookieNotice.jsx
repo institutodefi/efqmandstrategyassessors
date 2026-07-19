@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
+import { applyConsentToGTM, initConsentDefaults } from '../lib/gtm.js'
 
 const KEY = 'cookie-consent-v2'
 const OPEN_EVENT = 'open-cookie-settings'
@@ -18,7 +19,12 @@ function readConsent() {
 function writeConsent(obj) {
   try { localStorage.setItem(KEY, JSON.stringify({ ...obj, ts: new Date().toISOString() })) }
   catch { /* storage blocked */ }
+  // Push the decision to Consent Mode and load GTM if now allowed.
+  applyConsentToGTM(obj)
 }
+
+// Read the stored decision (used on boot).
+export function getStoredConsent() { return readConsent() }
 
 // Footer (or anywhere) can reopen the manager by dispatching this event.
 export function openCookieSettings() {

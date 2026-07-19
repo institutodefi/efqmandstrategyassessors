@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useRef } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { LangProvider } from './i18n.jsx'
 import { CurrencyProvider } from './context/CurrencyContext.jsx'
-import CookieNotice from './components/CookieNotice.jsx'
+import CookieNotice, { getStoredConsent } from './components/CookieNotice.jsx'
+import { initConsentDefaults, applyConsentToGTM, trackPageView } from './lib/gtm.js'
 import WhatsAppButton from './components/WhatsAppButton.jsx'
 import Home from './pages/Home.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
@@ -23,11 +24,29 @@ function Fallback() {
   return <div className="route-loading" aria-live="polite" aria-busy="true" />
 }
 
+// Consent-gated analytics: denied by default, loaded only if the visitor agreed.
+function Analytics() {
+  const { pathname, search } = useLocation()
+  const booted = useRef(false)
+
+  useEffect(() => {
+    if (booted.current) return
+    booted.current = true
+    initConsentDefaults()
+    const stored = getStoredConsent()
+    if (stored) applyConsentToGTM(stored)
+  }, [])
+
+  useEffect(() => { trackPageView(pathname + search) }, [pathname, search])
+  return null
+}
+
 export default function App() {
   return (
     <LangProvider>
       <AuthProvider>
         <CurrencyProvider>
+        <Analytics />
         <Suspense fallback={<Fallback />}>
           <Routes>
             <Route path="/" element={<Home />} />

@@ -14,7 +14,7 @@
 // where the firm processes EU/EEA personal data, the EU GDPR.
 // ------------------------------------------------------------------
 
-export const LEGAL_UPDATED = '2026-07-13' // review date; edit when policies change
+export const LEGAL_UPDATED = '2026-07-19' // review date; edit when policies change
 
 export const LEGAL = {
   en: {
@@ -58,7 +58,7 @@ export const LEGAL = {
                 'Contact and enquiry data — the name, email address, organisation and message you provide through our contact form.',
                 'Client account data — the name and email address you use to register for the client zone, and any organisation details you add.',
                 'Engagement data — documents, assessment records and correspondence created during a consultancy engagement, stored in your private client workspace.',
-                'Technical data — because we use no analytics or advertising cookies, we do not build a browsing profile of you. Our hosting provider processes standard server logs (including IP address) for a short period purely for security and to deliver the site.',
+                'Technical data — our hosting provider processes standard server logs (including IP address) for a short period purely for security and to deliver the site. If, and only if, you consent to analytics or marketing cookies, we also use Google Tag Manager and the measurement tags it loads (such as Google Analytics), which set cookies and process usage data — including a truncated IP address — to tell us how the site is used. You can refuse or withdraw this at any time from Cookie settings, and nothing is loaded until you agree.',
                 'Approximate location — to display prices in your local currency, we make a one-off lookup of your country from your IP address using a third-party geolocation service. We store only the resulting currency choice in your browser, never your IP address, and this is used solely to localise pricing.',
               ],
             },
@@ -83,7 +83,7 @@ export const LEGAL = {
         {
           h: 'Cookies and similar technologies',
           body: [
-            'We use only strictly necessary storage that is essential for the website to function — for example, remembering your language choice and your cookie preference. We do not use analytics, advertising or third-party tracking cookies, and we do not sell your data. See our Cookie Policy for the full list.',
+            'We use strictly necessary storage that is essential for the website to function — for example, remembering your language choice, your currency and your cookie preference. We also offer optional analytics and marketing cookies, delivered through Google Tag Manager; these are switched off by default and load only after you consent. We never sell your data. See our Cookie Policy for the full list.',
           ],
         },
         {
@@ -170,7 +170,7 @@ export const LEGAL = {
         {
           h: 'The storage we use',
           body: [
-            'We use only strictly necessary storage. We do not use analytics, advertising, profiling or third-party tracking cookies.',
+            'We use strictly necessary storage, plus optional analytics and marketing cookies that are disabled until you consent. The optional categories are delivered by Google Tag Manager (container GTM-MGHZNN9K), which may load Google measurement tags. We do not sell your data or use it for profiling beyond aggregate usage statistics.',
             {
               list: [
                 'lang — remembers whether you are reading the site in English or Arabic. Stored in your browser (localStorage). No expiry until you clear it.',
@@ -183,7 +183,7 @@ export const LEGAL = {
         {
           h: 'Consent',
           body: [
-            'Strictly necessary storage does not require consent under the PDPL or GDPR, because the site cannot function without it. Because we set no analytics or marketing cookies, there is nothing optional to opt into — our banner is purely informational and records your acknowledgement.',
+            'Strictly necessary storage does not require consent under the PDPL or GDPR, because the site cannot function without it. Analytics and marketing cookies do require consent: they are set to “denied” by default, Google Tag Manager is not loaded at all until you allow one of those categories, and you can change or withdraw your choice at any time from Cookie settings.',
           ],
         },
         {
@@ -368,7 +368,7 @@ export const LEGAL = {
                 'بيانات التواصل والاستفسار — الاسم والبريد الإلكتروني والمؤسسة والرسالة التي تقدّمونها عبر نموذج التواصل.',
                 'بيانات حساب العميل — الاسم والبريد الإلكتروني اللذان تستخدمونهما للتسجيل في منطقة العملاء، وأي تفاصيل مؤسسية تضيفونها.',
                 'بيانات المشروع — الوثائق وسجلات التقييم والمراسلات المنشأة خلال مشروع استشاري، والمخزّنة في مساحة عملكم الخاصة.',
-                'البيانات التقنية — لأننا لا نستخدم ملفات تعريف ارتباط للتحليلات أو الإعلانات، فإننا لا نبني ملفاً لتصفّحكم. ويعالج مزوّد الاستضافة سجلات خادم قياسية (تشمل عنوان IP) لفترة قصيرة لأغراض الأمن وتقديم الموقع فحسب.',
+                'البيانات التقنية — يعالج مزوّد الاستضافة سجلات خادم قياسية (تشمل عنوان IP) لفترة قصيرة لأغراض الأمن وتقديم الموقع. وإذا وافقتم — وفقط إذا وافقتم — على ملفات التحليلات أو التسويق، فإننا نستخدم أيضاً Google Tag Manager والوسوم القياسية التي يحمّلها (مثل Google Analytics)، وهي تضبط ملفات تعريف ارتباط وتعالج بيانات الاستخدام — بما في ذلك عنوان IP مختصر — لتخبرنا كيف يُستخدم الموقع. ويمكنكم الرفض أو سحب الموافقة في أي وقت من إعدادات ملفات تعريف الارتباط، ولا يُحمَّل شيء قبل موافقتكم.',
                 'الموقع التقريبي — لعرض الأسعار بعملتكم المحلية، نجري استعلاماً واحداً عن بلدكم من عنوان IP عبر خدمة تحديد موقع من طرف ثالث. ولا نخزّن سوى اختيار العملة الناتج في متصفّحكم، لا عنوان IP، ويُستخدم ذلك فقط لعرض الأسعار محلياً.',
               ],
             },
@@ -393,7 +393,7 @@ export const LEGAL = {
         {
           h: 'ملفات تعريف الارتباط والتقنيات المشابهة',
           body: [
-            'نستخدم فقط التخزين الضروري تماماً لعمل الموقع — مثل تذكّر اختياركم للغة وتفضيلكم بشأن ملفات تعريف الارتباط. ولا نستخدم ملفات تحليلات أو إعلانات أو تتبّع من أطراف ثالثة، ولا نبيع بياناتكم. راجعوا سياسة ملفات تعريف الارتباط للقائمة الكاملة.',
+            'نستخدم التخزين الضروري تماماً لعمل الموقع — مثل تذكّر اختياركم للغة والعملة وتفضيلكم بشأن ملفات تعريف الارتباط. ونوفّر كذلك ملفات تحليلات وتسويق اختيارية تُقدَّم عبر Google Tag Manager؛ وهي معطّلة افتراضياً ولا تُحمَّل إلا بعد موافقتكم. ولا نبيع بياناتكم أبداً. راجعوا سياسة ملفات تعريف الارتباط للقائمة الكاملة.',
           ],
         },
         {
@@ -480,7 +480,7 @@ export const LEGAL = {
         {
           h: 'التخزين الذي نستخدمه',
           body: [
-            'نستخدم فقط التخزين الضروري تماماً. ولا نستخدم ملفات تحليلات أو إعلانات أو تنميط أو تتبّع من أطراف ثالثة.',
+            'نستخدم التخزين الضروري تماماً، إضافةً إلى ملفات تحليلات وتسويق اختيارية معطّلة حتى تمنحوا موافقتكم. وتُقدَّم الفئات الاختيارية عبر Google Tag Manager (الحاوية GTM-MGHZNN9K)، وقد يحمّل وسوم قياس من Google. ولا نبيع بياناتكم ولا نستخدمها للتنميط خارج إحصاءات الاستخدام المجمّعة.',
             {
               list: [
                 'lang — يتذكّر ما إذا كنتم تقرؤون الموقع بالعربية أو الإنجليزية. يُخزَّن في متصفّحكم (localStorage) ولا ينتهي حتى تمسحوه.',
@@ -493,7 +493,7 @@ export const LEGAL = {
         {
           h: 'الموافقة',
           body: [
-            'التخزين الضروري تماماً لا يتطلّب موافقة بموجب قانون حماية البيانات الإماراتي أو GDPR، لأن الموقع لا يعمل دونه. ولأننا لا نضبط أي ملفات تحليلات أو تسويق، فلا يوجد اختياري للموافقة عليه — وإشعارنا معلوماتي بحت يسجّل اطّلاعكم.',
+            'التخزين الضروري تماماً لا يتطلّب موافقة بموجب قانون حماية البيانات الإماراتي أو GDPR، لأن الموقع لا يعمل دونه. أما ملفات التحليلات والتسويق فتتطلّب موافقة: فهي مضبوطة على «مرفوض» افتراضياً، ولا يُحمَّل Google Tag Manager إطلاقاً حتى تسمحوا بإحدى هاتين الفئتين، ويمكنكم تغيير اختياركم أو سحبه في أي وقت من إعدادات ملفات تعريف الارتباط.',
           ],
         },
         {

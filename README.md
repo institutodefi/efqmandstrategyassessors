@@ -241,3 +241,31 @@ with the chosen service) and falls back to `mailto:`.
 Alejandro's LinkedIn profile appears in exactly one place: under his bio in the team
 section on the home page (`.person-li`, from `team.alex.linkedin` in `src/i18n.jsx`).
 It was removed from the service CTAs.
+
+## Analytics — Google Tag Manager (consent-gated)
+
+Container **GTM-MGHZNN9K**, in `src/lib/gtm.js`.
+
+The GTM snippet is **not** placed directly in `index.html`. Instead:
+
+1. On boot, Google **Consent Mode** defaults are pushed as *denied*
+   (`analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization`,
+   `functionality_storage`, `personalization_storage`).
+2. GTM is injected **only** once the visitor allows the analytics or marketing
+   category in the cookie banner. Reject-all loads nothing at all.
+3. Changing the choice later (footer → Cookie settings) pushes a `consent update`;
+   granting for the first time injects the container.
+4. Because the site is a SPA, route changes push a `page_view` event to the
+   dataLayer — configure a GTM trigger on that event rather than relying on
+   container-load page views.
+
+The `<noscript>` iframe is in `index.html` for visitors with JavaScript disabled
+(where the consent manager cannot run either).
+
+`netlify.toml` CSP was extended for `googletagmanager.com` / `google-analytics.com`
+(`script-src`, `img-src`, `connect-src`, `frame-src`).
+
+**Legal:** the privacy and cookie policies previously stated that the site set no
+analytics or advertising cookies. Both documents (EN + AR) were rewritten to disclose
+GTM, the optional categories and the consent basis, and `LEGAL_UPDATED` was bumped to
+2026-07-19.
