@@ -103,7 +103,7 @@ export default function Newsletter() {
               </button>
             </div>
 
-            <label className="consent">
+            <label className="consent consent-row">
               <input
                 type="checkbox"
                 name="OPT_IN"

@@ -29,7 +29,8 @@ export default function PostContact({ title }) {
 
   function validate(payload) {
     const e = {}
-    if (!payload.name) e.name = true
+    if (!payload.first_name) e.firstName = true
+    if (!payload.last_name) e.lastName = true
     if (!payload.email || !EMAIL_RE.test(payload.email)) e.email = true
     if (!payload.message) e.message = true
     setErrors(e)
@@ -39,8 +40,12 @@ export default function PostContact({ title }) {
   async function onSubmit(ev) {
     ev.preventDefault()
     const form = ev.target
+    const firstName = form.firstName.value.trim()
+    const lastName = form.lastName.value.trim()
     const payload = {
-      name: form.name.value.trim(),
+      first_name: firstName,
+      last_name: lastName,
+      name: `${firstName} ${lastName}`.trim(),
       email: form.email.value.trim(),
       message: form.message.value.trim(),
     }
@@ -77,10 +82,17 @@ export default function PostContact({ title }) {
 
       <form className="post-cta-form" onSubmit={onSubmit} noValidate
             onChange={() => status && setStatus(null)}>
-        <div className="field">
-          <label htmlFor="pc-name">{t.contact.fName}</label>
-          <input id="pc-name" name="name" autoComplete="name" required
-                 aria-invalid={errors.name || undefined} />
+        <div className="pc-name-row">
+          <div className="field">
+            <label htmlFor="pc-first">{t.contact.fFirstName}</label>
+            <input id="pc-first" name="firstName" autoComplete="given-name" required
+                   aria-invalid={errors.firstName || undefined} />
+          </div>
+          <div className="field">
+            <label htmlFor="pc-last">{t.contact.fLastName}</label>
+            <input id="pc-last" name="lastName" autoComplete="family-name" required
+                   aria-invalid={errors.lastName || undefined} />
+          </div>
         </div>
         <div className="field">
           <label htmlFor="pc-email">{t.contact.fEmail}</label>

@@ -47,13 +47,17 @@ export default function Contact() {
   async function onSubmit(e) {
     e.preventDefault()
     const f = e.target
+    const firstName = f.firstName.value.trim()
+    const lastName = f.lastName.value.trim()
     const payload = {
-      name: f.name.value.trim(),
+      first_name: firstName,
+      last_name: lastName,
+      name: `${firstName} ${lastName}`.trim(),
       email: f.email.value.trim(),
       organisation: f.organisation.value.trim(),
       message: f.message.value.trim(),
     }
-    if (!payload.name || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
+    if (!firstName || !lastName || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
       setStatus({ ok: false, msg: t.contact.valMsg }); return
     }
     if (!consent) { setStatus({ ok: false, msg: t.consent.required }); return }
@@ -91,13 +95,17 @@ export default function Contact() {
             <form className="req-form" onSubmit={onSubmit} noValidate>
               <div className="field-row">
                 <div className="field">
-                  <label htmlFor="c-name">{t.contact.fName}</label>
-                  <input id="c-name" name="name" autoComplete="name" required />
+                  <label htmlFor="c-first">{t.contact.fFirstName}</label>
+                  <input id="c-first" name="firstName" autoComplete="given-name" required />
                 </div>
                 <div className="field">
-                  <label htmlFor="c-email">{t.contact.fEmail}</label>
-                  <input id="c-email" name="email" type="email" autoComplete="email" required />
+                  <label htmlFor="c-last">{t.contact.fLastName}</label>
+                  <input id="c-last" name="lastName" autoComplete="family-name" required />
                 </div>
+              </div>
+              <div className="field">
+                <label htmlFor="c-email">{t.contact.fEmail}</label>
+                <input id="c-email" name="email" type="email" autoComplete="email" required />
               </div>
               <div className="field">
                 <label htmlFor="c-org">{t.contact.fOrg}</label>
@@ -107,9 +115,9 @@ export default function Contact() {
                 <label htmlFor="c-msg">{t.contact.fMsg}</label>
                 <textarea id="c-msg" name="message" rows="5" required />
               </div>
-              <label className="consent">
+              <label className="consent consent-row">
                 <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-                <span>{t.consent.label}<Link to="/privacy">{t.consent.privacyLink}</Link>{t.consent.and}</span>
+                <span className="consent-text">{t.consent.label}<Link to="/privacy">{t.consent.privacyLink}</Link>{t.consent.and}</span>
               </label>
               <button className="btn btn-primary" type="submit" disabled={sending}>
                 {sending ? t.contact.sending : t.contact.send}

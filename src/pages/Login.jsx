@@ -44,11 +44,18 @@ export default function Login() {
         if (error) throw error
         navigate('/portal')
       } else if (mode === 'signup') {
-        const fullName = form.fullName.value.trim()
+        const firstName = form.firstName.value.trim()
+        const lastName = form.lastName.value.trim()
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: fullName } },
+          options: {
+            data: {
+              first_name: firstName,
+              last_name: lastName,
+              full_name: `${firstName} ${lastName}`.trim(),
+            },
+          },
         })
         if (error) throw error
         setStatus({ ok: true, msg: a.created })
@@ -107,9 +114,15 @@ export default function Login() {
           <p className="sub">{subs[mode]}</p>
 
           {mode === 'signup' && (
-            <div className="field">
-              <label htmlFor="a-name">{a.fullName}</label>
-              <input id="a-name" name="fullName" autoComplete="name" required />
+            <div className="field-row">
+              <div className="field">
+                <label htmlFor="a-first">{a.firstName}</label>
+                <input id="a-first" name="firstName" autoComplete="given-name" required />
+              </div>
+              <div className="field">
+                <label htmlFor="a-last">{a.lastName}</label>
+                <input id="a-last" name="lastName" autoComplete="family-name" required />
+              </div>
             </div>
           )}
           <div className="field">

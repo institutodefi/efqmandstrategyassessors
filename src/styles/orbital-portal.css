@@ -162,3 +162,13 @@
   .portal-panels { grid-template-columns: 1fr; }
   .np-row { grid-template-columns: 1fr; }
 }
+
+/* Blog form — first/last name side by side */
+.pc-name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .pc-name-row { grid-template-columns: 1fr; } }
+
+/* Legacy .consent hardening — same guarantees as .consent-row wherever the
+   old class is still used (Contact, Request, Newsletter, third-party embeds) */
+.consent { display: flex !important; align-items: flex-start; gap: 10px; width: 100%; min-width: 0; }
+.consent > input[type="checkbox"] { flex: 0 0 auto; margin-top: 3px; }
+.consent > span { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
