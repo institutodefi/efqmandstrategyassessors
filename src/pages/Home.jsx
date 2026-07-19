@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit, BrandIcon } from '../components/Chrome.jsx'
+import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit, BrandIcon, SocialIcon } from '../components/Chrome.jsx'
 import Newsletter from '../components/Newsletter.jsx'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../i18n.jsx'
@@ -167,6 +167,12 @@ export default function Home() {
                 <div className="creds">
                   {p.creds.map((c) => <span key={c}>{c}</span>)}
                 </div>
+                {p.linkedin && (
+                  <a className="person-li" href={p.linkedin} target="_blank" rel="noopener noreferrer">
+                    <SocialIcon name="linkedin" />
+                    <span>{t.team.liLabel}</span>
+                  </a>
+                )}
               </article>
             ))}
           </div>

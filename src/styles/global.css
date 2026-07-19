@@ -1531,3 +1531,72 @@ body.consent-banner-open .wa-fab { opacity: 0; pointer-events: none; visibility:
   .model-row { grid-template-columns: 1fr; }
   .mr-feats { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   Service actions (request + WhatsApp) · request page · team link
+============================================================ */
+.svc-actions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-top: 18px; }
+.svc-actions .btn { padding: 10px 18px; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 8px; }
+.svc-actions.sm { margin-top: 10px; gap: 7px; }
+.svc-actions.sm .btn { padding: 7px 13px; font-size: 0.76rem; gap: 6px; }
+.svc-actions.sm svg { width: 14px; height: 14px; }
+
+.btn-request { background: var(--teal); color: #fff; }
+.btn-request:hover { background: var(--deep); color: #fff; }
+.model-row.featured .btn-request { background: var(--mint); color: var(--ink); }
+.model-row.featured .btn-request:hover { background: var(--glow); color: var(--ink); }
+.btn-wa { background: #25D366; color: #fff; }
+.btn-wa:hover { background: #1fbe5a; color: #fff; }
+
+/* keep the model row CTA column tidy with two small buttons */
+.mr-cta .svc-actions { margin-top: 0; justify-content: flex-end; }
+.prog-row-meta .svc-actions { margin-top: 4px; }
+
+/* Team: LinkedIn under the bio */
+.person-li {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
+  font-size: 0.85rem; font-weight: 600; color: var(--teal);
+  border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.person-li:hover { color: #0A66C2; border-color: #0A66C2; background: rgba(10,102,194,0.05); }
+.person-li svg { width: 15px; height: 15px; }
+
+/* ---------- Request page ---------- */
+.req-body { background: var(--paper); padding: clamp(38px, 5vw, 60px) 0 clamp(52px, 7vw, 80px); }
+.req-grid {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(26px, 4vw, 56px); align-items: start;
+}
+.req-form {
+  background: var(--white); border: 1px solid var(--line); border-radius: 16px;
+  padding: clamp(24px, 3vw, 34px); display: grid; gap: 14px;
+}
+.req-form .field { display: grid; gap: 6px; }
+.req-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.req-form label:not(.consent) { font-size: 0.79rem; font-weight: 600; color: var(--muted); }
+.req-form input, .req-form textarea, .req-form select {
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+  font-family: inherit; font-size: 0.92rem; background: var(--white); color: var(--ink); width: 100%;
+}
+.req-form select { cursor: pointer; }
+.req-form input:focus-visible, .req-form textarea:focus-visible, .req-form select:focus-visible {
+  outline: 3px solid var(--glow); outline-offset: 1px; border-color: var(--mint);
+}
+.req-aside h2 { font-size: 1.3rem; font-weight: 300; color: var(--teal); letter-spacing: -0.015em; margin-bottom: 16px; }
+.req-aside h2 strong { font-weight: 600; }
+.req-wa { width: 100%; justify-content: center; margin-bottom: 22px; }
+.req-details { display: grid; gap: 14px; margin-bottom: 18px; }
+.req-details dt {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 3px;
+}
+.req-details dd { font-size: 0.9rem; line-height: 1.55; color: var(--body); }
+.req-details a { color: var(--teal); }
+.req-details a:hover { color: var(--mint); }
+.req-note { font-size: 0.78rem; line-height: 1.6; color: var(--muted); }
+
+@media (max-width: 860px) {
+  .req-grid { grid-template-columns: 1fr; }
+  .req-form .field-row { grid-template-columns: 1fr; }
+}

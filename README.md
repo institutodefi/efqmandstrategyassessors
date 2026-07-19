@@ -214,3 +214,30 @@ stacked blocks below 1080px. The "Involvement" tier keeps the dark featured trea
 Each tab's closing CTA offers three routes to contact: the contact form, a **WhatsApp**
 button (pre-filled, bilingual message) and a link to **Alejandro's LinkedIn profile**
 (`https://www.linkedin.com/in/alejandrosnicolas/`).
+
+### Two actions on every service
+
+Every service on the site drives to exactly two things, via the shared
+`ServiceActions` component (`src/components/ServiceActions.jsx`):
+
+1. **Request** (document icon) → `/request?service=<name>`, which opens the form page
+   with that service already selected.
+2. **WhatsApp** → `wa.me/971507369400` with the message pre-filled as
+   *"Hello, I am interested in &lt;service&gt;…"* (Arabic when the site is in Arabic).
+
+They appear on all four Assessments services, both Consultancy services, each of the three
+pricing models (tagged with the tier name), and all eight training programmes — plus the
+closing CTA on each tab.
+
+### `/request` form page
+
+A dedicated page (`src/pages/Request.jsx`) with the full enquiry form, a service dropdown
+listing every service, a WhatsApp shortcut, and the office/phone/email details. It reads
+`?service=` to preselect, submits to the Supabase `inquiries` table (tagging the record
+with the chosen service) and falls back to `mailto:`.
+
+### LinkedIn
+
+Alejandro's LinkedIn profile appears in exactly one place: under his bio in the team
+section on the home page (`.person-li`, from `team.alex.linkedin` in `src/i18n.jsx`).
+It was removed from the service CTAs.

@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Nav, Footer, Icon, SocialIcon } from '../components/Chrome.jsx'
+import { Nav, Footer, Icon } from '../components/Chrome.jsx'
 import { useLang } from '../i18n.jsx'
 import { useCurrency } from '../context/CurrencyContext.jsx'
 import { priceParts, SELECTABLE } from '../lib/site.js'
+import ServiceActions, { RequestIcon, WaIcon } from '../components/ServiceActions.jsx'
 import { SERVICES } from '../data/services.js'
 import { useSeo } from '../lib/seo.js'
 
@@ -102,6 +103,7 @@ export default function Services() {
                   </div>
                   <div className="svc-item-body">
                     {it.paras.map((p, j) => <p key={j}>{p}</p>)}
+                    <ServiceActions service={it.title} />
                   </div>
                 </article>
               ))}
@@ -126,6 +128,7 @@ export default function Services() {
                 </div>
                 <div className="svc-item-body">
                   {meta.caas.paras.map((p, i) => <p key={i}>{p}</p>)}
+                  <ServiceActions service={meta.caas.title} />
                 </div>
               </article>
 
@@ -159,9 +162,7 @@ export default function Services() {
                         {tier.features.map((f) => <li key={f}><Icon name="check" />{f}</li>)}
                       </ul>
                       <div className="mr-cta">
-                        <Link to="/#contact" className={`btn ${tier.popular ? 'btn-primary' : 'btn-ghost'}`}>
-                          {t.models.cta}
-                        </Link>
+                        <ServiceActions service={`${meta.caas.title} — ${tier.name}`} size="sm" />
                       </div>
                     </article>
                   ))}
@@ -198,6 +199,7 @@ export default function Services() {
                 </div>
                 <div className="svc-item-body">
                   {meta.iso.paras.map((p, i) => <p key={i}>{p}</p>)}
+                  <ServiceActions service={meta.iso.title} />
                 </div>
               </article>
 
@@ -255,6 +257,7 @@ export default function Services() {
                     <div className="prog-row-meta">
                       <span className="prog-dur">{p.dur}</span>
                       <span className="prog-who">{p.who}</span>
+                      <ServiceActions service={p.title} size="sm" />
                     </div>
                   </article>
                 ))}
@@ -292,7 +295,6 @@ function CurrencyFoot({ t, currency, setCurrency }) {
 
 function SvcCta({ meta, hub }) {
   const waHref = `https://wa.me/971507369400?text=${encodeURIComponent(hub.waMsg)}`
-  const liHref = 'https://www.linkedin.com/in/alejandrosnicolas/'
   return (
     <section className="svc-cta">
       <div className="wrap">
@@ -302,16 +304,11 @@ function SvcCta({ meta, hub }) {
             <p>{meta.cta.text}</p>
           </div>
           <div className="svc-cta-actions">
-            <Link to="/#contact" className="btn btn-primary">{meta.cta.btn}</Link>
+            <Link to="/request" className="btn btn-primary">
+              <RequestIcon /><span>{meta.cta.btn}</span>
+            </Link>
             <a className="btn btn-wa" href={waHref} target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true">
-                <path fill="currentColor" d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.7 6L4 29l8.2-1.7c1.7.9 3.6 1.4 5.6 1.4h.2c6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-4.3.9.9-4.2-.3-.4c-1-1.6-1.5-3.4-1.5-5.3C5.4 9.6 10.2 4.8 16 4.8S26.6 9.6 26.6 15.4 21.8 24.8 16 24.8zm5.9-7.7c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.3-.7.1c-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3s0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5s.1-.4 0-.6-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.8 5.1.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5s-.3-.2-.6-.3z" />
-              </svg>
-              {hub.wa}
-            </a>
-            <a className="btn btn-li" href={liHref} target="_blank" rel="noopener noreferrer">
-              <SocialIcon name="linkedin" />
-              {hub.li}
+              <WaIcon /><span>{hub.wa}</span>
             </a>
           </div>
         </div>

@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 // Heavy / less-frequent routes are code-split so the landing page loads lean.
 const Model = lazy(() => import('./pages/Model.jsx'))
 const Services = lazy(() => import('./pages/Services.jsx'))
+const Request = lazy(() => import('./pages/Request.jsx'))
 const Blog = lazy(() => import('./pages/Blog.jsx'))
 const Post = lazy(() => import('./pages/Post.jsx'))
 const Legal = lazy(() => import('./pages/Legal.jsx'))
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/model" element={<Model />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/request" element={<Request />} />
             <Route path="/services/assessments" element={<Services />} />
             <Route path="/services/consultancy" element={<Services />} />
             <Route path="/services/training" element={<Services />} />

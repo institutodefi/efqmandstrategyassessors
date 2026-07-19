@@ -76,9 +76,11 @@ export const STRINGS = {
       ],
     },
     team: {
+      liLabel: 'Connect on LinkedIn',
       eyebrow: 'Core team',
       titleA: 'Assessors who have ', strong: 'seen excellence', titleB: ' up close',
       alex: {
+        linkedin: 'https://www.linkedin.com/in/alejandrosnicolas/',
         role: 'Engagement Director · Lead Assessor',
         name: 'Alejandro San Nicolás Medina',
         bio: 'Senior consultant and EFQM Certified Assessor with 20+ years working with the EFQM Model, 250+ external assessments and 300+ excellence and strategy projects. PhD in Economics with an EFQM-based research methodology; university lecturer on the EFQM Model.',
@@ -328,9 +330,11 @@ export const STRINGS = {
       ],
     },
     team: {
+      liLabel: 'تواصلوا عبر لينكدإن',
       eyebrow: 'الفريق الأساسي',
       titleA: 'مقيّمون عاينوا ', strong: 'التميّز', titleB: ' عن قرب',
       alex: {
+        linkedin: 'https://www.linkedin.com/in/alejandrosnicolas/',
         role: 'مدير المشاريع · المقيّم الرئيسي',
         name: 'أليخاندرو سان نيكولاس ميدينا',
         bio: 'مستشار أول ومقيّم EFQM معتمد بخبرة تتجاوز 20 عاماً مع نموذج EFQM، وأكثر من 250 تقييماً خارجياً و300 مشروع في التميّز والاستراتيجية. حاصل على دكتوراه في الاقتصاد بمنهجية بحثية قائمة على EFQM؛ ومحاضر جامعي في نموذج EFQM.',
