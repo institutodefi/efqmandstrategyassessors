@@ -244,7 +244,7 @@ It was removed from the service CTAs.
 
 ## Analytics — Google Tag Manager (consent-gated)
 
-Container **GTM-MGHZNN9K**, in `src/lib/gtm.js`.
+Container **GTM-MGHZNN9K** and GA4 property **G-VJ8ZCVTKG8**, both in `src/lib/analytics.js`.
 
 The GTM snippet is **not** placed directly in `index.html`. Instead:
 
@@ -269,3 +269,15 @@ The `<noscript>` iframe is in `index.html` for visitors with JavaScript disabled
 analytics or advertising cookies. Both documents (EN + AR) were rewritten to disclose
 GTM, the optional categories and the consent basis, and `LEGAL_UPDATED` was bumped to
 2026-07-19.
+
+### GA4 (gtag.js)
+
+GA4 `G-VJ8ZCVTKG8` is loaded the same consent-gated way: nothing is injected until the
+visitor allows **analytics**. It is configured with `send_page_view: false` and
+`anonymize_ip: true`, and page views are sent manually (`gtag('event','page_view')`)
+so single-page navigations are counted.
+
+> **Avoid double counting.** GA4 is currently loaded directly by gtag.js. If you also add a
+> GA4 Configuration tag for `G-VJ8ZCVTKG8` inside the GTM container, every hit will be
+> recorded twice. If you decide GTM should own GA4, set `GA4_HANDLED_BY_GTM = true` in
+> `src/lib/analytics.js` — gtag.js is then not injected at all.

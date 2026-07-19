@@ -8,8 +8,17 @@
 // ------------------------------------------------------------------
 
 export const GTM_ID = 'GTM-MGHZNN9K'
+export const GA4_ID = 'G-VJ8ZCVTKG8'
 
-let injected = false
+// IMPORTANT — avoid double counting.
+// GA4 is currently loaded directly via gtag.js. If you also add a GA4
+// Configuration tag for G-VJ8ZCVTKG8 inside the GTM container, every hit is
+// counted twice. In that case set this to true: gtag.js is then not injected
+// and GTM owns the measurement.
+export const GA4_HANDLED_BY_GTM = false
+
+let gtmInjected = false
+let ga4Injected = false
 
 function dl() {
   window.dataLayer = window.dataLayer || []
@@ -53,9 +62,9 @@ export function updateConsent(consent) {
 
 /** Inject the GTM container. Runs once, and only when consent allows it. */
 export function loadGTM() {
-  if (injected || typeof window === 'undefined') return
-  if (document.getElementById('gtm-script')) { injected = true; return }
-  injected = true
+  if (gtmInjected || typeof window === 'undefined') return
+  if (document.getElementById('gtm-script')) { gtmInjected = true; return }
+  gtmInjected = true
 
   dl().push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
   const s = document.createElement('script')
@@ -66,17 +75,55 @@ export function loadGTM() {
 }
 
 /**
+ * Inject GA4 (gtag.js) directly. Page views are sent manually from
+ * trackPageView, because a single-page app only fires one real page load.
+ */
+export function loadGA4() {
+  if (GA4_HANDLED_BY_GTM) return
+  if (ga4Injected || typeof window === 'undefined') return
+  if (document.getElementById('ga4-script')) { ga4Injected = true; return }
+  ga4Injected = true
+
+  const s = document.createElement('script')
+  s.id = 'ga4-script'
+  s.async = true
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`
+  document.head.appendChild(s)
+
+  gtag('js', new Date())
+  gtag('config', GA4_ID, { send_page_view: false, anonymize_ip: true })
+  // first view for this session, since send_page_view is off
+  sendPageView(window.location.pathname + window.location.search)
+}
+
+/**
  * Apply a consent object: always update the signals, and load the
  * container the first time analytics or marketing is allowed.
  */
 export function applyConsentToGTM(consent) {
   if (!consent) return
   updateConsent(consent)
-  if (consent.analytics || consent.marketing) loadGTM()
+  if (consent.analytics || consent.marketing) {
+    loadGTM()
+    if (consent.analytics) loadGA4()
+  }
 }
 
-/** SPA page view — GTM sees one page load, so route changes are pushed. */
+/** Send one page view to GA4 (and anything listening in GTM). */
+function sendPageView(path, title) {
+  const t = title || document.title
+  if (ga4Injected) {
+    gtag('event', 'page_view', {
+      page_path: path,
+      page_title: t,
+      page_location: window.location.origin + path,
+    })
+  }
+  dl().push({ event: 'page_view', page_path: path, page_title: t })
+}
+
+/** SPA page view — the browser only reports one real load, so routes are pushed. */
 export function trackPageView(path, title) {
-  if (!injected) return
-  dl().push({ event: 'page_view', page_path: path, page_title: title || document.title })
+  if (!gtmInjected && !ga4Injected) return
+  sendPageView(path, title)
 }

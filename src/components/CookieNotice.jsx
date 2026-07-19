@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
-import { applyConsentToGTM, initConsentDefaults } from '../lib/gtm.js'
+import { applyConsentToGTM, initConsentDefaults } from '../lib/analytics.js'
 
 const KEY = 'cookie-consent-v2'
 const OPEN_EVENT = 'open-cookie-settings'

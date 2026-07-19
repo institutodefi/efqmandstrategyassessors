@@ -58,7 +58,7 @@ export const LEGAL = {
                 'Contact and enquiry data — the name, email address, organisation and message you provide through our contact form.',
                 'Client account data — the name and email address you use to register for the client zone, and any organisation details you add.',
                 'Engagement data — documents, assessment records and correspondence created during a consultancy engagement, stored in your private client workspace.',
-                'Technical data — our hosting provider processes standard server logs (including IP address) for a short period purely for security and to deliver the site. If, and only if, you consent to analytics or marketing cookies, we also use Google Tag Manager and the measurement tags it loads (such as Google Analytics), which set cookies and process usage data — including a truncated IP address — to tell us how the site is used. You can refuse or withdraw this at any time from Cookie settings, and nothing is loaded until you agree.',
+                'Technical data — our hosting provider processes standard server logs (including IP address) for a short period purely for security and to deliver the site. If, and only if, you consent to analytics or marketing cookies, we also use Google Tag Manager (GTM-MGHZNN9K) and Google Analytics 4 (G-VJ8ZCVTKG8), which set cookies and process usage data — including a truncated IP address — to tell us how the site is used. You can refuse or withdraw this at any time from Cookie settings, and nothing is loaded until you agree.',
                 'Approximate location — to display prices in your local currency, we make a one-off lookup of your country from your IP address using a third-party geolocation service. We store only the resulting currency choice in your browser, never your IP address, and this is used solely to localise pricing.',
               ],
             },
@@ -170,7 +170,7 @@ export const LEGAL = {
         {
           h: 'The storage we use',
           body: [
-            'We use strictly necessary storage, plus optional analytics and marketing cookies that are disabled until you consent. The optional categories are delivered by Google Tag Manager (container GTM-MGHZNN9K), which may load Google measurement tags. We do not sell your data or use it for profiling beyond aggregate usage statistics.',
+            'We use strictly necessary storage, plus optional analytics and marketing cookies that are disabled until you consent. The optional categories are delivered by Google Tag Manager (container GTM-MGHZNN9K) and Google Analytics 4 (measurement ID G-VJ8ZCVTKG8). Analytics cookies are set by Google and typically expire within two years; IP addresses are truncated before storage. We do not sell your data or use it for profiling beyond aggregate usage statistics.',
             {
               list: [
                 'lang — remembers whether you are reading the site in English or Arabic. Stored in your browser (localStorage). No expiry until you clear it.',
@@ -368,7 +368,7 @@ export const LEGAL = {
                 'بيانات التواصل والاستفسار — الاسم والبريد الإلكتروني والمؤسسة والرسالة التي تقدّمونها عبر نموذج التواصل.',
                 'بيانات حساب العميل — الاسم والبريد الإلكتروني اللذان تستخدمونهما للتسجيل في منطقة العملاء، وأي تفاصيل مؤسسية تضيفونها.',
                 'بيانات المشروع — الوثائق وسجلات التقييم والمراسلات المنشأة خلال مشروع استشاري، والمخزّنة في مساحة عملكم الخاصة.',
-                'البيانات التقنية — يعالج مزوّد الاستضافة سجلات خادم قياسية (تشمل عنوان IP) لفترة قصيرة لأغراض الأمن وتقديم الموقع. وإذا وافقتم — وفقط إذا وافقتم — على ملفات التحليلات أو التسويق، فإننا نستخدم أيضاً Google Tag Manager والوسوم القياسية التي يحمّلها (مثل Google Analytics)، وهي تضبط ملفات تعريف ارتباط وتعالج بيانات الاستخدام — بما في ذلك عنوان IP مختصر — لتخبرنا كيف يُستخدم الموقع. ويمكنكم الرفض أو سحب الموافقة في أي وقت من إعدادات ملفات تعريف الارتباط، ولا يُحمَّل شيء قبل موافقتكم.',
+                'البيانات التقنية — يعالج مزوّد الاستضافة سجلات خادم قياسية (تشمل عنوان IP) لفترة قصيرة لأغراض الأمن وتقديم الموقع. وإذا وافقتم — وفقط إذا وافقتم — على ملفات التحليلات أو التسويق، فإننا نستخدم أيضاً Google Tag Manager (GTM-MGHZNN9K) وGoogle Analytics 4 (G-VJ8ZCVTKG8)، وهي تضبط ملفات تعريف ارتباط وتعالج بيانات الاستخدام — بما في ذلك عنوان IP مختصر — لتخبرنا كيف يُستخدم الموقع. ويمكنكم الرفض أو سحب الموافقة في أي وقت من إعدادات ملفات تعريف الارتباط، ولا يُحمَّل شيء قبل موافقتكم.',
                 'الموقع التقريبي — لعرض الأسعار بعملتكم المحلية، نجري استعلاماً واحداً عن بلدكم من عنوان IP عبر خدمة تحديد موقع من طرف ثالث. ولا نخزّن سوى اختيار العملة الناتج في متصفّحكم، لا عنوان IP، ويُستخدم ذلك فقط لعرض الأسعار محلياً.',
               ],
             },
@@ -480,7 +480,7 @@ export const LEGAL = {
         {
           h: 'التخزين الذي نستخدمه',
           body: [
-            'نستخدم التخزين الضروري تماماً، إضافةً إلى ملفات تحليلات وتسويق اختيارية معطّلة حتى تمنحوا موافقتكم. وتُقدَّم الفئات الاختيارية عبر Google Tag Manager (الحاوية GTM-MGHZNN9K)، وقد يحمّل وسوم قياس من Google. ولا نبيع بياناتكم ولا نستخدمها للتنميط خارج إحصاءات الاستخدام المجمّعة.',
+            'نستخدم التخزين الضروري تماماً، إضافةً إلى ملفات تحليلات وتسويق اختيارية معطّلة حتى تمنحوا موافقتكم. وتُقدَّم الفئات الاختيارية عبر Google Tag Manager (الحاوية GTM-MGHZNN9K) وGoogle Analytics 4 (معرّف القياس G-VJ8ZCVTKG8). وتضبط Google ملفات التحليلات وتنتهي عادةً خلال سنتين، وتُختصر عناوين IP قبل تخزينها. ولا نبيع بياناتكم ولا نستخدمها للتنميط خارج إحصاءات الاستخدام المجمّعة.',
             {
               list: [
                 'lang — يتذكّر ما إذا كنتم تقرؤون الموقع بالعربية أو الإنجليزية. يُخزَّن في متصفّحكم (localStorage) ولا ينتهي حتى تمسحوه.',
