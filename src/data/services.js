@@ -13,6 +13,8 @@ export const SERVICES = {
       eyebrow: 'Our services',
       titleA: 'Three ways we ', strong: 'work with you', titleB: '',
       lead: 'Assessment tells you where you stand. Consultancy moves you forward. Training makes it stick. Most engagements use all three.',
+      wa: 'WhatsApp', li: 'Alejandro on LinkedIn',
+      waMsg: 'Hello, I would like to talk to an assessor about your services.',
     },
     consultancy: {
       seoTitle: 'Consultancy Services — ISO Standards & Consultancy as a Service | Dubai',
@@ -183,6 +185,8 @@ export const SERVICES = {
       eyebrow: 'خدماتنا',
       titleA: 'ثلاث طرق ', strong: 'نعمل بها معكم', titleB: '',
       lead: 'التقييم يخبركم أين تقفون. والاستشارة تدفعكم إلى الأمام. والتدريب يجعل الأثر يدوم. ومعظم المشاريع تستخدم الثلاث.',
+      wa: 'واتساب', li: 'أليخاندرو على لينكدإن',
+      waMsg: 'مرحباً، أودّ التحدّث إلى مقيّم بخصوص خدماتكم.',
     },
     consultancy: {
       seoTitle: 'الخدمات الاستشارية — مواصفات ISO والاستشارة كخدمة | دبي',

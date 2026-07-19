@@ -332,3 +332,72 @@ export function SocialIcon({ name }) {
     </svg>
   )
 }
+
+/**
+ * Bespoke icons for the three service areas. Drawn for this brand rather than
+ * taken from a generic set: each pairs a teal→mint gradient primary shape with
+ * a solid mint accent, echoing the spiral mark.
+ *   assess — a maturity dial: scored arcs with a needle (diagnosis, RADAR)
+ *   caas   — a continuous loop around an AI spark (ongoing, AI-boosted service)
+ *   train  — an easel with a rising line (workshops that move results)
+ */
+export function BrandIcon({ name, size = 44 }) {
+  const gid = `bi-${name}`
+  const svg = {
+    viewBox: '0 0 48 48', width: size, height: size, fill: 'none',
+    strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true,
+  }
+  const defs = (
+    <defs>
+      <linearGradient id={gid} x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#0E4C60" />
+        <stop offset="1" stopColor="#1FA98A" />
+      </linearGradient>
+    </defs>
+  )
+
+  if (name === 'assess') {
+    return (
+      <svg {...svg}>
+        {defs}
+        {/* outer scored arc */}
+        <path d="M9 33a16.5 16.5 0 1 1 30 0" stroke={`url(#${gid})`} strokeWidth="3.2" />
+        {/* inner arc */}
+        <path d="M16.5 32a9 9 0 1 1 15 0" stroke={`url(#${gid})`} strokeWidth="2.6" opacity="0.45" />
+        {/* needle to the upper-right = rising maturity */}
+        <path d="M24 32 33 19.5" stroke="#1FA98A" strokeWidth="3.2" />
+        <circle cx="24" cy="32" r="2.9" fill="#0E4C60" />
+        {/* scale ticks */}
+        <path d="M9 33h3M36 33h3" stroke={`url(#${gid})`} strokeWidth="2.6" />
+      </svg>
+    )
+  }
+
+  if (name === 'caas') {
+    return (
+      <svg {...svg}>
+        {defs}
+        {/* continuous subscription loop, open for the arrowhead */}
+        <path d="M38.5 21.5A15.5 15.5 0 1 1 33 12.2" stroke={`url(#${gid})`} strokeWidth="3.2" />
+        <path d="M33.5 5.8v7h-7" stroke={`url(#${gid})`} strokeWidth="3.2" />
+        {/* AI spark at the centre */}
+        <path d="M24 16.5c0 4.2 3.3 7.5 7.5 7.5-4.2 0-7.5 3.3-7.5 7.5 0-4.2-3.3-7.5-7.5-7.5 4.2 0 7.5-3.3 7.5-7.5Z"
+              fill="#1FA98A" />
+      </svg>
+    )
+  }
+
+  // train
+  return (
+    <svg {...svg}>
+      {defs}
+      {/* easel / board */}
+      <rect x="7.5" y="9" width="33" height="24" rx="4" stroke={`url(#${gid})`} strokeWidth="3.2" />
+      {/* rising line of results */}
+      <path d="M14.5 26.5 20.5 21l4.5 3.5L33.5 15" stroke="#1FA98A" strokeWidth="3.2" />
+      <circle cx="33.5" cy="15" r="2.6" fill="#1FA98A" />
+      {/* stand */}
+      <path d="M24 33v6M18 39h12" stroke={`url(#${gid})`} strokeWidth="3.2" />
+    </svg>
+  )
+}

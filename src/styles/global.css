@@ -1441,3 +1441,93 @@ body.consent-banner-open .wa-fab { opacity: 0; pointer-events: none; visibility:
   .svc-tabbar .wrap::after { opacity: 1; }
   .svc-tab { padding: 14px 14px; font-size: 0.82rem; }
 }
+
+/* ============================================================
+   Bespoke hub icons · horizontal model rows · CTA actions
+============================================================ */
+
+/* Hub card icon — explicit sizing (the .service .glyph rule doesn't reach here) */
+.hub-glyph {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: linear-gradient(150deg, var(--paper-2), #ffffff);
+  border: 1px solid var(--line);
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 4px;
+}
+.hub-glyph svg { width: 34px; height: 34px; display: block; }
+.hub-card:hover .hub-glyph { border-color: var(--mint); }
+
+/* ---------- three models, drawn horizontally ---------- */
+.model-rows { display: grid; gap: 12px; }
+.model-row {
+  display: grid;
+  grid-template-columns: 190px 150px minmax(0, 1fr) 170px;
+  gap: clamp(16px, 2.4vw, 30px);
+  align-items: center;
+  background: var(--white); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px 24px;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+}
+.model-row:hover { border-color: var(--mint); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.model-row.featured { background: var(--ink); border-color: var(--ink); }
+
+.mr-id { position: relative; }
+.mr-name { font-size: 1.1rem; font-weight: 650; color: var(--ink); letter-spacing: -0.012em; }
+.mr-tagline { font-size: 0.82rem; line-height: 1.5; color: var(--muted); margin-top: 4px; }
+.mr-badge {
+  display: inline-block; margin-top: 9px;
+  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); background: var(--glow); border-radius: 999px; padding: 3px 10px;
+}
+.model-row.featured .mr-name { color: var(--white); }
+.model-row.featured .mr-tagline { color: var(--muted-on-dark); }
+
+.mr-price { display: flex; flex-direction: column; gap: 1px; }
+.mr-from { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.mr-amount { font-size: 1.72rem; font-weight: 300; color: var(--teal); letter-spacing: -0.02em; line-height: 1.1; }
+.mr-amount em { font-style: normal; font-size: 0.95rem; font-weight: 600; color: var(--mint); margin: 0 3px; }
+.mr-unit { font-size: 0.76rem; color: var(--muted); }
+.model-row.featured .mr-from, .model-row.featured .mr-unit { color: var(--muted-on-dark); }
+.model-row.featured .mr-amount { color: var(--white); }
+.model-row.featured .mr-amount em { color: var(--glow); }
+
+.mr-feats {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px;
+}
+.mr-feats li {
+  display: flex; align-items: flex-start; gap: 7px;
+  font-size: 0.815rem; line-height: 1.45; color: var(--body);
+}
+.mr-feats svg { width: 14px; height: 14px; flex: none; margin-top: 2px; color: var(--mint); }
+.mr-feats svg circle, .mr-feats svg path { stroke: var(--mint); }
+.model-row.featured .mr-feats li { color: #dfeaf0; }
+.model-row.featured .mr-feats svg { color: var(--glow); }
+.model-row.featured .mr-feats svg circle, .model-row.featured .mr-feats svg path { stroke: var(--glow); }
+
+.mr-cta { display: flex; justify-content: flex-end; }
+.mr-cta .btn { padding: 11px 20px; font-size: 0.84rem; white-space: nowrap; }
+.model-row.featured .btn-ghost { color: var(--white); border-color: rgba(255,255,255,0.35); }
+
+/* ---------- CTA actions ---------- */
+.svc-cta-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.svc-cta-actions .btn { padding: 12px 20px; font-size: 0.86rem; }
+.btn-wa {
+  background: #25D366; color: #fff; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-wa:hover { background: #1fbe5a; color: #fff; }
+.btn-li {
+  background: #0A66C2; color: #fff; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-li:hover { background: #08529b; color: #fff; }
+.btn-li svg { width: 16px; height: 16px; }
+
+@media (max-width: 1080px) {
+  .model-row { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .mr-feats { grid-column: 1 / -1; }
+  .mr-cta { grid-column: 1 / -1; justify-content: flex-start; }
+}
+@media (max-width: 620px) {
+  .model-row { grid-template-columns: 1fr; }
+  .mr-feats { grid-template-columns: 1fr; }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit } from '../components/Chrome.jsx'
+import { Nav, Footer, HeroWave, RadarWheel, Icon, ExcellenceOrbit, BrandIcon } from '../components/Chrome.jsx'
 import Newsletter from '../components/Newsletter.jsx'
 import { supabase } from '../lib/supabase.js'
 import { useLang } from '../i18n.jsx'
@@ -96,7 +96,7 @@ export default function Home() {
           <div className="hub-grid">
             {t.services.hub.map((s) => (
               <Link className="hub-card reveal" to={s.href} key={s.title}>
-                <div className="glyph"><Icon name={s.icon} /></div>
+                <div className="hub-glyph"><BrandIcon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.text}</p>
                 <span className="hub-link">{t.services.more} →</span>

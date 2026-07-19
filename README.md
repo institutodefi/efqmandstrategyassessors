@@ -190,3 +190,27 @@ The service pages use a deliberately compact scale: a short dark page head, a st
 subtab bar, lean two-column service blocks (rail + text), and small bordered cards
 (`.mini-card`, `.flow`, `.prog-row`) instead of large padded panels. Type sits at
 ~0.95rem body / 1.24rem item headings so pages read densely without feeling cramped.
+
+### Bespoke service icons
+
+`BrandIcon` in `src/components/Chrome.jsx` holds three custom-drawn icons (not from a
+generic icon set), each pairing a teal→mint gradient with a solid mint accent:
+
+- `assess` — a maturity dial: scored arcs with a rising needle (diagnosis / RADAR)
+- `caas` — a continuous loop around an AI spark (ongoing, AI-boosted service)
+- `train` — an easel with a rising results line (workshops that change outcomes)
+
+They are referenced by the `icon` key in `services.hub` (`src/i18n.jsx`) and sized by
+`.hub-glyph` in the stylesheet.
+
+### Pricing layout
+
+The three models render as **horizontal rows** (`.model-rows` / `.model-row`): name and
+tagline, price, a two-column feature list and the CTA across a single band, collapsing to
+stacked blocks below 1080px. The "Involvement" tier keeps the dark featured treatment.
+
+### Service CTA
+
+Each tab's closing CTA offers three routes to contact: the contact form, a **WhatsApp**
+button (pre-filled, bilingual message) and a link to **Alejandro's LinkedIn profile**
+(`https://www.linkedin.com/in/alejandrosnicolas/`).
