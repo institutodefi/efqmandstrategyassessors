@@ -281,3 +281,22 @@ so single-page navigations are counted.
 > GA4 Configuration tag for `G-VJ8ZCVTKG8` inside the GTM container, every hit will be
 > recorded twice. If you decide GTM should own GA4, set `GA4_HANDLED_BY_GTM = true` in
 > `src/lib/analytics.js` — gtag.js is then not injected at all.
+
+### Every assessment CTA drives to a form
+
+All "start / request an assessment" calls to action now open the `/request` form page with
+the relevant service preselected, rather than scrolling to an anchor:
+
+- Home hero "Start your assessment" → `/request?service=EFQM Model Assessment`
+- EFQM Model page CTA → same
+- Every service, model tier and training programme → `/request?service=<name>`
+- Each service tab's closing CTA → `/request`
+
+### `/contact` — unlisted page
+
+`src/pages/Contact.jsx` is a standalone contact page with the enquiry form, a WhatsApp
+button and the office details. It is deliberately **hidden**: not in the navigation, not in
+`sitemap.xml`, and it sets `robots: noindex, follow` while mounted so it does not compete
+with `/request` in search. Use it for campaigns, email signatures or printed material by
+linking to `https://efqmassessors.ae/contact` directly. To make it public, remove the
+robots effect in that file and add the route to `scripts/gen-sitemap.mjs`.
