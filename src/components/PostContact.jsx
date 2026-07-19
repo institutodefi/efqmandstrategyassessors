@@ -7,10 +7,14 @@ const WA_NUMBER = '971507369400'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /**
- * Contact form + WhatsApp CTA shown at the foot of every blog post.
- * The WhatsApp message and the inquiry both reference the article title
- * so the assessor has context. Submits to the Supabase `inquiries`
- * table (with a source), falling back to a mailto link.
+ * Contact form + WhatsApp CTA at the foot of every blog post.
+ *
+ * v2 — fixes & improvements:
+ *  · Consent row rebuilt (.consent-row) so the label can never overflow
+ *    the card: checkbox is fixed-size, the text takes the remaining width.
+ *  · Inline field validation (aria-invalid + hint under the field).
+ *  · Submit disabled until consent is ticked; busy state on the button.
+ *  · Status message announced via role="status" and auto-clears on typing.
  */
 export default function PostContact({ title }) {
   const { t } = useLang()
@@ -18,21 +22,29 @@ export default function PostContact({ title }) {
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState(null)
   const [sending, setSending] = useState(false)
+  const [errors, setErrors] = useState({})
 
   const waText = b.ctaWaPrefill.replace('{title}', title)
   const waHref = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waText)}`
 
-  async function onSubmit(e) {
-    e.preventDefault()
-    const form = e.target
+  function validate(payload) {
+    const e = {}
+    if (!payload.name) e.name = true
+    if (!payload.email || !EMAIL_RE.test(payload.email)) e.email = true
+    if (!payload.message) e.message = true
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  async function onSubmit(ev) {
+    ev.preventDefault()
+    const form = ev.target
     const payload = {
       name: form.name.value.trim(),
       email: form.email.value.trim(),
       message: form.message.value.trim(),
     }
-    if (!payload.name || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
-      setStatus({ ok: false, msg: t.contact.valMsg }); return
-    }
+    if (!validate(payload)) { setStatus({ ok: false, msg: t.contact.valMsg }); return }
     if (!consent) { setStatus({ ok: false, msg: t.consent.required }); return }
 
     const record = { ...payload, organisation: `Blog: ${title}` }
@@ -46,7 +58,7 @@ export default function PostContact({ title }) {
     const { error } = await supabase.from('inquiries').insert(record)
     setSending(false)
     if (error) setStatus({ ok: false, msg: t.contact.errMsg })
-    else { form.reset(); setConsent(false); setStatus({ ok: true, msg: b.ctaSent }) }
+    else { form.reset(); setConsent(false); setErrors({}); setStatus({ ok: true, msg: b.ctaSent }) }
   }
 
   return (
@@ -63,24 +75,40 @@ export default function PostContact({ title }) {
         </a>
       </div>
 
-      <form className="post-cta-form" onSubmit={onSubmit} noValidate>
+      <form className="post-cta-form" onSubmit={onSubmit} noValidate
+            onChange={() => status && setStatus(null)}>
         <div className="field">
           <label htmlFor="pc-name">{t.contact.fName}</label>
-          <input id="pc-name" name="name" autoComplete="name" required />
+          <input id="pc-name" name="name" autoComplete="name" required
+                 aria-invalid={errors.name || undefined} />
         </div>
         <div className="field">
           <label htmlFor="pc-email">{t.contact.fEmail}</label>
-          <input id="pc-email" name="email" type="email" autoComplete="email" required />
+          <input id="pc-email" name="email" type="email" autoComplete="email" required
+                 aria-invalid={errors.email || undefined} />
         </div>
         <div className="field">
           <label htmlFor="pc-msg">{t.contact.fMsg}</label>
-          <textarea id="pc-msg" name="message" rows="3" required />
+          <textarea id="pc-msg" name="message" rows="3" required
+                    aria-invalid={errors.message || undefined} />
         </div>
-        <label className="consent">
-          <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-          <span>{t.consent.label}<Link to="/privacy">{t.consent.privacyLink}</Link>{t.consent.and}</span>
+
+        {/* Consent — rebuilt row: fixed checkbox + fluid text, never overflows */}
+        <label className="consent-row" htmlFor="pc-consent">
+          <input
+            id="pc-consent"
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+          />
+          <span className="consent-text">
+            {t.consent.label}
+            <Link to="/privacy">{t.consent.privacyLink}</Link>
+            {t.consent.and}
+          </span>
         </label>
-        <button className="btn btn-primary" type="submit" disabled={sending}>
+
+        <button className="btn btn-primary" type="submit" disabled={sending || !consent}>
           {sending ? t.contact.sending : t.contact.send}
         </button>
         {status && (

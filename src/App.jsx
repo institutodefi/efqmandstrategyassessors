@@ -84,6 +84,14 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/portal/:zone"
+              element={
+                <ProtectedRoute>
+                  <Portal />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
