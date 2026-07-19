@@ -18,7 +18,11 @@ export const GA4_ID = 'G-VJ8ZCVTKG8'
 export const GA4_HANDLED_BY_GTM = false
 
 let gtmInjected = false
-let ga4Injected = false
+// GA4 (gtag.js) is now hard-coded in index.html so Google's tag verification
+// can detect it. Consent Mode defaults there are "denied", so nothing is
+// stored until the visitor agrees — see updateConsent below.
+const GA4_IN_HTML = true
+let ga4Injected = GA4_IN_HTML
 
 function dl() {
   window.dataLayer = window.dataLayer || []
@@ -30,9 +34,17 @@ function gtag() {
   dl().push(arguments)
 }
 
-/** Set Consent Mode defaults to denied. Safe to call before GTM loads. */
+/**
+ * Consent Mode defaults are set inline in index.html (they must run before
+ * gtag.js). This stays as a safety net for any page that does not include
+ * that snippet, and is a no-op when the defaults are already present.
+ */
 export function initConsentDefaults() {
   if (typeof window === 'undefined') return
+  const already = (window.dataLayer || []).some(
+    (x) => x && x.length && x[0] === 'consent' && x[1] === 'default'
+  )
+  if (already) return
   gtag('consent', 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
@@ -79,7 +91,9 @@ export function loadGTM() {
  * trackPageView, because a single-page app only fires one real page load.
  */
 export function loadGA4() {
-  if (GA4_HANDLED_BY_GTM) return
+  // gtag.js ships in index.html, so there is nothing to inject. Kept for the
+  // case where GA4_IN_HTML is turned off and the tag must be added lazily.
+  if (GA4_IN_HTML || GA4_HANDLED_BY_GTM) return
   if (ga4Injected || typeof window === 'undefined') return
   if (document.getElementById('ga4-script')) { ga4Injected = true; return }
   ga4Injected = true
@@ -92,7 +106,6 @@ export function loadGA4() {
 
   gtag('js', new Date())
   gtag('config', GA4_ID, { send_page_view: false, anonymize_ip: true })
-  // first view for this session, since send_page_view is off
   sendPageView(window.location.pathname + window.location.search)
 }
 
@@ -126,4 +139,9 @@ function sendPageView(path, title) {
 export function trackPageView(path, title) {
   if (!gtmInjected && !ga4Injected) return
   sendPageView(path, title)
+}
+
+/** Send the first page view once the tag is present (called on boot). */
+export function trackInitialPageView() {
+  sendPageView(window.location.pathname + window.location.search)
 }

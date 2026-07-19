@@ -270,12 +270,21 @@ analytics or advertising cookies. Both documents (EN + AR) were rewritten to dis
 GTM, the optional categories and the consent basis, and `LEGAL_UPDATED` was bumped to
 2026-07-19.
 
-### GA4 (gtag.js)
+### GA4 (gtag.js) — in `index.html` with Consent Mode v2
 
-GA4 `G-VJ8ZCVTKG8` is loaded the same consent-gated way: nothing is injected until the
-visitor allows **analytics**. It is configured with `send_page_view: false` and
-`anonymize_ip: true`, and page views are sent manually (`gtag('event','page_view')`)
-so single-page navigations are counted.
+The standard Google tag for `G-VJ8ZCVTKG8` sits directly in `index.html`, so Google Tag
+Assistant / the GA4 setup wizard can detect it. Immediately **before** it, an inline
+script sets Consent Mode defaults to `denied` for analytics, ads, functionality and
+personalisation. The result:
+
+- The tag is present and detectable on every page load.
+- No analytics cookies or advertising identifiers are stored until the visitor accepts.
+- Accepting pushes `consent update` → measurement starts. Rejecting keeps it denied.
+
+It is configured with `send_page_view: false` and `anonymize_ip: true`; page views are
+sent per route from `src/lib/analytics.js` so single-page navigations are counted.
+`GA4_IN_HTML = true` in that file stops the module injecting a second copy — set it to
+`false` if you ever remove the snippet from `index.html`.
 
 > **Avoid double counting.** GA4 is currently loaded directly by gtag.js. If you also add a
 > GA4 Configuration tag for `G-VJ8ZCVTKG8` inside the GTM container, every hit will be

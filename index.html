@@ -118,6 +118,35 @@
       }
     </script>
 
+
+    <!-- Consent Mode v2 defaults — everything denied until the visitor chooses.
+         MUST run before gtag.js so no storage is used without consent. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'denied',
+        personalization_storage: 'denied',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJ8ZCVTKG8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      // send_page_view is off: this is a single-page app, so page views are
+      // sent per route from src/lib/analytics.js
+      gtag('config', 'G-VJ8ZCVTKG8', { send_page_view: false, anonymize_ip: true });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

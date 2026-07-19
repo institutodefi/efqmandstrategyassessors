@@ -58,7 +58,7 @@ export const LEGAL = {
                 'Contact and enquiry data — the name, email address, organisation and message you provide through our contact form.',
                 'Client account data — the name and email address you use to register for the client zone, and any organisation details you add.',
                 'Engagement data — documents, assessment records and correspondence created during a consultancy engagement, stored in your private client workspace.',
-                'Technical data — our hosting provider processes standard server logs (including IP address) for a short period purely for security and to deliver the site. If, and only if, you consent to analytics or marketing cookies, we also use Google Tag Manager (GTM-MGHZNN9K) and Google Analytics 4 (G-VJ8ZCVTKG8), which set cookies and process usage data — including a truncated IP address — to tell us how the site is used. You can refuse or withdraw this at any time from Cookie settings, and nothing is loaded until you agree.',
+                'Technical data — our hosting provider processes standard server logs (including IP address) for a short period purely for security and to deliver the site. If, and only if, you consent to analytics or marketing cookies, we also use Google Tag Manager (GTM-MGHZNN9K) and Google Analytics 4 (G-VJ8ZCVTKG8), which set cookies and process usage data — including a truncated IP address — to tell us how the site is used. You can refuse or withdraw this at any time from Cookie settings. The Google tag is present on every page, but it runs in a consent-denied state: it sets no cookies and stores no identifiers on your device unless and until you allow the analytics or marketing category.',
                 'Approximate location — to display prices in your local currency, we make a one-off lookup of your country from your IP address using a third-party geolocation service. We store only the resulting currency choice in your browser, never your IP address, and this is used solely to localise pricing.',
               ],
             },
@@ -183,7 +183,7 @@ export const LEGAL = {
         {
           h: 'Consent',
           body: [
-            'Strictly necessary storage does not require consent under the PDPL or GDPR, because the site cannot function without it. Analytics and marketing cookies do require consent: they are set to “denied” by default, Google Tag Manager is not loaded at all until you allow one of those categories, and you can change or withdraw your choice at any time from Cookie settings.',
+            'Strictly necessary storage does not require consent under the PDPL or GDPR, because the site cannot function without it. Analytics and marketing cookies do require consent. We use Google Consent Mode: on every page load all analytics and advertising storage is set to “denied” before the Google tag runs, so no analytics cookies are written and no advertising identifiers are read. The Google Tag Manager container is not loaded at all until you allow one of those categories. If you accept, the denial is lifted and measurement begins; if you reject or ignore the banner, it stays denied. You can change or withdraw your choice at any time from Cookie settings.',
           ],
         },
         {
@@ -368,7 +368,7 @@ export const LEGAL = {
                 'بيانات التواصل والاستفسار — الاسم والبريد الإلكتروني والمؤسسة والرسالة التي تقدّمونها عبر نموذج التواصل.',
                 'بيانات حساب العميل — الاسم والبريد الإلكتروني اللذان تستخدمونهما للتسجيل في منطقة العملاء، وأي تفاصيل مؤسسية تضيفونها.',
                 'بيانات المشروع — الوثائق وسجلات التقييم والمراسلات المنشأة خلال مشروع استشاري، والمخزّنة في مساحة عملكم الخاصة.',
-                'البيانات التقنية — يعالج مزوّد الاستضافة سجلات خادم قياسية (تشمل عنوان IP) لفترة قصيرة لأغراض الأمن وتقديم الموقع. وإذا وافقتم — وفقط إذا وافقتم — على ملفات التحليلات أو التسويق، فإننا نستخدم أيضاً Google Tag Manager (GTM-MGHZNN9K) وGoogle Analytics 4 (G-VJ8ZCVTKG8)، وهي تضبط ملفات تعريف ارتباط وتعالج بيانات الاستخدام — بما في ذلك عنوان IP مختصر — لتخبرنا كيف يُستخدم الموقع. ويمكنكم الرفض أو سحب الموافقة في أي وقت من إعدادات ملفات تعريف الارتباط، ولا يُحمَّل شيء قبل موافقتكم.',
+                'البيانات التقنية — يعالج مزوّد الاستضافة سجلات خادم قياسية (تشمل عنوان IP) لفترة قصيرة لأغراض الأمن وتقديم الموقع. وإذا وافقتم — وفقط إذا وافقتم — على ملفات التحليلات أو التسويق، فإننا نستخدم أيضاً Google Tag Manager (GTM-MGHZNN9K) وGoogle Analytics 4 (G-VJ8ZCVTKG8)، وهي تضبط ملفات تعريف ارتباط وتعالج بيانات الاستخدام — بما في ذلك عنوان IP مختصر — لتخبرنا كيف يُستخدم الموقع. ويمكنكم الرفض أو سحب الموافقة في أي وقت من إعدادات ملفات تعريف الارتباط. ووسم Google موجود في كل صفحة، لكنه يعمل في حالة «مرفوض»: فلا يضبط أي ملفات تعريف ارتباط ولا يخزّن أي معرّفات على جهازكم ما لم — وحتى — تسمحوا بفئة التحليلات أو التسويق.',
                 'الموقع التقريبي — لعرض الأسعار بعملتكم المحلية، نجري استعلاماً واحداً عن بلدكم من عنوان IP عبر خدمة تحديد موقع من طرف ثالث. ولا نخزّن سوى اختيار العملة الناتج في متصفّحكم، لا عنوان IP، ويُستخدم ذلك فقط لعرض الأسعار محلياً.',
               ],
             },
@@ -493,7 +493,7 @@ export const LEGAL = {
         {
           h: 'الموافقة',
           body: [
-            'التخزين الضروري تماماً لا يتطلّب موافقة بموجب قانون حماية البيانات الإماراتي أو GDPR، لأن الموقع لا يعمل دونه. أما ملفات التحليلات والتسويق فتتطلّب موافقة: فهي مضبوطة على «مرفوض» افتراضياً، ولا يُحمَّل Google Tag Manager إطلاقاً حتى تسمحوا بإحدى هاتين الفئتين، ويمكنكم تغيير اختياركم أو سحبه في أي وقت من إعدادات ملفات تعريف الارتباط.',
+            'التخزين الضروري تماماً لا يتطلّب موافقة بموجب قانون حماية البيانات الإماراتي أو GDPR، لأن الموقع لا يعمل دونه. أما ملفات التحليلات والتسويق فتتطلّب موافقة. ونستخدم وضع الموافقة من Google (Consent Mode): فعند تحميل كل صفحة يُضبط تخزين التحليلات والإعلانات على «مرفوض» قبل تشغيل وسم Google، فلا تُكتب أي ملفات تحليلات ولا تُقرأ أي معرّفات إعلانية. ولا تُحمَّل حاوية Google Tag Manager إطلاقاً حتى تسمحوا بإحدى هاتين الفئتين. فإن قبلتم، رُفع الرفض وبدأ القياس؛ وإن رفضتم أو تجاهلتم الإشعار، بقي مرفوضاً. ويمكنكم تغيير اختياركم أو سحبه في أي وقت من إعدادات ملفات تعريف الارتباط.',
           ],
         },
         {
