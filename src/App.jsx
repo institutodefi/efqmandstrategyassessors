@@ -14,6 +14,7 @@ const Model = lazy(() => import('./pages/Model.jsx'))
 const Services = lazy(() => import('./pages/Services.jsx'))
 const Request = lazy(() => import('./pages/Request.jsx'))
 const Contact = lazy(() => import('./pages/Contact.jsx'))
+const Orbital = lazy(() => import('./pages/Orbital.jsx'))
 const Blog = lazy(() => import('./pages/Blog.jsx'))
 const Post = lazy(() => import('./pages/Post.jsx'))
 const Legal = lazy(() => import('./pages/Legal.jsx'))
@@ -56,6 +57,7 @@ export default function App() {
             <Route path="/request" element={<Request />} />
             {/* unlisted: not in nav or sitemap, noindex */}
             <Route path="/contact" element={<Contact />} />
+            <Route path="/orbital360" element={<Orbital />} />
             <Route path="/services/assessments" element={<Services />} />
             <Route path="/services/consultancy" element={<Services />} />
             <Route path="/services/training" element={<Services />} />

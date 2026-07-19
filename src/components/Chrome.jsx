@@ -70,8 +70,9 @@ export function Nav() {
             </div>
           </li>
           <li>
-            <Link to="/login" className="btn btn-primary nav-cta client-flash">
-              <Icon name="lock" /><span>{t.nav.client}</span>
+            <Link to="/orbital360" className="btn btn-primary nav-cta client-flash">
+              <img className="nav-cta-mark" src="/orbital360/mark.svg" alt="" width="20" height="20" />
+              <span>{t.nav.client}</span>
             </Link>
           </li>
         </ul>
@@ -109,7 +110,7 @@ export function Footer() {
               {links.map(([href, label]) => (
                 <li key={label}><Link to={href}>{label}</Link></li>
               ))}
-              <li><Link to="/login">{t.nav.client}</Link></li>
+              <li><Link to="/orbital360">{t.nav.client}</Link></li>
               <li><a href="/rss.xml" target="_blank" rel="noopener noreferrer">{t.blog.rss}</a></li>
             </ul>
           </div>

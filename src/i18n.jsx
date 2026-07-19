@@ -8,7 +8,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 export const STRINGS = {
   en: {
     dir: 'ltr',
-    nav: { about: 'About', services: 'Services', models: 'Models', consultancy: 'Consultancy', assessments: 'Assessments', training: 'Training', model: 'EFQM Model', blog: 'Blog', contact: 'Contact', client: 'Client zone' },
+    nav: { about: 'About', services: 'Services', models: 'Models', consultancy: 'Consultancy', assessments: 'Assessments', training: 'Training', model: 'EFQM Model', blog: 'Blog', contact: 'Contact', client: 'Orbital360' },
     hero: {
       eyebrow: 'Dubai · Americas · Europe · MENA',
       titleA: 'Fostering ', titleStrong1: 'strategy', titleB: ' through the ', titleStrong2: 'EFQM Model',
@@ -262,7 +262,7 @@ export const STRINGS = {
 
   ar: {
     dir: 'rtl',
-    nav: { about: 'من نحن', services: 'خدماتنا', models: 'النماذج', consultancy: 'الاستشارات', assessments: 'التقييمات', training: 'التدريب', model: 'نموذج EFQM', blog: 'المدونة', contact: 'اتصل بنا', client: 'منطقة العملاء' },
+    nav: { about: 'من نحن', services: 'خدماتنا', models: 'النماذج', consultancy: 'الاستشارات', assessments: 'التقييمات', training: 'التدريب', model: 'نموذج EFQM', blog: 'المدونة', contact: 'اتصل بنا', client: 'Orbital360' },
     hero: {
       eyebrow: 'دبي · الأمريكتان · أوروبا · الشرق الأوسط وشمال أفريقيا',
       titleA: 'تعزيز ', titleStrong1: 'الاستراتيجية', titleB: ' من خلال ', titleStrong2: 'نموذج EFQM',

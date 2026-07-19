@@ -309,3 +309,34 @@ button and the office details. It is deliberately **hidden**: not in the navigat
 with `/request` in search. Use it for campaigns, email signatures or printed material by
 linking to `https://efqmassessors.ae/contact` directly. To make it public, remove the
 robots effect in that file and add the route to `scripts/gen-sitemap.mjs`.
+
+## Orbital360 — the AI PMTool
+
+`/orbital360` (`src/pages/Orbital.jsx`, content in `src/data/orbital.js`, bilingual EN/AR).
+
+The page positions Orbital360 as the AI project-management tool clients work in, built
+around four jobs — **Implement, Maintain, Assess, Audit** — for their management,
+governance and excellence transformation system. It also covers what the AI actually
+does, who it is for, and closes with the request/WhatsApp actions.
+
+### Assets — `public/orbital360/`
+
+| File | Use |
+| --- | --- |
+| `mark.svg` | Transparent orbital mark — used as the nav button icon and the CTA glyph |
+| `logo-on-dark.svg` | Full logo, background removed, light artwork — for dark sections |
+| `logo.svg` | Full logo, background removed, dark artwork — for light sections |
+| `favicon-512.png` / `favicon-192.png` | Raster marks (512 used as the page's OG image) |
+| `logo-dark.png`, `animated.gif` | Supplied originals kept for other channels |
+
+The two supplied SVGs shipped with an opaque background rectangle (`#FFFFFF` and
+`#0B1230`). Those rects were stripped so the logo sits cleanly on the site's ink
+(`#0E1730`) without a visible panel edge — the source files are otherwise untouched.
+
+### Nav change
+
+The **Client zone** button is now **Orbital360**, with the orbital mark replacing the
+padlock icon. It points to `/orbital360` rather than straight to `/login`, so visitors
+who don't yet have an account learn what the tool is; the page carries a prominent
+**Sign in to Orbital360** button to `/login`, so existing clients still reach the portal
+in one extra click. The footer link was updated to match.

@@ -17,6 +17,7 @@ const staticUrls = [
   { loc: '/services/consultancy', pri: '0.95', freq: 'monthly' },
   { loc: '/services/training', pri: '0.9', freq: 'monthly' },
   { loc: '/request', pri: '0.9', freq: 'monthly' },
+  { loc: '/orbital360', pri: '0.9', freq: 'monthly' },
   { loc: '/model', pri: '0.9', freq: 'monthly' },
   { loc: '/blog', pri: '0.9', freq: 'daily' },
   { loc: '/login', pri: '0.3', freq: 'yearly' },
