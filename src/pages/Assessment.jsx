@@ -83,7 +83,12 @@ function AssessmentList() {
         const { data: dbg } = await supabase.rpc('debug_assessment_access',
           { p_company: f.company.value })
         const d = dbg?.[0]
-        if (d) msg += ` — role: ${d.my_role} · subscription active: ${d.has_active_subscription} · your grant: ${d.my_grant}`
+        if (d) {
+          msg += ` — role: ${d.my_role} · subscription active: ${d.has_active_subscription} · your grant: ${d.my_grant}`
+          if ('is_admin' in d) msg += ` · is_admin: ${d.is_admin} · can_create: ${d.can_create}`
+          if ('auth_uid' in d) msg += ` · uid: ${String(d.auth_uid).slice(0, 8)}`
+          msg += ` · project: ${(supabase?.supabaseUrl || '').replace('https://', '').split('.')[0]}`
+        }
       }
       setStatus({ ok: false, msg })
     } else {
