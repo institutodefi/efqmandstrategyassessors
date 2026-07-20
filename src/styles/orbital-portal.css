@@ -324,3 +324,38 @@
   .as-score-item { grid-template-columns: 1fr 60px; }
   .as-score-item .proj-bar { grid-column: 1 / -1; }
 }
+
+/* ---- Auditor dual scoring ---- */
+.as-legend { display: flex; gap: 22px; font-size: 0.8rem; margin: 0 0 12px; }
+.as-leg-client { color: var(--glow, #52d3a2); }
+.as-leg-auditor { color: #e8b44f; }
+.as-dual { grid-template-columns: minmax(140px, 1fr) 2fr 74px; }
+.as-bars { display: grid; gap: 4px; }
+.bar-auditor span { background: linear-gradient(90deg, #e8b44f, #d98d2b) !important; }
+.as-score-num b { color: #e8b44f; }
+.as-assessor { border-color: rgba(232,180,79,0.4) !important; }
+.as-assessor > h3 { color: #e8b44f; }
+.as-aud-panel { margin-top: 16px; padding: 14px; border-radius: 12px;
+  background: rgba(232,180,79,0.07); border: 1px solid rgba(232,180,79,0.3);
+  display: grid; gap: 10px; }
+.as-aud-levels { display: flex; gap: 6px; flex-wrap: wrap; }
+.as-aud-lvl { padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(232,180,79,0.5);
+  font-size: 0.82rem; font-weight: 700; color: #e8b44f; cursor: pointer; }
+.as-aud-lvl.on { background: #e8b44f; color: #0b2530; }
+.as-aud-lvl input { position: absolute; opacity: 0; }
+.as-aud-chip { margin-top: 12px; font-size: 0.84rem; color: #e8b44f; }
+.as-findings { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.as-findings li { display: flex; align-items: baseline; gap: 8px; font-size: 0.83rem; }
+.as-find-tag { flex: 0 0 auto; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+.as-findings li.strength .as-find-tag { color: #52d3a2; border: 1px solid #52d3a2; }
+.as-findings li.improvement .as-find-tag { color: #e8884f; border: 1px solid #e8884f; }
+.as-find-body { flex: 1; line-height: 1.5; }
+.as-find-forms { display: grid; gap: 6px; }
+.as-review summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; padding: 8px 0; }
+.as-review[open] summary { color: var(--glow, #52d3a2); }
+.as-assign { display: grid; gap: 8px; margin: 10px 0; }
+@media (max-width: 640px) {
+  .as-dual { grid-template-columns: 1fr 74px; }
+  .as-dual .as-bars { grid-column: 1 / -1; }
+}

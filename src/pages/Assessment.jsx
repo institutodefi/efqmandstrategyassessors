@@ -26,6 +26,19 @@ const useS = () => {
 }
 const L = (row, base, lang) => (lang === 'ar' ? row[`${base}_ar`] : row[`${base}_en`]) || row[`${base}_en`]
 
+function useIsAssessor(assessmentId) {
+  const { user, role } = useAuth()
+  const [assigned, setAssigned] = useState(false)
+  useEffect(() => {
+    if (!supabase || !user || !assessmentId) return
+    supabase.from('assessment_assignments')
+      .select('consultant_id').eq('assessment_id', assessmentId)
+      .eq('consultant_id', user.id).maybeSingle()
+      .then(({ data }) => setAssigned(!!data))
+  }, [user, assessmentId])
+  return ['superadmin', 'admin'].includes(role) || assigned
+}
+
 /* ============================= LIST ============================= */
 function AssessmentList() {
   const { user, role } = useAuth()
@@ -132,13 +145,16 @@ function AssessmentList() {
 
 /* ============================= DETAIL ============================= */
 function AssessmentDetail({ assessmentId }) {
+  const { user, role } = useAuth()
+  const isAssessor = useIsAssessor(assessmentId)
+  const isAdmin = ['superadmin', 'admin'].includes(role)
   const [s, lang] = useS()
   const navigate = useNavigate()
   const [a, setA] = useState(null)
   const [scope, setScope] = useState('')
   const [entities, setEntities] = useState([])
   const [sites, setSites] = useState([])
-  const [scores, setScores] = useState({ perCrit: [], total: null, answered: 0, totalQ: 0 })
+  const [scores, setScores] = useState({ perCrit: [], total: null, audTotal: null, answered: 0, totalQ: 0 })
   const [criteria, setCriteria] = useState([])
   const [saveState, setSaveState] = useState(null)
   const scopeTimer = useRef(null)
@@ -157,28 +173,34 @@ function AssessmentDetail({ assessmentId }) {
         .select('*').in('entity_id', en.map(x => x.id)).order('created_at')
       setSites(st ?? [])
     } else setSites([])
-    // scores
-    const [{ data: ans }, { data: qs }] = await Promise.all([
+    // scores (client + auditor)
+    const [{ data: ans }, { data: aud }, { data: qs }] = await Promise.all([
       supabase.from('assessment_answers').select('question_code, level').eq('assessment_id', assessmentId),
+      supabase.from('assessment_auditor_scores').select('question_code, level').eq('assessment_id', assessmentId),
       supabase.from('assessment_questions').select('code, criterion_code'),
     ])
     const byCrit = {}
-    for (const q of qs ?? []) (byCrit[q.criterion_code] ??= { scores: [], total: 0 }).total++
+    for (const q of qs ?? []) (byCrit[q.criterion_code] ??= { c: [], a: [], total: 0 }).total++
+    const critOf = Object.fromEntries((qs ?? []).map(q => [q.code, q.criterion_code]))
     for (const an of ans ?? []) {
-      if (an.level == null) continue
-      const q = (qs ?? []).find(x => x.code === an.question_code)
-      if (q) byCrit[q.criterion_code].scores.push(an.level * 20)
+      if (an.level != null && critOf[an.question_code]) byCrit[critOf[an.question_code]].c.push(an.level * 20)
     }
+    for (const an of aud ?? []) {
+      if (an.level != null && critOf[an.question_code]) byCrit[critOf[an.question_code]].a.push(an.level * 20)
+    }
+    const avg = (xs) => xs.length ? Math.round(xs.reduce((x, y) => x + y, 0) / xs.length) : null
     const perCrit = (cr ?? []).map(c => {
-      const b = byCrit[c.code] || { scores: [], total: 0 }
+      const b = byCrit[c.code] || { c: [], a: [], total: 0 }
       return { code: c.code, num: c.num,
-               avg: b.scores.length ? Math.round(b.scores.reduce((x, y) => x + y, 0) / b.scores.length) : null,
-               answered: b.scores.length, total: b.total }
+               avg: avg(b.c), audAvg: avg(b.a),
+               answered: b.c.length, total: b.total }
     })
-    const withAvg = perCrit.filter(c => c.avg != null)
+    const wc = perCrit.filter(c => c.avg != null)
+    const wa = perCrit.filter(c => c.audAvg != null)
     setScores({
       perCrit,
-      total: withAvg.length ? Math.round(withAvg.reduce((x, c) => x + c.avg, 0) / withAvg.length) : null,
+      total: wc.length ? Math.round(wc.reduce((x, c) => x + c.avg, 0) / wc.length) : null,
+      audTotal: wa.length ? Math.round(wa.reduce((x, c) => x + c.audAvg, 0) / wa.length) : null,
       answered: (ans ?? []).filter(x => x.level != null).length,
       totalQ: (qs ?? []).length,
     })
@@ -250,17 +272,32 @@ function AssessmentDetail({ assessmentId }) {
       <div className="portal-panels">
         {/* score */}
         <section className="portal-card wide2">
-          <h3>{s.asScore}{scores.total != null && <> — {s.asTotal}: <b>{scores.total}</b>/100</>}</h3>
+          <h3>{s.asScore}</h3>
+          <p className="as-legend">
+            <span className="as-leg-client">■ {s.asClientScore}{scores.total != null && ` · ${scores.total}`}</span>
+            <span className="as-leg-auditor">■ {s.asAuditorScore}{scores.audTotal != null && ` · ${scores.audTotal}`}</span>
+          </p>
           <div className="as-scores">
             {scores.perCrit.map(c => (
-              <div key={c.code} className="as-score-item">
+              <div key={c.code} className="as-score-item as-dual">
                 <span className="as-score-label">C{c.num} · {critName(c.code)}</span>
-                <div className="proj-bar"><span style={{ width: `${c.avg ?? 0}%` }} /></div>
-                <span className="as-score-num">{c.avg ?? '—'}</span>
+                <span className="as-bars">
+                  <span className="proj-bar"><span style={{ width: `${c.avg ?? 0}%` }} /></span>
+                  <span className="proj-bar bar-auditor"><span style={{ width: `${c.audAvg ?? 0}%` }} /></span>
+                </span>
+                <span className="as-score-num">{c.avg ?? '—'} / <b>{c.audAvg ?? '—'}</b></span>
               </div>
             ))}
           </div>
         </section>
+
+        {/* assessor tools */}
+        {isAssessor && (
+          <AssessorTools
+            assessmentId={assessmentId} a={a} criteria={criteria}
+            isAdmin={isAdmin} s={s} lang={lang} onChanged={load}
+          />
+        )}
 
         {/* scope */}
         <section className="portal-card wide2">
@@ -314,12 +351,15 @@ function AssessmentDetail({ assessmentId }) {
 /* ============================= QUESTIONNAIRE ============================= */
 function Questionnaire({ assessmentId }) {
   const { user } = useAuth()
+  const isAssessor = useIsAssessor(assessmentId)
   const [s, lang] = useS()
   const navigate = useNavigate()
   const [criteria, setCriteria] = useState([])
   const [questions, setQuestions] = useState([])
   const [answers, setAnswers] = useState({})     // code → {level, justification}
   const [docs, setDocs] = useState([])
+  const [audScores, setAudScores] = useState({})
+  const [findings, setFindings] = useState([])
   const [crit, setCrit] = useState(null)
   const [saveState, setSaveState] = useState(null)
   const timers = useRef({})
@@ -331,11 +371,15 @@ function Questionnaire({ assessmentId }) {
       supabase.from('assessment_questions').select('*').order('sort'),
       supabase.from('assessment_answers').select('*').eq('assessment_id', assessmentId),
       supabase.from('assessment_documents').select('*').eq('assessment_id', assessmentId),
-    ]).then(([c, q, a, d]) => {
+      supabase.from('assessment_auditor_scores').select('*').eq('assessment_id', assessmentId),
+      supabase.from('assessment_findings').select('*').eq('assessment_id', assessmentId).order('created_at'),
+    ]).then(([c, q, a, d, au, fi]) => {
       setCriteria(c.data ?? [])
       setQuestions(q.data ?? [])
       setAnswers(Object.fromEntries((a.data ?? []).map(x => [x.question_code, x])))
       setDocs(d.data ?? [])
+      setAudScores(Object.fromEntries((au.data ?? []).map(x => [x.question_code, x])))
+      setFindings(fi.data ?? [])
       if (c.data?.length) setCrit(prev => prev ?? c.data[0].code)
     })
   }, [assessmentId])
@@ -389,6 +433,36 @@ function Questionnaire({ assessmentId }) {
     await supabase.storage.from('assessment-evidence').remove([doc.storage_path])
     await supabase.from('assessment_documents').delete().eq('id', doc.id)
     setDocs(prev => prev.filter(d => d.id !== doc.id))
+  }
+
+  function persistAud(code, patch, debounce = 0) {
+    setAudScores(prev => ({ ...prev, [code]: { ...prev[code], question_code: code, ...patch } }))
+    setSaveState(s.asSaving)
+    clearTimeout(timers.current['aud' + code])
+    timers.current['aud' + code] = setTimeout(async () => {
+      const cur = { ...(audScores[code] || {}), ...patch }
+      await supabase.from('assessment_auditor_scores').upsert({
+        assessment_id: assessmentId, question_code: code,
+        level: cur.level ?? null, note: cur.note ?? null, auditor_id: user.id,
+      })
+      setSaveState(s.asSaved)
+    }, debounce)
+  }
+
+  async function addFinding(code, type, e) {
+    e.preventDefault()
+    const f = e.target
+    const body = f.body.value.trim()
+    if (!body) return
+    const { data, error } = await supabase.from('assessment_findings').insert({
+      assessment_id: assessmentId, question_code: code, type, body, created_by: user.id,
+    }).select().single()
+    if (!error && data) { setFindings(prev => [...prev, data]); f.reset() }
+  }
+
+  async function removeFinding(id) {
+    await supabase.from('assessment_findings').delete().eq('id', id)
+    setFindings(prev => prev.filter(x => x.id !== id))
   }
 
   const pct = questions.length ? Math.round((answered / questions.length) * 100) : 0
@@ -465,6 +539,66 @@ function Questionnaire({ assessmentId }) {
                 <input type="file" hidden onChange={(e) => upload(q.code, e)} />
               </label>
             </div>
+
+            {/* auditor score chip visible to everyone once it exists */}
+            {!isAssessor && audScores[q.code]?.level != null && (
+              <p className="as-aud-chip">
+                {s.asAuditorScore}: <b>{audScores[q.code].level * 20}</b>
+                {audScores[q.code].note && <span className="proj-meta"> · {audScores[q.code].note}</span>}
+              </p>
+            )}
+
+            {/* auditor correction panel */}
+            {isAssessor && (
+              <div className="as-aud-panel">
+                <h4 className="cp-h4">{s.asAuditorPanel}</h4>
+                <p className="proj-meta">
+                  {s.asClientAnswer}: <b>{an.level != null ? an.level * 20 : s.asNoAnswer}</b>
+                </p>
+                <div className="as-aud-levels" role="radiogroup" aria-label={s.asAuditorLevel}>
+                  {[0, 1, 2, 3, 4, 5].map(i => (
+                    <label key={i}
+                           className={`as-aud-lvl ${audScores[q.code]?.level === i ? 'on' : ''}`}
+                           title={(lang === 'ar' ? q.levels_ar : q.levels_en)[i]}>
+                      <input type="radio" name={`aud-${q.code}`}
+                             checked={audScores[q.code]?.level === i}
+                             onChange={() => persistAud(q.code, { level: i })} />
+                      {i * 20}
+                    </label>
+                  ))}
+                </div>
+                <div className="field">
+                  <label>{s.asAuditorNote}</label>
+                  <textarea rows="2" value={audScores[q.code]?.note || ''}
+                            placeholder={s.asAuditorNotePh}
+                            onChange={(e) => persistAud(q.code, { note: e.target.value }, 800)} />
+                </div>
+
+                <h4 className="cp-h4">{s.asFindings}</h4>
+                <ul className="as-findings">
+                  {findings.filter(x => x.question_code === q.code).map(x => (
+                    <li key={x.id} className={x.type}>
+                      <span className="as-find-tag">
+                        {x.type === 'strength' ? s.asStrength : s.asImprovement}
+                      </span>
+                      <span className="as-find-body">{x.body}</span>
+                      <button className="btn btn-ghost btn-xs"
+                              onClick={() => removeFinding(x.id)}>✕</button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="as-find-forms">
+                  <form className="cp-inline" onSubmit={(e) => addFinding(q.code, 'strength', e)}>
+                    <input name="body" placeholder={`${s.asStrength}…`} />
+                    <button className="btn btn-primary btn-xs" type="submit">{s.asAddFinding}</button>
+                  </form>
+                  <form className="cp-inline" onSubmit={(e) => addFinding(q.code, 'improvement', e)}>
+                    <input name="body" placeholder={`${s.asImprovement}…`} />
+                    <button className="btn btn-primary btn-xs" type="submit">{s.asAddFinding}</button>
+                  </form>
+                </div>
+              </div>
+            )}
           </section>
         )
       })}
@@ -608,5 +742,133 @@ function ModelDesigner() {
         </section>
       ))}
     </PmShell>
+  )
+}
+
+
+/* ================= ASSESSOR TOOLS: status · assignments · reviews ================= */
+function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged }) {
+  const [consultants, setConsultants] = useState([])
+  const [assigned, setAssigned] = useState([])
+  const [reviews, setReviews] = useState({})     // criterion_code → row
+  const [busy, setBusy] = useState(false)
+  const [saveState, setSaveState] = useState(null)
+  const timers = useRef({})
+
+  async function load() {
+    const [{ data: asg }, { data: rev }] = await Promise.all([
+      supabase.from('assessment_assignments')
+        .select('consultant_id').eq('assessment_id', assessmentId),
+      supabase.from('assessment_criterion_reviews')
+        .select('*').eq('assessment_id', assessmentId),
+    ])
+    setAssigned((asg ?? []).map(x => x.consultant_id))
+    setReviews(Object.fromEntries((rev ?? []).map(r => [r.criterion_code, r])))
+    if (isAdmin) {
+      const { data: cons } = await supabase.from('profiles')
+        .select('id, full_name, email').in('role', ['consultant', 'admin', 'superadmin'])
+        .order('full_name')
+      setConsultants(cons ?? [])
+    }
+  }
+  useEffect(() => { load() }, [assessmentId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function setAssessStatus(v) {
+    setBusy(true)
+    await supabase.from('assessments').update({ status: v }).eq('id', assessmentId)
+    setBusy(false); onChanged()
+  }
+
+  async function assign(e) {
+    e.preventDefault()
+    const uid = e.target.consultant.value
+    if (!uid) return
+    setBusy(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    await supabase.from('assessment_assignments')
+      .upsert({ assessment_id: assessmentId, consultant_id: uid, assigned_by: user.id })
+    setBusy(false); e.target.reset(); load()
+  }
+
+  async function unassign(uid) {
+    setBusy(true)
+    await supabase.from('assessment_assignments')
+      .delete().eq('assessment_id', assessmentId).eq('consultant_id', uid)
+    setBusy(false); load()
+  }
+
+  function saveReview(code, field, value) {
+    setReviews(prev => ({ ...prev, [code]: { ...prev[code], criterion_code: code, [field]: value } }))
+    setSaveState(s.asSaving)
+    clearTimeout(timers.current[code + field])
+    timers.current[code + field] = setTimeout(async () => {
+      const cur = { ...(reviews[code] || {}), [field]: value }
+      await supabase.from('assessment_criterion_reviews').upsert({
+        assessment_id: assessmentId, criterion_code: code,
+        strengths: cur.strengths ?? null, improvements: cur.improvements ?? null,
+      })
+      setSaveState(s.asSaved)
+    }, 800)
+  }
+
+  const consName = (id) =>
+    consultants.find(c => c.id === id)?.full_name
+    || consultants.find(c => c.id === id)?.email || id.slice(0, 8)
+
+  return (
+    <section className="portal-card wide2 as-assessor">
+      <h3>{s.asAuditorPanel} {saveState && <em className="proj-meta">· {saveState}</em>}</h3>
+
+      <div className="pm-actions">
+        <label className="proj-meta">{s.asChangeStatus}:</label>
+        <select value={a.status} disabled={busy}
+                onChange={(e) => setAssessStatus(e.target.value)}>
+          {Object.entries(s.asStatus).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+        </select>
+      </div>
+
+      {isAdmin && (
+        <div className="as-assign">
+          <h4 className="cp-h4">{s.asAssignments}</h4>
+          {assigned.length === 0
+            ? <p className="proj-meta">{s.asNoAssessors}</p>
+            : assigned.map(uid => (
+              <span key={uid} className="as-doc">
+                <span className="role-badge">{consName(uid)}</span>
+                <button className="btn btn-ghost btn-xs" disabled={busy}
+                        onClick={() => unassign(uid)}>✕</button>
+              </span>
+            ))}
+          <form className="cp-inline" onSubmit={assign}>
+            <select name="consultant" required>
+              <option value="">—</option>
+              {consultants.filter(c => !assigned.includes(c.id)).map(c => (
+                <option key={c.id} value={c.id}>{c.full_name || c.email}</option>
+              ))}
+            </select>
+            <button className="btn btn-primary btn-xs" disabled={busy} type="submit">{s.asAssign}</button>
+          </form>
+        </div>
+      )}
+
+      <h4 className="cp-h4">{s.asReviews}</h4>
+      {criteria.map(c => (
+        <details key={c.code} className="as-review">
+          <summary>C{c.num} · {L(c, 'title', lang)}</summary>
+          <div className="np-row">
+            <div className="field">
+              <label>{s.asRevStrengths}</label>
+              <textarea rows="3" value={reviews[c.code]?.strengths || ''}
+                        onChange={(e) => saveReview(c.code, 'strengths', e.target.value)} />
+            </div>
+            <div className="field">
+              <label>{s.asRevImprovements}</label>
+              <textarea rows="3" value={reviews[c.code]?.improvements || ''}
+                        onChange={(e) => saveReview(c.code, 'improvements', e.target.value)} />
+            </div>
+          </div>
+        </details>
+      ))}
+    </section>
   )
 }
