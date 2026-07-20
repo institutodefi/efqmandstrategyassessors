@@ -15,6 +15,7 @@ import { PORTAL_STRINGS } from '../data/orbitalPortal.js'
 export default function Assessment() {
   const { id, view } = useParams()
   if (!id) return <AssessmentList />
+  if (id === 'design') return <ModelDesigner />
   if (view === 'quiz') return <Questionnaire assessmentId={id} />
   return <AssessmentDetail assessmentId={id} />
 }
@@ -27,7 +28,7 @@ const L = (row, base, lang) => (lang === 'ar' ? row[`${base}_ar`] : row[`${base}
 
 /* ============================= LIST ============================= */
 function AssessmentList() {
-  const { user } = useAuth()
+  const { user, role } = useAuth()
   const [s] = useS()
   const navigate = useNavigate()
   const [rows, setRows] = useState([])
@@ -71,6 +72,14 @@ function AssessmentList() {
     <PmShell>
       <h1>{s.asTitle}</h1>
       <p className="sub">{s.asList}</p>
+      {['superadmin', 'admin'].includes(role) && (
+        <div className="pm-actions">
+          <button className="btn btn-ghost btn-xs"
+                  onClick={() => navigate('/portal/assessment/design')}>
+            {s.asDesign}
+          </button>
+        </div>
+      )}
       {status && <p className="form-status err">{status.msg}</p>}
 
       <div className="portal-panels">
@@ -451,6 +460,145 @@ function Questionnaire({ assessmentId }) {
           </section>
         )
       })}
+    </PmShell>
+  )
+}
+
+
+/* ============================= MODEL DESIGNER (superadmin/admin) ============================= */
+function ModelDesigner() {
+  const [s, lang] = useS()
+  const navigate = useNavigate()
+  const [criteria, setCriteria] = useState([])
+  const [questions, setQuestions] = useState([])
+  const [crit, setCrit] = useState(null)
+  const [openQ, setOpenQ] = useState(null)
+  const [state, setState] = useState(null)
+
+  async function load() {
+    const [c, q] = await Promise.all([
+      supabase.from('assessment_criteria').select('*').order('num'),
+      supabase.from('assessment_questions').select('*').order('sort'),
+    ])
+    setCriteria(c.data ?? []); setQuestions(q.data ?? [])
+    if (c.data?.length) setCrit(prev => prev ?? c.data[0].code)
+  }
+  useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function saveQ(q, e) {
+    e.preventDefault()
+    const f = e.target
+    const lvEn = f.levels_en.value.split('\n').map(x => x.trim()).filter(Boolean)
+    const lvAr = f.levels_ar.value.split('\n').map(x => x.trim()).filter(Boolean)
+    if (lvEn.length !== 6 || lvAr.length !== 6) {
+      setState({ ok: false, msg: s.asLevels6 }); return
+    }
+    const { error } = await supabase.from('assessment_questions').update({
+      question_en: f.question_en.value.trim(),
+      question_ar: f.question_ar.value.trim(),
+      block_en: f.block_en.value.trim(),
+      block_ar: f.block_ar.value.trim(),
+      context_en: f.context_en.value.trim() || null,
+      context_ar: f.context_ar.value.trim() || null,
+      evidence_en: f.evidence_en.value.trim() || null,
+      evidence_ar: f.evidence_ar.value.trim() || null,
+      levels_en: lvEn,
+      levels_ar: lvAr,
+    }).eq('code', q.code)
+    setState(error ? { ok: false, msg: error.message } : { ok: true, msg: s.accSaved })
+    if (!error) load()
+  }
+
+  const critQs = questions.filter(q => q.criterion_code === crit)
+
+  return (
+    <PmShell>
+      <button className="btn btn-ghost btn-xs"
+              onClick={() => navigate('/portal/assessment')}>← {s.asBack}</button>
+      <h1>{s.asDesign}</h1>
+      <p className="sub">{s.asDesignSub}</p>
+      {state && <p className={`form-status ${state.ok ? 'ok' : 'err'}`} role="status">{state.msg}</p>}
+
+      <div className="tab-row as-crit-tabs" role="tablist">
+        {criteria.map(c => (
+          <button key={c.code} role="tab" aria-selected={crit === c.code}
+                  className={`tab-btn ${crit === c.code ? 'on' : ''}`}
+                  onClick={() => { setCrit(c.code); setOpenQ(null) }}>
+            C{c.num}
+          </button>
+        ))}
+      </div>
+      {crit && <h2 className="as-crit-title">{L(criteria.find(c => c.code === crit) || {}, 'title_full', lang)}</h2>}
+
+      {critQs.length === 0 && <p className="sub">—</p>}
+      {critQs.map(q => (
+        <section key={q.code} className="portal-card wide2 as-q">
+          <div className="cp-head">
+            <h3>{q.code} · {L(q, 'question', lang)}</h3>
+            <button className="btn btn-ghost btn-xs"
+                    onClick={() => setOpenQ(openQ === q.code ? null : q.code)}>
+              {openQ === q.code ? '▴' : s.coEdit + ' ▾'}
+            </button>
+          </div>
+
+          {openQ === q.code && (
+            <form className="np-form" onSubmit={(e) => saveQ(q, e)}>
+              <div className="np-row">
+                <div className="field">
+                  <label>Question (EN)</label>
+                  <input name="question_en" defaultValue={q.question_en} required />
+                </div>
+                <div className="field">
+                  <label>السؤال (AR)</label>
+                  <input name="question_ar" defaultValue={q.question_ar} dir="rtl" required />
+                </div>
+              </div>
+              <div className="np-row">
+                <div className="field">
+                  <label>Block (EN)</label>
+                  <input name="block_en" defaultValue={q.block_en} required />
+                </div>
+                <div className="field">
+                  <label>المحور (AR)</label>
+                  <input name="block_ar" defaultValue={q.block_ar} dir="rtl" required />
+                </div>
+              </div>
+              <div className="np-row">
+                <div className="field">
+                  <label>Context (EN)</label>
+                  <textarea name="context_en" rows="2" defaultValue={q.context_en || ''} />
+                </div>
+                <div className="field">
+                  <label>السياق (AR)</label>
+                  <textarea name="context_ar" rows="2" defaultValue={q.context_ar || ''} dir="rtl" />
+                </div>
+              </div>
+              <div className="np-row">
+                <div className="field">
+                  <label>Suggested evidence (EN)</label>
+                  <textarea name="evidence_en" rows="4" defaultValue={q.evidence_en || ''} />
+                </div>
+                <div className="field">
+                  <label>الأدلة المقترحة (AR)</label>
+                  <textarea name="evidence_ar" rows="4" defaultValue={q.evidence_ar || ''} dir="rtl" />
+                </div>
+              </div>
+              <p className="proj-meta">{s.asLevelsHint}</p>
+              <div className="np-row">
+                <div className="field">
+                  <label>Levels (EN)</label>
+                  <textarea name="levels_en" rows="7" defaultValue={(q.levels_en || []).join('\n')} required />
+                </div>
+                <div className="field">
+                  <label>المستويات (AR)</label>
+                  <textarea name="levels_ar" rows="7" defaultValue={(q.levels_ar || []).join('\n')} dir="rtl" required />
+                </div>
+              </div>
+              <button className="btn btn-primary btn-xs" type="submit">{s.asSave}</button>
+            </form>
+          )}
+        </section>
+      ))}
     </PmShell>
   )
 }

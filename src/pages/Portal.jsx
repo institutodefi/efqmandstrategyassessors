@@ -48,7 +48,7 @@ export default function Portal() {
 
     // Projects: RLS already limits rows to what this role may see.
     supabase.from('projects')
-      .select('id, title_en, title_ar, zone_code, status, progress, due_date, account_id')
+      .select('id, code, title_en, title_ar, zone_code, status, progress, due_date, account_id')
       .order('updated_at', { ascending: false })
       .limit(12)
       .then(({ data }) => setProjects(data ?? []))
@@ -75,7 +75,10 @@ export default function Portal() {
   const accountById = useMemo(
     () => Object.fromEntries(accounts.map(a => [a.id, a])), [accounts])
 
-  const projTitle = (p) => (isAr && p.title_ar) ? p.title_ar : p.title_en
+  const projTitle = (p) => {
+    const t = (isAr && p.title_ar) ? p.title_ar : p.title_en
+    return p.code && t !== p.code ? `${p.code} · ${t}` : (p.code || t)
+  }
 
   return (
     <PmShell>
@@ -192,11 +195,9 @@ function NewProject({ zones, lang, s, onCreated }) {
   async function onSubmit(e) {
     e.preventDefault()
     const f = e.target
-    if (!supabase || !f.title.value.trim() || !f.account.value) return
+    if (!supabase || !f.account.value) return
     setBusy(true); setStatus(null)
     const { data, error } = await supabase.from('projects').insert({
-      title_en: f.title.value.trim(),
-      title_ar: f.titleAr.value.trim() || null,
       account_id: f.account.value,
       zone_code: f.zone.value,
       created_by: user.id,
@@ -218,14 +219,7 @@ function NewProject({ zones, lang, s, onCreated }) {
     <section className="portal-card wide">
       <h3>{s.newProject}</h3>
       <form className="np-form" onSubmit={onSubmit}>
-        <div className="field">
-          <label htmlFor="np-title">{s.npTitle}</label>
-          <input id="np-title" name="title" required />
-        </div>
-        <div className="field">
-          <label htmlFor="np-title-ar">{s.npTitleAr}</label>
-          <input id="np-title-ar" name="titleAr" dir="rtl" />
-        </div>
+        <p className="proj-meta">{s.npCode}</p>
         <div className="np-row">
           <div className="field">
             <label htmlFor="np-account">{s.npAccount}</label>
