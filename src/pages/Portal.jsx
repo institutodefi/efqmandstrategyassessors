@@ -82,6 +82,13 @@ export default function Portal() {
   const accountById = useMemo(
     () => Object.fromEntries(accounts.map(a => [a.id, a])), [accounts])
 
+  /* ---------- who can open projects & where ---------- */
+  const [scopes, setScopes] = useState([])
+  useEffect(() => {
+    if (!supabase || !user) return
+    supabase.rpc('my_project_scopes').then(({ data }) => setScopes(data ?? []))
+  }, [user])
+
   /* ---------- project members ---------- */
   const [membersFor, setMembersFor] = useState(null)
   const [members, setMembers] = useState([])
@@ -260,11 +267,11 @@ export default function Portal() {
             )}
           </section>
 
-          {/* ------------- CONSULTANT: quick create ------------- */}
-          {(isConsultant || role === 'superadmin' || role === 'admin') && (
-            <NewProject zones={zones} lang={lang} s={s} onCreated={
-              (p) => setProjects(prev => [p, ...prev])
-            } />
+          {/* ------------- open a project (staff, or product-admin of a company) ------------- */}
+          {(isConsultant || role === 'superadmin' || role === 'admin' || scopes.length > 0) && (
+            <NewProject zones={zones} lang={lang} s={s} scopes={scopes}
+              staff={isConsultant || role === 'superadmin' || role === 'admin'}
+              onCreated={(p) => setProjects(prev => [p, ...prev])} />
           )}
 
           {/* ------------- CLIENT: activity ------------- */}
@@ -282,17 +289,28 @@ export default function Portal() {
 }
 
 /* ======================= Consultant: new project ======================= */
-function NewProject({ zones, lang, s, onCreated }) {
+function NewProject({ zones, lang, s, scopes, staff, onCreated }) {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [accounts, setAccounts] = useState([])
+  const [zoneSel, setZoneSel] = useState('')
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState(null)
 
   useEffect(() => {
     if (!supabase) return
     supabase.from('accounts').select('id, name').order('name')
-      .then(({ data }) => setAccounts(data ?? []))
-  }, [])
+      .then(({ data }) => {
+        const all = data ?? []
+        setAccounts(staff ? all
+          : all.filter(a => scopes.some(sc => sc.account_id === a.id)))
+      })
+  }, [staff, scopes])
+
+  const zonesFor = (accountId) => staff ? zones
+    : zones.filter(z => scopes.some(sc =>
+        sc.account_id === accountId && sc.zone_code === z.code))
+  const [accountSel, setAccountSel] = useState('')
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -306,14 +324,20 @@ function NewProject({ zones, lang, s, onCreated }) {
       status: 'design',
     }).select().single()
     setBusy(false)
-    if (error) { setStatus({ ok: false, msg: s.npError }) }
+    if (error) { setStatus({ ok: false, msg: error.message || s.npError }) }
     else {
       setStatus({ ok: true, msg: s.npCreated })
       onCreated(data); f.reset()
-      // the creator joins the project team as lead consultant
-      await supabase.from('project_members').insert({
-        project_id: data.id, user_id: user.id, member_role: 'lead_consultant',
+      // the creator joins the project team as admin
+      await supabase.from('project_members').upsert({
+        project_id: data.id, user_id: user.id, member_role: 'admin',
       })
+      // O360 project → its assessment was auto-created; open it
+      if (data.zone_code === 'assessment') {
+        const { data: a } = await supabase.from('assessments')
+          .select('id').eq('project_id', data.id).maybeSingle()
+        if (a) navigate(`/portal/assessment/${a.id}`)
+      }
     }
   }
 
@@ -322,18 +346,22 @@ function NewProject({ zones, lang, s, onCreated }) {
       <h3>{s.newProject}</h3>
       <form className="np-form" onSubmit={onSubmit}>
         <p className="proj-meta">{s.npCode}</p>
+        {zoneSel === 'assessment' && <p className="proj-meta">{s.npOpenO360}</p>}
         <div className="np-row">
           <div className="field">
             <label htmlFor="np-account">{s.npAccount}</label>
-            <select id="np-account" name="account" required>
+            <select id="np-account" name="account" required value={accountSel}
+                    onChange={(e) => { setAccountSel(e.target.value); setZoneSel('') }}>
               <option value="">—</option>
               {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
             </select>
           </div>
           <div className="field">
             <label htmlFor="np-zone">{s.npZone}</label>
-            <select id="np-zone" name="zone" required>
-              {zones.map(z => (
+            <select id="np-zone" name="zone" required value={zoneSel}
+                    onChange={(e) => setZoneSel(e.target.value)}>
+              <option value="">—</option>
+              {zonesFor(accountSel).map(z => (
                 <option key={z.code} value={z.code}>{zoneText(z, lang).name}</option>
               ))}
             </select>

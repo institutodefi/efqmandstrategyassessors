@@ -288,6 +288,10 @@ export const PORTAL_STRINGS = {
     pjAddMember: 'Add member',
     pjNoMembers: 'No members yet.',
     pjRemove: 'Remove',
+    asTeam: 'Assessment team',
+    asAddUser: 'Add user',
+    asNoTeam: 'No team members yet — add users with their roles.',
+    npOpenO360: 'Opening an O360 project creates its assessment automatically (code P0360-CLIENT-NNN).',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -526,6 +530,10 @@ export const PORTAL_STRINGS = {
     pjAddMember: 'إضافة عضو',
     pjNoMembers: 'لا يوجد أعضاء بعد.',
     pjRemove: 'إزالة',
+    asTeam: 'فريق التقييم',
+    asAddUser: 'إضافة مستخدم',
+    asNoTeam: 'لا يوجد أعضاء بعد — أضيفوا المستخدمين بأدوارهم.',
+    npOpenO360: 'فتح مشروع O360 ينشئ تقييمه تلقائياً (الرمز P0360-CLIENT-NNN).',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',

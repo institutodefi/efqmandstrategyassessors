@@ -30,7 +30,8 @@ function useAssessCaps(assessmentId) {
   const { user, role } = useAuth()
   const isPlatformAdmin = ['superadmin', 'admin'].includes(role)
   const [caps, setCaps] = useState({
-    can_view: true, can_edit_client: true, is_assessor: isPlatformAdmin, product_role: null,
+    can_view: true, can_edit_client: true, is_assessor: isPlatformAdmin,
+    can_manage_members: isPlatformAdmin, product_role: null,
   })
   useEffect(() => {
     if (!supabase || !user || !assessmentId) return
@@ -112,19 +113,6 @@ function AssessmentList() {
       {status && <p className="form-status err">{status.msg}</p>}
 
       <div className="portal-panels">
-        {companies.length > 0 && (
-          <section className="portal-card wide2">
-            <h3>{s.asNew}</h3>
-            <form className="cp-inline" onSubmit={create}>
-              <input name="title" placeholder={s.asNewTitle} required style={{ flex: 2 }} />
-              <select name="company" required>
-                {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-              <button className="btn btn-primary btn-xs" disabled={busy} type="submit">{s.asCreate}</button>
-            </form>
-          </section>
-        )}
-
         <section className="portal-card wide2">
           {rows.length === 0 ? <p>{s.asNone}</p> : (
             <ul className="proj-list">
@@ -154,7 +142,8 @@ function AssessmentList() {
 /* ============================= DETAIL ============================= */
 function AssessmentDetail({ assessmentId }) {
   const { user, role } = useAuth()
-  const isAssessor = useIsAssessor(assessmentId)
+  const caps = useAssessCaps(assessmentId)
+  const isAssessor = caps.is_assessor
   const isAdmin = ['superadmin', 'admin'].includes(role)
   const [s, lang] = useS()
   const navigate = useNavigate()
@@ -298,6 +287,10 @@ function AssessmentDetail({ assessmentId }) {
             ))}
           </div>
         </section>
+
+        {/* assessment team: add users with their roles */}
+        <TeamPanel assessmentId={assessmentId} s={s}
+                   canManage={caps.can_manage_members} />
 
         {/* assessor tools */}
         {isAssessor && (
@@ -882,6 +875,90 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
           </div>
         </details>
       ))}
+    </section>
+  )
+}
+
+
+/* ================= ASSESSMENT TEAM: users + roles ================= */
+function TeamPanel({ assessmentId, s, canManage }) {
+  const [members, setMembers] = useState([])
+  const [users, setUsers] = useState([])
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState(null)
+
+  async function load() {
+    const { data } = await supabase.from('assessment_members')
+      .select('user_id, member_role').eq('assessment_id', assessmentId)
+    setMembers(data ?? [])
+    if (canManage) {
+      const { data: ppl } = await supabase.from('profiles')
+        .select('id, full_name, email').order('full_name')
+      setUsers(ppl ?? [])
+    }
+  }
+  useEffect(() => { load() }, [assessmentId, canManage]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const uname = (id) => {
+    const u = users.find(x => x.id === id)
+    return u ? (u.full_name || u.email) : id.slice(0, 8)
+  }
+
+  async function add(e) {
+    e.preventDefault()
+    const f = e.target
+    if (!f.tuser.value) return
+    setBusy(true); setErr(null)
+    const { data: { user } } = await supabase.auth.getUser()
+    const { error } = await supabase.from('assessment_members').upsert({
+      assessment_id: assessmentId, user_id: f.tuser.value,
+      member_role: f.trole.value, added_by: user.id,
+    })
+    setBusy(false)
+    if (error) setErr(error.message)
+    else { f.reset(); load() }
+  }
+
+  async function remove(uid) {
+    setBusy(true)
+    await supabase.from('assessment_members').delete()
+      .eq('assessment_id', assessmentId).eq('user_id', uid)
+    setBusy(false); load()
+  }
+
+  return (
+    <section className="portal-card wide2">
+      <h3>{s.asTeam}</h3>
+      {err && <p className="form-status err">{err}</p>}
+      {members.length === 0
+        ? <p className="proj-meta">{s.asNoTeam}</p>
+        : members.map(m => (
+          <div key={m.user_id} className="proj-top">
+            <span>
+              <b>{uname(m.user_id)}</b>
+              <span className="proj-meta"> · {s.productRoles[m.member_role] || m.member_role}</span>
+            </span>
+            {canManage && (
+              <button className="btn btn-ghost btn-xs" disabled={busy}
+                      onClick={() => remove(m.user_id)}>✕</button>
+            )}
+          </div>
+        ))}
+      {canManage && (
+        <form className="cp-inline" onSubmit={add}>
+          <select name="tuser" required>
+            <option value="">—</option>
+            {users.filter(u => !members.some(m => m.user_id === u.id)).map(u => (
+              <option key={u.id} value={u.id}>{u.full_name || u.email}</option>
+            ))}
+          </select>
+          <select name="trole" defaultValue="assessor">
+            {Object.entries(s.productRoles).map(([k, v]) =>
+              <option key={k} value={k}>{v}</option>)}
+          </select>
+          <button className="btn btn-primary btn-xs" disabled={busy} type="submit">{s.asAddUser}</button>
+        </form>
+      )}
     </section>
   )
 }
