@@ -254,14 +254,45 @@ export default function Portal() {
             </section>
           )}
 
-          {/* ------------- PROJECT STATUS (everyone; content filtered by RLS) ------------- */}
+          {/* ------------- DASHBOARD: active projects by client ------------- */}
+          {!zoneParam && (
+            <section className="portal-card wide2">
+              <h3>{s.dsActiveByClient}</h3>
+              {(() => {
+                const active = projects.filter(p => p.status !== 'archived')
+                if (active.length === 0) return <p>{s.projEmpty}</p>
+                const clientIds = [...new Set(active.map(p => p.account_id))]
+                return clientIds.map(cid => (
+                  <div key={cid} className="dash-client">
+                    <span className="dash-client-name">
+                      {accountById[cid]?.name || '—'}
+                    </span>
+                    <span className="dash-client-projs">
+                      {active.filter(p => p.account_id === cid).map(p => (
+                        <button key={p.id} className="dash-proj-chip"
+                                onClick={() => navigate(p.zone_code === 'assessment'
+                                  ? '/portal/assessment' : `/portal/${p.zone_code}`)}>
+                          <span className={`dash-dot dot-${p.status}`} />
+                          {p.code || projTitle(p)}
+                          <em>{s.projStatus[p.status] || p.status}</em>
+                        </button>
+                      ))}
+                    </span>
+                  </div>
+                ))
+              })()}
+            </section>
+          )}
+
+          {/* ------------- ZONE: full project management ------------- */}
+          {zoneParam && (
           <section className="portal-card wide">
             <h3>
               {canSeeCRM ? s.statusTitle : isConsultant ? s.myProjects : s.clientProjects}
             </h3>
-            {projects.length === 0 ? <p>{s.projEmpty}</p> : (
+            {projects.filter(p => p.zone_code === zoneParam).length === 0 ? <p>{s.projEmpty}</p> : (
               <ul className="proj-list">
-                {projects.map(p => (
+                {projects.filter(p => p.zone_code === zoneParam).map(p => (
                   <li key={p.id}>
                     <div className="proj-top">
                       <b>{projTitle(p)}</b>
@@ -338,9 +369,10 @@ export default function Portal() {
               </ul>
             )}
           </section>
+          )}
 
-          {/* ------------- open a project (admin / superadmin only) ------------- */}
-          {canCreateDelete && (
+          {/* ------------- open a project (admin / superadmin, inside a zone) ------------- */}
+          {canCreateDelete && zoneParam && (
             <NewProject zones={zones} lang={lang} s={s} scopes={scopes}
               staff={true} fixedZone={zoneParam || ''}
               onCreated={(p) => setProjects(prev => [p, ...prev])} />
@@ -360,14 +392,18 @@ export default function Portal() {
   )
 }
 
-/* ======================= Consultant: new project ======================= */
+/* =================== New project (lean, with team roles) =================== */
 function NewProject({ zones, lang, s, scopes, staff, fixedZone, onCreated }) {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [accounts, setAccounts] = useState([])
-  const [zoneSel, setZoneSel] = useState(fixedZone || '')
+  const [people, setPeople] = useState([])
+  const [accountSel, setAccountSel] = useState('')
+  const [team, setTeam] = useState([])          // [{user_id, role}]
+  const [pick, setPick] = useState({ user_id: '', role: 'assessor' })
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState(null)
+  const zoneSel = fixedZone
 
   useEffect(() => {
     if (!supabase) return
@@ -377,71 +413,106 @@ function NewProject({ zones, lang, s, scopes, staff, fixedZone, onCreated }) {
         setAccounts(staff ? all
           : all.filter(a => scopes.some(sc => sc.account_id === a.id)))
       })
+    supabase.rpc('list_people_min').then(({ data }) => setPeople(data ?? []))
   }, [staff, scopes])
 
-  const zonesFor = (accountId) => staff ? zones
-    : zones.filter(z => scopes.some(sc =>
-        sc.account_id === accountId && sc.zone_code === z.code))
-  const [accountSel, setAccountSel] = useState('')
+  const pname = (id) => {
+    const u = people.find(x => x.id === id)
+    return u ? (u.full_name || u.email) : id
+  }
+
+  function addToTeam() {
+    if (!pick.user_id || team.some(t => t.user_id === pick.user_id)) return
+    setTeam(prev => [...prev, { ...pick }])
+    setPick({ user_id: '', role: 'assessor' })
+  }
 
   async function onSubmit(e) {
     e.preventDefault()
-    const f = e.target
-    if (!supabase || !f.account.value) return
+    if (!supabase || !accountSel || !zoneSel) return
     setBusy(true); setStatus(null)
     const { data, error } = await supabase.from('projects').insert({
-      account_id: f.account.value,
-      zone_code: f.zone.value,
+      account_id: accountSel,
+      zone_code: zoneSel,
       created_by: user.id,
       status: 'design',
     }).select().single()
-    setBusy(false)
-    if (error) { setStatus({ ok: false, msg: error.message || s.npError }) }
-    else {
-      setStatus({ ok: true, msg: s.npCreated })
-      onCreated(data); f.reset()
-      // the creator joins the project team as admin
-      await supabase.from('project_members').upsert({
-        project_id: data.id, user_id: user.id, member_role: 'admin',
-      })
-      // O360 project → its assessment was auto-created; open it
-      if (data.zone_code === 'assessment') {
-        const { data: a } = await supabase.from('assessments')
-          .select('id').eq('project_id', data.id).maybeSingle()
-        if (a) navigate(`/portal/assessment/${a.id}`)
+    if (error) {
+      setBusy(false)
+      setStatus({ ok: false, msg: error.message || s.npError })
+      return
+    }
+    // creator + picked team, with their roles
+    const rows = [{ project_id: data.id, user_id: user.id, member_role: 'admin' },
+                  ...team.map(t => ({ project_id: data.id, user_id: t.user_id,
+                                      member_role: t.role }))]
+    await supabase.from('project_members').upsert(rows)
+    // O360 → mirror the team on the auto-created assessment and open it
+    if (data.zone_code === 'assessment') {
+      const { data: a } = await supabase.from('assessments')
+        .select('id').eq('project_id', data.id).maybeSingle()
+      if (a) {
+        if (team.length) {
+          await supabase.from('assessment_members').upsert(
+            team.map(t => ({ assessment_id: a.id, user_id: t.user_id,
+                             member_role: t.role, added_by: user.id })))
+        }
+        setBusy(false); onCreated(data)
+        navigate(`/portal/assessment/${a.id}`)
+        return
       }
     }
+    setBusy(false)
+    setStatus({ ok: true, msg: `${s.npCreated} · ${data.code}` })
+    onCreated(data)
+    setTeam([]); setAccountSel('')
   }
 
   return (
-    <section className="portal-card wide">
+    <section className="portal-card wide2 np-lean">
       <h3>{s.newProject}</h3>
-      <form className="np-form" onSubmit={onSubmit}>
-        <p className="proj-meta">{s.npCode}</p>
-        {zoneSel === 'assessment' && <p className="proj-meta">{s.npOpenO360}</p>}
-        <div className="np-row">
-          <div className="field">
-            <label htmlFor="np-account">{s.npAccount}</label>
-            <select id="np-account" name="account" required value={accountSel}
-                    onChange={(e) => { setAccountSel(e.target.value); setZoneSel('') }}>
-              <option value="">—</option>
-              {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-            </select>
-          </div>
-          <div className="field">
-            <label htmlFor="np-zone">{s.npZone}</label>
-            <select id="np-zone" name="zone" required value={zoneSel}
-                    disabled={!!fixedZone}
-                    onChange={(e) => setZoneSel(e.target.value)}>
-              <option value="">—</option>
-              {zonesFor(accountSel).map(z => (
-                <option key={z.code} value={z.code}>{zoneText(z, lang).name}</option>
-              ))}
-            </select>
-          </div>
+      {status && <p className={`form-status ${status.ok ? 'ok' : 'err'}`}>{status.msg}</p>}
+      <form onSubmit={onSubmit}>
+        <div className="np-lean-row">
+          <select aria-label={s.npAccount} required value={accountSel}
+                  onChange={(e) => setAccountSel(e.target.value)}>
+            <option value="">{s.npAccount} —</option>
+            {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+          </select>
+          <button className="btn btn-primary" disabled={busy || !accountSel} type="submit">
+            {s.npCreate}
+          </button>
         </div>
-        <button className="btn btn-primary" disabled={busy} type="submit">{s.npCreate}</button>
-        {status && <p className={`form-status ${status.ok ? 'ok' : 'err'}`}>{status.msg}</p>}
+        <p className="proj-meta">{s.npCode}{zoneSel === 'assessment' && <> {s.npOpenO360}</>}</p>
+
+        {/* team, optional — add users with their roles before creating */}
+        <div className="np-lean-team">
+          <span className="np-lean-lbl">{s.npTeam}</span>
+          {team.map(t => (
+            <span key={t.user_id} className="np-chip">
+              {pname(t.user_id)} <em>{s.productRoles[t.role]}</em>
+              <button type="button" aria-label={s.pjRemove}
+                      onClick={() => setTeam(prev => prev.filter(x => x.user_id !== t.user_id))}>
+                ✕
+              </button>
+            </span>
+          ))}
+          <span className="np-lean-add">
+            <select value={pick.user_id} aria-label={s.pjAddMember}
+                    onChange={(e) => setPick(p0 => ({ ...p0, user_id: e.target.value }))}>
+              <option value="">—</option>
+              {people.filter(u => u.id !== user.id && !team.some(t => t.user_id === u.id))
+                .map(u => <option key={u.id} value={u.id}>{u.full_name || u.email}</option>)}
+            </select>
+            <select value={pick.role} aria-label={s.uRole}
+                    onChange={(e) => setPick(p0 => ({ ...p0, role: e.target.value }))}>
+              {Object.entries(s.productRoles).map(([k, v]) =>
+                <option key={k} value={k}>{v}</option>)}
+            </select>
+            <button type="button" className="btn btn-ghost btn-xs"
+                    disabled={!pick.user_id} onClick={addToTeam}>+</button>
+          </span>
+        </div>
       </form>
     </section>
   )

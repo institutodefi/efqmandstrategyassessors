@@ -302,6 +302,8 @@ export const PORTAL_STRINGS = {
     cpProjLimit: 'Projects',
     dsMyCompany: 'My company',
     asAssignConsultants: 'Consultants (evidence)',
+    dsActiveByClient: 'Active projects by client',
+    npTeam: 'Team',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -555,6 +557,8 @@ export const PORTAL_STRINGS = {
     cpProjLimit: 'المشاريع',
     dsMyCompany: 'شركتي',
     asAssignConsultants: 'الاستشاريون (الأدلة)',
+    dsActiveByClient: 'المشاريع النشطة حسب العميل',
+    npTeam: 'الفريق',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',
