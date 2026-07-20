@@ -284,6 +284,10 @@ export const PORTAL_STRINGS = {
     cpSeats: 'seats used',
     cpLicenseHint: 'Access grants consume licenses; the limit is enforced automatically.',
     cpProductOn: 'Active',
+    pjMembers: 'Members',
+    pjAddMember: 'Add member',
+    pjNoMembers: 'No members yet.',
+    pjRemove: 'Remove',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -518,6 +522,10 @@ export const PORTAL_STRINGS = {
     cpSeats: 'مقاعد مستخدمة',
     cpLicenseHint: 'تستهلك الصلاحيات التراخيص؛ ويُطبق الحد تلقائياً.',
     cpProductOn: 'مفعل',
+    pjMembers: 'الأعضاء',
+    pjAddMember: 'إضافة عضو',
+    pjNoMembers: 'لا يوجد أعضاء بعد.',
+    pjRemove: 'إزالة',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',

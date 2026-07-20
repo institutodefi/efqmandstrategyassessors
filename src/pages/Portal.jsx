@@ -82,6 +82,50 @@ export default function Portal() {
   const accountById = useMemo(
     () => Object.fromEntries(accounts.map(a => [a.id, a])), [accounts])
 
+  /* ---------- project members ---------- */
+  const [membersFor, setMembersFor] = useState(null)
+  const [members, setMembers] = useState([])
+  const [allUsers, setAllUsers] = useState([])
+  const canManageMembers = ['superadmin', 'admin', 'consultant'].includes(role)
+
+  useEffect(() => {
+    if (!supabase || !user || projects.length === 0) return
+    supabase.from('project_members')
+      .select('project_id, user_id, member_role')
+      .in('project_id', projects.map(p => p.id))
+      .then(({ data }) => setMembers(data ?? []))
+    if (canManageMembers) {
+      supabase.from('profiles').select('id, full_name, email').order('full_name')
+        .then(({ data }) => setAllUsers(data ?? []))
+    }
+  }, [user, projects, canManageMembers])
+
+  const memberName = (id) => {
+    const u = allUsers.find(x => x.id === id)
+    return u ? (u.full_name || u.email) : id.slice(0, 8)
+  }
+
+  async function addMember(projectId, e) {
+    e.preventDefault()
+    const f = e.target
+    if (!f.muser.value) return
+    const { error } = await supabase.from('project_members').upsert({
+      project_id: projectId, user_id: f.muser.value, member_role: f.mrole.value,
+    })
+    if (error) setStatus?.({ ok: false, msg: error.message })
+    f.reset()
+    const { data } = await supabase.from('project_members')
+      .select('project_id, user_id, member_role')
+      .in('project_id', projects.map(p => p.id))
+    setMembers(data ?? [])
+  }
+
+  async function removeMember(projectId, userId) {
+    await supabase.from('project_members').delete()
+      .eq('project_id', projectId).eq('user_id', userId)
+    setMembers(prev => prev.filter(m => !(m.project_id === projectId && m.user_id === userId)))
+  }
+
   const projTitle = (p) => {
     const t = (isAr && p.title_ar) ? p.title_ar : p.title_en
     return p.code && t !== p.code ? `${p.code} · ${t}` : (p.code || t)
@@ -166,6 +210,49 @@ export default function Portal() {
                     </div>
                     <div className="proj-bar" aria-label={`${s.progress}: ${p.progress}%`}>
                       <span style={{ width: `${p.progress}%` }} />
+                    </div>
+
+                    <div className="proj-members">
+                      <button className="btn btn-ghost btn-xs"
+                              onClick={() => setMembersFor(membersFor === p.id ? null : p.id)}>
+                        {s.pjMembers} ({members.filter(m => m.project_id === p.id).length})
+                        {' '}{membersFor === p.id ? '▴' : '▾'}
+                      </button>
+                      {membersFor === p.id && (
+                        <div className="cp-detail">
+                          {members.filter(m => m.project_id === p.id).length === 0
+                            ? <p className="proj-meta">{s.pjNoMembers}</p>
+                            : members.filter(m => m.project_id === p.id).map(m => (
+                              <div key={m.user_id} className="proj-top">
+                                <span>
+                                  <b>{memberName(m.user_id)}</b>
+                                  <span className="proj-meta"> · {s.productRoles[m.member_role] || m.member_role}</span>
+                                </span>
+                                {canManageMembers && (
+                                  <button className="btn btn-ghost btn-xs"
+                                          onClick={() => removeMember(p.id, m.user_id)}>
+                                    {s.pjRemove}
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          {canManageMembers && (
+                            <form className="cp-inline" onSubmit={(e) => addMember(p.id, e)}>
+                              <select name="muser" required>
+                                <option value="">—</option>
+                                {allUsers
+                                  .filter(u => !members.some(m => m.project_id === p.id && m.user_id === u.id))
+                                  .map(u => <option key={u.id} value={u.id}>{u.full_name || u.email}</option>)}
+                              </select>
+                              <select name="mrole" defaultValue="assessor">
+                                {Object.entries(s.productRoles).map(([k, v]) =>
+                                  <option key={k} value={k}>{v}</option>)}
+                              </select>
+                              <button className="btn btn-primary btn-xs" type="submit">{s.pjAddMember}</button>
+                            </form>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </li>
                 ))}
