@@ -160,6 +160,33 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGHZNN9K"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="root"></div>
+    <script>
+      // If the app fails to boot (stale cached chunks after a deploy, JS error
+      // before React mounts), show a visible recovery message instead of white.
+      (function () {
+        var shown = false;
+        function failsafe(msg) {
+          var root = document.getElementById('root');
+          if (shown || !root || root.children.length > 0) return;
+          shown = true;
+          root.innerHTML =
+            '<div style="font-family:system-ui;padding:48px 24px;max-width:560px;margin:0 auto;text-align:center">' +
+            '<h1 style="font-size:22px;color:#0b2530">The app could not start</h1>' +
+            '<p style="color:#5a6f77;font-size:14px">' + (msg || 'A resource failed to load — this usually clears with a hard reload.') + '</p>' +
+            '<button onclick="location.reload(true)" style="padding:10px 22px;border-radius:999px;border:none;background:#1f9d77;color:#fff;font-weight:700;cursor:pointer">Reload</button>' +
+            '</div>';
+        }
+        window.addEventListener('error', function (e) {
+          if (e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+            failsafe('A script failed to load (possibly a cached old version). Hard-reload: Cmd/Ctrl + Shift + R.');
+          } else if (e.error) { failsafe(String(e.error.message || e.error)); }
+        }, true);
+        window.addEventListener('unhandledrejection', function (e) {
+          failsafe(String((e.reason && e.reason.message) || e.reason || ''));
+        });
+        setTimeout(function () { failsafe('Startup timed out. Hard-reload: Cmd/Ctrl + Shift + R.'); }, 12000);
+      })();
+    </script>
     <noscript>
       <div style="max-width: 40em; margin: 4em auto; font-family: sans-serif; padding: 0 1.5em; color: #0E1730;">
         <h1>EFQM and Strategy Assessors</h1>
