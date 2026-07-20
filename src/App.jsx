@@ -21,7 +21,6 @@ const Legal = lazy(() => import('./pages/Legal.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
 const Portal = lazy(() => import('./pages/Portal.jsx'))
 const Account = lazy(() => import('./pages/Account.jsx'))
-const Users = lazy(() => import('./pages/Users.jsx'))
 const Contacts = lazy(() => import('./pages/Contacts.jsx'))
 const Companies = lazy(() => import('./pages/Companies.jsx'))
 const Assessment = lazy(() => import('./pages/Assessment.jsx'))
@@ -97,14 +96,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/portal/users"
-              element={
-                <ProtectedRoute roles={['admin']}>
-                  <Users />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/portal/users" element={<Navigate to="/portal/contacts" replace />} />
             <Route
               path="/portal/contacts"
               element={

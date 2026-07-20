@@ -75,7 +75,6 @@ export default function PmShell({ children }) {
           {isAdmin && (
             <>
               <p className="pm-sec">{s.administration}</p>
-              <NavLink to="/portal/users" className="pm-link"><span className="pm-dot" />{s.users}</NavLink>
               <NavLink to="/portal/contacts" className="pm-link"><span className="pm-dot" />{s.contacts}</NavLink>
               <NavLink to="/portal/companies" className="pm-link"><span className="pm-dot" />{s.companies}</NavLink>
             </>

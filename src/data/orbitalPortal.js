@@ -247,6 +247,10 @@ export const PORTAL_STRINGS = {
     coActivatedExisting: 'Contact was already a user — role and data updated.',
     coIsUser: 'User',
     coActivateRole: 'Role',
+    coMergedSub: 'One list for every individual — CRM contacts and platform users, with roles and product access.',
+    pePermits: 'Permits',
+    peNoGrants: 'No product access yet.',
+    peUserOnly: 'User without CRM record',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -445,6 +449,10 @@ export const PORTAL_STRINGS = {
     coActivatedExisting: 'جهة الاتصال مستخدم بالفعل — تم تحديث الدور والبيانات.',
     coIsUser: 'مستخدم',
     coActivateRole: 'الدور',
+    coMergedSub: 'قائمة واحدة لكل الأفراد — جهات اتصال CRM ومستخدمو المنصة، مع الأدوار وصلاحيات المنتجات.',
+    pePermits: 'الصلاحيات',
+    peNoGrants: 'لا توجد صلاحيات منتجات بعد.',
+    peUserOnly: 'مستخدم بدون سجل CRM',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',
