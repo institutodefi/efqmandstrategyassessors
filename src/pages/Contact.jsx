@@ -55,6 +55,7 @@ export default function Contact() {
       name: `${firstName} ${lastName}`.trim(),
       email: f.email.value.trim(),
       organisation: f.organisation.value.trim(),
+      phone: f.phone.value.trim() || null,
       source: 'contact',
       message: f.message.value.trim(),
     }
@@ -111,6 +112,10 @@ export default function Contact() {
               <div className="field">
                 <label htmlFor="c-org">{t.contact.fOrg}</label>
                 <input id="c-org" name="organisation" autoComplete="organization" required />
+              </div>
+              <div className="field">
+                <label htmlFor="c-phone">{t.contact.fPhone}</label>
+                <input id="c-phone" name="phone" autoComplete="tel" inputMode="tel" placeholder="+971 …" />
               </div>
               <div className="field">
                 <label htmlFor="c-msg">{t.contact.fMsg}</label>

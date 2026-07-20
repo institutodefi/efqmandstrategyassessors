@@ -53,6 +53,10 @@ export default function Users() {
   const grantable = ROLES.filter(r => isSuper || !['admin', 'superadmin'].includes(r))
 
   async function setUserRole(u, newRole) {
+    const msg = (s.coRoleConfirm || 'Change role of {name} to {role}?')
+      .replace('{name}', u.full_name || u.email)
+      .replace('{role}', roleLabels[newRole] || newRole)
+    if (!window.confirm(msg)) { loadAll(); return }
     setBusy(true); setStatus(null)
     const { data, error } = await supabase.rpc('authorize_user', {
       p_email: u.email,

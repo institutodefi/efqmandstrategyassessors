@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { useLang } from '../i18n.jsx'
 
-// Company mobile in international format, digits only for the wa.me link.
-const WA_NUMBER = '971507369400'
+import { waLink } from '../lib/whatsapp.js'
 
 export default function WhatsAppButton() {
   const { t } = useLang()
   const w = t.whatsapp
   const [showBubble, setShowBubble] = useState(true)
 
-  const href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(w.prefill)}`
+  const href = waLink(w.prefill, 'web:whatsapp-button')
 
   return (
     <div className="wa-fab">

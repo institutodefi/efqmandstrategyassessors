@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
 import { supabase } from '../lib/supabase.js'
+import { waLink } from '../lib/whatsapp.js'
 
-const WA_NUMBER = '971507369400'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /**
@@ -24,8 +24,7 @@ export default function PostContact({ title }) {
   const [sending, setSending] = useState(false)
   const [errors, setErrors] = useState({})
 
-  const waText = b.ctaWaPrefill.replace('{title}', title)
-  const waHref = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waText)}`
+  const waHref = waLink(b.ctaWaPrefill.replace('{title}', title), `blog:${title}`)
 
   function validate(payload) {
     const e = {}
@@ -49,6 +48,7 @@ export default function PostContact({ title }) {
       name: `${firstName} ${lastName}`.trim(),
       email: form.email.value.trim(),
       organisation: form.company.value.trim(),
+      phone: form.phone.value.trim() || null,
       message: form.message.value.trim(),
     }
     if (!validate(payload)) { setStatus({ ok: false, msg: t.contact.valMsg }); return }
@@ -107,6 +107,10 @@ export default function PostContact({ title }) {
             <input id="pc-company" name="company" autoComplete="organization" required
                    aria-invalid={errors.company || undefined} />
           </div>
+        </div>
+        <div className="field">
+          <label htmlFor="pc-phone">{t.contact.fPhone}</label>
+          <input id="pc-phone" name="phone" autoComplete="tel" inputMode="tel" placeholder="+971 …" />
         </div>
         <div className="field">
           <label htmlFor="pc-msg">{t.contact.fMsg}</label>

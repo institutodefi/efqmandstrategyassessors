@@ -214,7 +214,12 @@ export default function Companies() {
                 <div className="cp-head">
                   <div>
                     <b>{r.name}</b>
-                    <span className="proj-meta"> · {s.cpVat}: {r.vat || '—'} · {s.cpPrimary}: {contactName(r.primary_contact)}</span>
+                    {(!r.vat || !r.address || !r.primary_contact) &&
+                      <span className="badge-partial">{s.coPartial}</span>}
+                    <span className="proj-meta"> · {s.cpVat}: {r.vat || '—'} · {s.cpPrimary}: </span>
+                    <span className={['active','success'].includes(r.crm_status) ? 'name-active' : ''}>
+                      {contactName(r.primary_contact)}
+                    </span>
                   </div>
                   <div className="pm-actions">
                     <span className={`pill pill-${r.crm_status}`}>{s.crmStatus[r.crm_status] || r.crm_status}</span>

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useLang } from '../i18n.jsx'
 import PmShell from '../components/PmShell.jsx'
 import { PORTAL_STRINGS, validateContact } from '../data/orbitalPortal.js'
+import { brevoUpsert, brevoDelete } from '../lib/brevo.js'
 
 const EMPTY = { id: null, first_name: '', last_name: '', email: '', phone: '',
                 company_id: '', position: '', consent: false, marketing_consent: false,
@@ -28,7 +29,7 @@ export default function Contacts() {
       supabase.from('contacts')
         .select('id, first_name, last_name, email, phone, company_id, company_name, position, consent, marketing_consent, brevo_synced_at, erasure_requested, created_at')
         .order('created_at', { ascending: false }),
-      supabase.from('accounts').select('id, name').order('name'),
+      supabase.from('accounts').select('id, name, crm_status').order('name'),
     ])
     setRows(c.data ?? [])
     setCompanies(a.data ?? [])
@@ -36,6 +37,9 @@ export default function Contacts() {
   useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const companyName = (id, raw) => companies.find(c => c.id === id)?.name || raw || '—'
+  const companyActive = (id) =>
+    ['active', 'success'].includes(companies.find(c => c.id === id)?.crm_status)
+  const isPartial = (r) => !r.company_id || !r.phone || !r.position
   const set = (k) => (e) => setForm(f => ({
     ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
   }))
@@ -79,8 +83,57 @@ export default function Contacts() {
     if (!window.confirm(s.coEraseConfirm)) return
     setBusy(true)
     const { error } = await supabase.rpc('gdpr_erase_contact', { p_contact: r.id })
+    if (!error) await brevoDelete(r.email)   // right to erasure reaches Brevo too
     setBusy(false)
     if (!error) load()
+  }
+
+  async function syncOne(r) {
+    setBusy(true); setStatus(null)
+    const res = await brevoUpsert({
+      email: r.email, first_name: r.first_name, last_name: r.last_name,
+      phone: r.phone, company: companyName(r.company_id, r.company_name),
+    })
+    if (res.ok) {
+      await supabase.from('contacts')
+        .update({ brevo_synced_at: new Date().toISOString() }).eq('id', r.id)
+      setStatus({ ok: true, msg: s.coSyncOk }); load()
+    } else setStatus({ ok: false, msg: `${s.coSyncErr} ${res.error || res.detail || res.status}` })
+    setBusy(false)
+  }
+
+  async function syncAll() {
+    const list = rows.filter(r => r.marketing_consent && !r.erasure_requested)
+    setBusy(true); setStatus(null)
+    let okCount = 0
+    for (const r of list) {
+      const res = await brevoUpsert({
+        email: r.email, first_name: r.first_name, last_name: r.last_name,
+        phone: r.phone, company: companyName(r.company_id, r.company_name),
+      })
+      if (res.ok) okCount++
+    }
+    if (okCount) {
+      await supabase.from('contacts')
+        .update({ brevo_synced_at: new Date().toISOString() })
+        .in('id', list.map(r => r.id))
+    }
+    setStatus({ ok: okCount === list.length,
+                msg: `${okCount}/${list.length} · ${okCount === list.length ? s.coSyncOk : s.coSyncErr}` })
+    setBusy(false); load()
+  }
+
+  async function createAndLinkCompany(r) {
+    setBusy(true); setStatus(null)
+    const { data, error } = await supabase.from('accounts')
+      .insert({ name: r.company_name, crm_status: 'lead', primary_contact: r.id })
+      .select().single()
+    if (!error && data) {
+      await supabase.from('contacts').update({ company_id: data.id }).eq('id', r.id)
+      setStatus({ ok: true, msg: s.coCompanyCreated })
+      load()
+    } else if (error) setStatus({ ok: false, msg: error.message })
+    setBusy(false)
   }
 
   async function importInquiries() {
@@ -120,6 +173,8 @@ export default function Contacts() {
 
       <div className="pm-actions">
         <button className="btn btn-ghost btn-xs" disabled={busy} onClick={importInquiries}>{s.coImport}</button>
+        <button className="btn btn-primary btn-xs" disabled={busy} onClick={syncAll}
+                title={s.coExportNote}>{s.coSyncAll}</button>
         <button className="btn btn-ghost btn-xs" disabled={busy} onClick={exportBrevo}
                 title={s.coExportNote}>{s.coExportBrevo}</button>
       </div>
@@ -166,6 +221,12 @@ export default function Contacts() {
                 <input id="ct-pos" value={form.position} onChange={set('position')} />
               </div>
             </div>
+            <div className="field">
+              <label htmlFor="ct-source">{s.coSourceLbl}</label>
+              <select id="ct-source" value={form.consent_source} onChange={set('consent_source')}>
+                {Object.entries(s.coSources).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
+            </div>
             <label className="consent-row">
               <input type="checkbox" checked={form.consent} onChange={set('consent')} />
               <span className="consent-text">{s.coConsent}</span>
@@ -196,17 +257,33 @@ export default function Contacts() {
               <tbody>
                 {rows.map(r => (
                   <tr key={r.id} className={r.erasure_requested ? 'row-pending' : ''}>
-                    <td><b>{r.first_name} {r.last_name}</b>
-                        {r.position && <span className="proj-meta"> · {r.position}</span>}</td>
+                    <td>
+                      <b className={companyActive(r.company_id) ? 'name-active' : ''}>
+                        {r.first_name} {r.last_name}
+                      </b>
+                      {r.position && <span className="proj-meta"> · {r.position}</span>}
+                      {isPartial(r) && !r.erasure_requested &&
+                        <span className="badge-partial">{s.coPartial}</span>}
+                    </td>
                     <td>{r.email}</td>
                     <td>{r.phone || '—'}</td>
-                    <td>{companyName(r.company_id, r.company_name)}</td>
+                    <td>
+                      {companyName(r.company_id, r.company_name)}
+                      {!r.company_id && r.company_name && (
+                        <button className="btn btn-ghost btn-xs" disabled={busy}
+                                onClick={() => createAndLinkCompany(r)}>
+                          {s.coCreateCompany}
+                        </button>
+                      )}
+                    </td>
                     <td>{r.consent ? '✓' : '—'}{r.marketing_consent ? ' ✉' : ''}</td>
                     <td>{r.brevo_synced_at ? '✓' : '—'}</td>
                     <td>
                       {!r.erasure_requested && (
                         <>
                           <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>{' '}
+                          <button className="btn btn-ghost btn-xs" disabled={busy}
+                                  onClick={() => syncOne(r)}>{s.coSyncOne}</button>{' '}
                           <button className="btn btn-ghost btn-xs" disabled={busy}
                                   onClick={() => gdprErase(r)}>{s.coErase}</button>
                         </>

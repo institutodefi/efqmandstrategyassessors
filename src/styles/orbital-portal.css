@@ -240,3 +240,9 @@
   .pm-nav { flex-direction: row; flex-wrap: wrap; }
   .pm-main { padding: 24px 18px; }
 }
+
+.pill-success { color: #35e39b; }
+.name-active { color: #35e39b; }
+.badge-partial { display: inline-block; padding: 2px 9px; border-radius: 999px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+  color: #e8b44f; border: 1px solid #e8b44f; margin-inline-start: 8px; }

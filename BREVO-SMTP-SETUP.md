@@ -121,3 +121,28 @@ Las plantillas usan las variables de Supabase (`{{ .ConfirmationURL }}`,
 - **No llega nada y Brevo no registra el envío** → el SMTP de Supabase
   no quedó activado (toggle Enable Custom SMTP) o el puerto es 465 en
   vez de 587.
+
+---
+
+## 8. Sincronización EN VIVO del CRM (Edge Function `brevo-sync`)
+
+La app sincroniza contactos con Brevo en tiempo real (botones "Sync" y
+"Sync all" en /portal/contacts, y borrado en Brevo al hacer GDPR erase).
+La API key vive en el servidor, nunca en el navegador.
+
+Despliegue (una vez, con la CLI de Supabase):
+
+    supabase login
+    supabase link --project-ref wiraonfdufycdcqgurpx
+    supabase functions deploy brevo-sync
+    supabase secrets set BREVO_API_KEY=xkeysib-XXXX     # Brevo → SMTP & API → API Keys
+    supabase secrets set BREVO_LIST_ID=3                # opcional: lista "CRM contacts"
+
+Atributos necesarios en Brevo (Contacts → Settings → Contact attributes):
+FIRSTNAME y LASTNAME (de serie), COMPANY (crear, tipo texto). SMS es de
+serie; la función solo lo envía si el número está en formato E.164 y, si
+Brevo lo rechaza, reintenta sin él.
+
+¿Make/Zapier? No hace falta: la Edge Function cubre el flujo con coste
+cero. Make solo aportaría valor si más adelante quieres orquestar flujos
+multi-app sin código (p. ej. Brevo → hoja de cálculo → Slack).
