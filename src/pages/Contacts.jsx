@@ -27,7 +27,7 @@ export default function Contacts() {
     if (!supabase) return
     const [c, a] = await Promise.all([
       supabase.from('contacts')
-        .select('id, first_name, last_name, email, phone, company_id, company_name, position, consent, marketing_consent, brevo_synced_at, erasure_requested, created_at')
+        .select('id, first_name, last_name, email, phone, company_id, company_name, position, consent, marketing_consent, consent_source, brevo_synced_at, erasure_requested, created_at')
         .order('created_at', { ascending: false }),
       supabase.from('accounts').select('id, name, crm_status').order('name'),
     ])
@@ -251,7 +251,7 @@ export default function Contacts() {
               <thead>
                 <tr>
                   <th>{s.uName}</th><th>{s.uEmail}</th><th>{s.coCell}</th>
-                  <th>{s.coCompany}</th><th>GDPR</th><th>Brevo</th><th>{s.uActions}</th>
+                  <th>{s.coCompany}</th><th>{s.coSourceLbl}</th><th>GDPR</th><th>Brevo</th><th>{s.uActions}</th>
                 </tr>
               </thead>
               <tbody>
@@ -276,6 +276,8 @@ export default function Contacts() {
                         </button>
                       )}
                     </td>
+                    <td>{(s.coSources[r.consent_source] || r.consent_source || '—')}<br />
+                        <span className="proj-meta">{new Date(r.created_at).toLocaleDateString('en-GB')}</span></td>
                     <td>{r.consent ? '✓' : '—'}{r.marketing_consent ? ' ✉' : ''}</td>
                     <td>{r.brevo_synced_at ? '✓' : '—'}</td>
                     <td>

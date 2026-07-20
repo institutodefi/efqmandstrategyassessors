@@ -36,8 +36,8 @@ export default function Companies() {
         .select('id, name, vat, address, country, sector, crm_status, primary_contact')
         .order('name'),
       supabase.from('contacts')
-        .select('id, first_name, last_name, email, company_id')
-        .eq('erasure_requested', false).order('last_name'),
+        .select('id, first_name, last_name, email, phone, position, company_id, consent, marketing_consent, erasure_requested')
+        .order('last_name'),
       supabase.from('zones').select('code, name_en, name_ar, sort_order')
         .eq('is_active', true).order('sort_order'),
       supabase.from('subscriptions')
@@ -181,7 +181,7 @@ export default function Companies() {
                 <select id="cp-primary" value={form.primary_contact} onChange={set('primary_contact')}
                         aria-invalid={errors.primary_contact || undefined} required>
                   <option value="">—</option>
-                  {contacts.map(c => (
+                  {contacts.filter(c => !c.erasure_requested).map(c => (
                     <option key={c.id} value={c.id}>{c.first_name} {c.last_name} · {c.email}</option>
                   ))}
                 </select>
@@ -233,6 +233,38 @@ export default function Companies() {
 
                 {open && (
                   <div className="cp-detail">
+                    {/* company contacts */}
+                    <h4 className="cp-h4">{s.contacts}</h4>
+                    {(() => {
+                      const cc = contacts.filter(c => c.company_id === r.id)
+                      if (cc.length === 0) return <p className="proj-meta">{s.coNone}</p>
+                      return (
+                        <table className="portal-table tbl-compact">
+                          <thead>
+                            <tr><th>{s.uName}</th><th>{s.uEmail}</th><th>{s.coCell}</th>
+                                <th>GDPR</th><th>Newsletter</th></tr>
+                          </thead>
+                          <tbody>
+                            {cc.map(c => (
+                              <tr key={c.id} className={c.erasure_requested ? 'row-pending' : ''}>
+                                <td>
+                                  <b className={r.primary_contact === c.id ? 'name-active' : ''}>
+                                    {c.first_name} {c.last_name}
+                                  </b>
+                                  {c.position && <span className="proj-meta"> · {c.position}</span>}
+                                  {r.primary_contact === c.id && ' ★'}
+                                </td>
+                                <td>{c.email}</td>
+                                <td>{c.phone || '—'}</td>
+                                <td>{c.erasure_requested ? '✕' : c.consent ? '✓' : '—'}</td>
+                                <td>{c.marketing_consent ? '✉ ✓' : '—'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )
+                    })()}
+
                     {/* subscriptions */}
                     {rSubs.length === 0 ? <p className="proj-meta">{s.cpNoSubs}</p> : (
                       <ul className="proj-list">

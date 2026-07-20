@@ -137,13 +137,15 @@ export default function Users() {
             {profiles.length === 0 ? <p>{s.uEmpty}</p> : (
               <table className="portal-table">
                 <thead>
-                  <tr><th>{s.uName}</th><th>{s.uEmail}</th><th>{s.uRole}</th><th>{s.uActions}</th></tr>
+                  <tr><th>{s.uName}</th><th>{s.uEmail}</th><th>{s.coCell}</th><th>{s.coCompany}</th><th>{s.uRole}</th><th>{s.uActions}</th></tr>
                 </thead>
                 <tbody>
                   {profiles.map(u => (
                     <tr key={u.id}>
                       <td><b>{u.full_name || `${u.first_name || ''} ${u.last_name || ''}`}</b></td>
                       <td>{u.email}</td>
+                      <td>{u.phone || '—'}</td>
+                      <td>{companies.find(c => c.id === u.company_id)?.name || '—'}</td>
                       <td>
                         {u.email?.toLowerCase() === 'alejandro@efqmassessors.ae'
                           ? <span className="role-badge">{roleLabels.superadmin}</span>
@@ -174,7 +176,7 @@ export default function Users() {
                     if (editing !== u.id) return [row]
                     return [row, (
                       <tr key={u.id + '-edit'}>
-                        <td colSpan="4">
+                        <td colSpan="6">
                           <form className="cp-inline" onSubmit={(e) => saveUserEdit(e, u)}>
                             <input name="first" defaultValue={u.first_name || ''} placeholder={s.accFirst} required />
                             <input name="last" defaultValue={u.last_name || ''} placeholder={s.accLast} required />
@@ -193,6 +195,8 @@ export default function Users() {
                     <tr key={'p-' + u.email} className="row-pending">
                       <td><b>{`${u.first_name || ''} ${u.last_name || ''}`.trim() || '—'}</b></td>
                       <td>{u.email}</td>
+                      <td>—</td>
+                      <td>—</td>
                       <td>{roleLabels[u.role]} · <em>{s.uPending}</em></td>
                       <td>
                         <button className="btn btn-ghost btn-xs" disabled={busy}

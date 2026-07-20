@@ -68,3 +68,25 @@ email and list management. The site's field names already match
 - Component: `src/components/Newsletter.jsx` (reads `VITE_BREVO_FORM_ACTION`)
 - Copy (EN/AR): the `newsletter` block in `src/i18n.jsx`
 - Fallback table: `subscribers` in `supabase/schema.sql`
+
+
+---
+
+## 6. Estructura recomendada de listas y atributos (CRM + Newsletter)
+
+**Atributos** (Contacts → Settings → Contact attributes):
+- `FIRSTNAME`, `LASTNAME` — de serie
+- `COMPANY` — crear (texto), lo envía la sincronización del CRM
+- `LOCALE` — crear (texto). El formulario del sitio ya envía `locale`
+  (en/ar); mapéalo en el formulario de Brevo para poder segmentar
+  campañas por idioma.
+
+**Listas**:
+1. `Newsletter` — solo-información. Entran por el formulario del sitio
+   con double opt-in. Mínimo dato (email + LOCALE).
+2. `CRM contacts` — contactos con consentimiento de marketing,
+   sincronizados en vivo desde /portal/contacts. Pon el ID de esta
+   lista en el secret `BREVO_LIST_ID` de la Edge Function.
+
+Regla de oro: campañas comerciales → `CRM contacts`; contenido del
+blog/novedades → ambas listas, segmentadas por `LOCALE`.
