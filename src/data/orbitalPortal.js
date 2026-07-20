@@ -162,7 +162,7 @@ export const PORTAL_STRINGS = {
     cpPrimary: 'Primary contact',
     cpSave: 'Save company',
     cpSaved: 'Company saved.',
-    cpRequiredMsg: 'Name, VAT, address and primary contact are required.',
+    cpRequiredMsg: 'Name, VAT and address are required.',
     cpVatInvalid: 'VAT: 5–20 letters/numbers.',
     cpNone: 'No companies yet.',
     cpProducts: 'Products & access',
@@ -189,6 +189,9 @@ export const PORTAL_STRINGS = {
     coSources: { manual: 'Manual', 'web-form': 'Web form', whatsapp: 'WhatsApp',
                  event: 'Event', import: 'Import' },
     coRoleConfirm: 'Change role of {name} to {role}?',
+    coNewCompanyOpt: '+ New company…',
+    coNewCompanyName: 'New company name',
+
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -303,7 +306,7 @@ export const PORTAL_STRINGS = {
     cpPrimary: 'جهة الاتصال الرئيسية',
     cpSave: 'حفظ الشركة',
     cpSaved: 'تم حفظ الشركة.',
-    cpRequiredMsg: 'الاسم والرقم الضريبي والعنوان وجهة الاتصال الرئيسية مطلوبة.',
+    cpRequiredMsg: 'الاسم والرقم الضريبي والعنوان مطلوبة.',
     cpVatInvalid: 'الرقم الضريبي: 5–20 حرفاً/رقماً.',
     cpNone: 'لا توجد شركات بعد.',
     cpProducts: 'المنتجات والصلاحيات',
@@ -330,6 +333,9 @@ export const PORTAL_STRINGS = {
     coSources: { manual: 'يدوي', 'web-form': 'نموذج الموقع', whatsapp: 'واتساب',
                  event: 'فعالية', import: 'استيراد' },
     coRoleConfirm: 'تغيير دور {name} إلى {role}؟',
+    coNewCompanyOpt: '+ شركة جديدة…',
+    coNewCompanyName: 'اسم الشركة الجديدة',
+
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',
@@ -370,6 +376,5 @@ export function validateCompany(c) {
   if (!c.name?.trim()) errs.name = true
   if (!c.vat?.trim() || !RE_VAT.test(c.vat.trim())) errs.vat = true
   if (!c.address?.trim()) errs.address = true
-  if (!c.primary_contact) errs.primary_contact = true
   return errs
 }

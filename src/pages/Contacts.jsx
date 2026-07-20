@@ -20,6 +20,7 @@ export default function Contacts() {
   const [companies, setCompanies] = useState([])
   const [form, setForm] = useState(EMPTY)
   const [errors, setErrors] = useState({})
+  const [newCompany, setNewCompany] = useState('')
   const [status, setStatus] = useState(null)
   const [busy, setBusy] = useState(false)
 
@@ -53,12 +54,21 @@ export default function Contacts() {
       return
     }
     setBusy(true); setStatus(null)
+    let companyId = form.company_id || null
+    if (form.company_id === '__new__') {
+      const name = newCompany.trim()
+      if (!name) { setBusy(false); setStatus({ ok: false, msg: s.coRequired }); return }
+      const { data: acc, error: accErr } = await supabase.from('accounts')
+        .insert({ name, crm_status: 'lead' }).select().single()
+      if (accErr) { setBusy(false); setStatus({ ok: false, msg: accErr.message }); return }
+      companyId = acc.id
+    }
     const payload = {
       first_name: form.first_name.trim(),
       last_name: form.last_name.trim(),
       email: form.email.trim().toLowerCase(),
       phone: form.phone.trim() || null,
-      company_id: form.company_id || null,
+      company_id: companyId,
       position: form.position.trim() || null,
       consent: form.consent,
       consent_at: form.consent ? new Date().toISOString() : null,
@@ -71,7 +81,7 @@ export default function Contacts() {
     const { error } = await q
     setBusy(false)
     if (error) setStatus({ ok: false, msg: error.message })
-    else { setStatus({ ok: true, msg: s.coSaved }); setForm(EMPTY); setErrors({}); load() }
+    else { setStatus({ ok: true, msg: s.coSaved }); setForm(EMPTY); setErrors({}); setNewCompany(''); load() }
   }
 
   function edit(r) {
@@ -214,7 +224,18 @@ export default function Contacts() {
                 <select id="ct-company" value={form.company_id} onChange={set('company_id')}>
                   <option value="">—</option>
                   {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  <option value="__new__">{s.coNewCompanyOpt}</option>
                 </select>
+                {form.company_id === '__new__' && (
+                  <input
+                    aria-label={s.coNewCompanyName}
+                    placeholder={s.coNewCompanyName}
+                    value={newCompany}
+                    onChange={(e) => setNewCompany(e.target.value)}
+                    style={{ marginTop: 8 }}
+                    required
+                  />
+                )}
               </div>
               <div className="field">
                 <label htmlFor="ct-pos">{s.coPosition}</label>

@@ -178,8 +178,7 @@ export default function Companies() {
             <div className="np-row">
               <div className="field">
                 <label htmlFor="cp-primary">{s.cpPrimary}</label>
-                <select id="cp-primary" value={form.primary_contact} onChange={set('primary_contact')}
-                        aria-invalid={errors.primary_contact || undefined} required>
+                <select id="cp-primary" value={form.primary_contact} onChange={set('primary_contact')}>
                   <option value="">—</option>
                   {contacts.filter(c => !c.erasure_requested).map(c => (
                     <option key={c.id} value={c.id}>{c.first_name} {c.last_name} · {c.email}</option>

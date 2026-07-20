@@ -206,7 +206,13 @@ export default function Login() {
               </p>
             </>
           )}
-          {mode !== 'signin' && (
+          {mode === 'signup' && (
+            <p className="auth-switch">
+              {a.alreadyClient}{' '}
+              <button type="button" onClick={() => { setMode('signin'); setStatus(null) }}>{a.signin}</button>
+            </p>
+          )}
+          {mode === 'reset' && (
             <p className="auth-switch">
               <button type="button" onClick={() => { setMode('signin'); setStatus(null) }}>{a.backToSignin}</button>
             </p>
