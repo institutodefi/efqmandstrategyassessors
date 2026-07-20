@@ -146,3 +146,21 @@ Brevo lo rechaza, reintenta sin él.
 ¿Make/Zapier? No hace falta: la Edge Function cubre el flujo con coste
 cero. Make solo aportaría valor si más adelante quieres orquestar flujos
 multi-app sin código (p. ej. Brevo → hoja de cálculo → Slack).
+
+---
+
+## 9. Notificación de formularios web (Edge Function `notify-inquiry`)
+
+Cada inquiry del sitio dispara un email a hello@efqmassessors.ae con los
+datos y Reply-To del remitente. Despliegue:
+
+    supabase functions deploy notify-inquiry --no-verify-jwt
+    supabase secrets set WEBHOOK_SECRET=<cadena-aleatoria-larga>
+
+Webhook (Dashboard → Database → Webhooks → Create):
+  · Table: public.inquiries · Events: INSERT
+  · Type: Supabase Edge Function → notify-inquiry
+  · HTTP Header:  x-webhook-secret = la misma cadena
+
+Prueba: envía el formulario de /contact y comprueba hello@ (llega en
+segundos; también visible en Brevo → Statistics → Transactional).

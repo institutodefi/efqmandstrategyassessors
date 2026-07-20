@@ -24,6 +24,7 @@ const Account = lazy(() => import('./pages/Account.jsx'))
 const Users = lazy(() => import('./pages/Users.jsx'))
 const Contacts = lazy(() => import('./pages/Contacts.jsx'))
 const Companies = lazy(() => import('./pages/Companies.jsx'))
+const Assessment = lazy(() => import('./pages/Assessment.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 function Fallback() {
@@ -117,6 +118,30 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['admin']}>
                   <Companies />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portal/assessment"
+              element={
+                <ProtectedRoute>
+                  <Assessment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portal/assessment/:id"
+              element={
+                <ProtectedRoute>
+                  <Assessment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portal/assessment/:id/:view"
+              element={
+                <ProtectedRoute>
+                  <Assessment />
                 </ProtectedRoute>
               }
             />

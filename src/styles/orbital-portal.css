@@ -284,3 +284,43 @@
   .pm-foot { flex-basis: 100%; border-top: none; padding-top: 6px;
              grid-template-columns: 1fr auto; align-items: center; }
 }
+
+/* ================= Assessment Tool ================= */
+.as-progress { height: 8px; margin: 6px 0 18px; }
+.as-crit-tabs { flex-wrap: wrap; }
+.as-crit-title { font-size: 1.05rem; margin: 4px 0 14px; color: var(--glow, #52d3a2); }
+.as-q { margin-bottom: 16px; }
+.as-q h3 { font-size: 0.98rem; }
+.as-block { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #7d968e; margin: 2px 0 8px; }
+.as-ctx { font-size: 0.85rem; color: #9fb6ad; line-height: 1.55; margin: 0 0 12px; }
+.as-level-lbl { font-size: 0.8rem; font-weight: 600; margin: 0 0 8px; }
+.as-levels { display: grid; gap: 6px; }
+.as-level { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; cursor: pointer;
+  font-size: 0.83rem; line-height: 1.5; transition: border-color .15s, background .15s; }
+.as-level:hover { border-color: var(--glow, #52d3a2); }
+.as-level.on { border-color: var(--glow, #52d3a2);
+  background: color-mix(in srgb, var(--glow, #52d3a2) 12%, transparent); }
+.as-level input { position: absolute; opacity: 0; }
+.as-level-score { flex: 0 0 34px; font-weight: 700; color: var(--glow, #52d3a2); }
+.as-level-txt { flex: 1; }
+.as-evid-hint { margin: 12px 0 0; font-size: 0.82rem; }
+.as-evid-hint summary { cursor: pointer; color: var(--glow, #52d3a2); font-weight: 600; }
+.as-evid-hint pre { white-space: pre-wrap; font-family: inherit; color: #9fb6ad;
+  margin: 8px 0 0; line-height: 1.6; }
+.as-docs { margin-top: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 0.82rem; }
+.as-doc { display: inline-flex; gap: 2px; align-items: center; }
+.as-upload { display: inline-flex; }
+.as-scope { width: 100%; padding: 11px 13px; border: 1px solid var(--line);
+  border-radius: 10px; font-family: inherit; font-size: 0.9rem;
+  background: var(--white); color: var(--ink); }
+.as-scores { display: grid; gap: 10px; }
+.as-score-item { display: grid; grid-template-columns: minmax(140px, 1fr) 2fr 40px;
+  align-items: center; gap: 12px; font-size: 0.82rem; }
+.as-score-num { font-weight: 700; color: var(--glow, #52d3a2); text-align: end; }
+@media (max-width: 640px) {
+  .as-score-item { grid-template-columns: 1fr 60px; }
+  .as-score-item .proj-bar { grid-column: 1 / -1; }
+}
