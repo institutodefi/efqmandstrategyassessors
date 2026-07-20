@@ -378,3 +378,51 @@
 .score-low  { background: rgba(232,110,79,0.16); color: #e86e4f; border: 1px solid #e86e4f; }
 .pj-status { padding: 5px 9px; border-radius: 999px; font-size: 0.76rem;
   border: 1px solid var(--line); background: var(--white); color: var(--ink); }
+
+/* ================= Minimal dashboard ================= */
+.dash-head h1 { font-size: 1.35rem; letter-spacing: -0.01em; margin: 0 0 22px; }
+.dash-head h1 strong { font-weight: 800; }
+
+.dash-stats { display: flex; flex-wrap: wrap; gap: 0; margin: 0 0 30px;
+  border-block: 1px solid rgba(255,255,255,0.09); }
+.dash-stat { flex: 1 1 auto; min-width: 110px; padding: 16px 20px 14px;
+  display: grid; gap: 2px; border-inline-end: 1px solid rgba(255,255,255,0.09); }
+.dash-stat:last-child { border-inline-end: none; }
+.dash-stat b { font-size: 1.7rem; font-weight: 800; line-height: 1;
+  color: var(--glow, #52d3a2); font-variant-numeric: tabular-nums; }
+.dash-stat span { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #7d968e; }
+
+.dash-zones { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 34px; }
+.dash-zone { display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-radius: 999px; cursor: pointer;
+  background: transparent; border: 1px solid rgba(255,255,255,0.14);
+  color: inherit; font-size: 0.86rem; transition: border-color .15s, background .15s; }
+.dash-zone:hover { border-color: var(--glow, #52d3a2);
+  background: rgba(82,211,162,0.06); }
+.dash-zone-glyph svg { width: 17px; height: 17px; display: block; opacity: 0.85; }
+.dash-zone-name { font-weight: 600; }
+.dash-zone-arrow { opacity: 0.45; }
+.dash-zone:hover .dash-zone-arrow { opacity: 1; color: var(--glow, #52d3a2); }
+
+.dash-empty { display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap; padding: 14px 18px; margin: 0 0 26px;
+  border: 1px dashed rgba(82,211,162,0.4); border-radius: 12px;
+  font-size: 0.86rem; }
+.dash-empty p { margin: 0; color: #9fb6ad; }
+.dash-empty b { color: var(--glow, #52d3a2); }
+
+/* Quieter panels & project rows on the dashboard */
+.pm-content .portal-card { background: transparent; box-shadow: none;
+  border: none; border-top: 1px solid rgba(255,255,255,0.09);
+  border-radius: 0; padding: 18px 2px 6px; }
+.pm-content .portal-card > h3 { font-size: 0.72rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #7d968e; font-weight: 700; margin: 0 0 14px; }
+.pm-content .proj-list > li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.pm-content .proj-list > li:last-child { border-bottom: none; }
+.pm-content .proj-bar { height: 2px; border-radius: 0; background: rgba(255,255,255,0.08); }
+.pm-content .proj-meta { font-size: 0.72rem; }
+@media (max-width: 640px) {
+  .dash-stat { min-width: 45%; border-inline-end: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06); }
+}

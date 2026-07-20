@@ -294,6 +294,11 @@ export const PORTAL_STRINGS = {
     npOpenO360: 'Opening an O360 project creates its assessment automatically (code P0360-CLIENT-NNN).',
     pjDelete: 'Delete',
     pjDeleteConfirm: 'Delete this project? For O360 projects, its assessment and all its data are deleted too. This cannot be undone.',
+    dsCompanies: 'companies',
+    dsPeople: 'people',
+    dsProducts: 'active products',
+    dsProjects: 'projects',
+    dsAssessments: 'assessments',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -539,6 +544,11 @@ export const PORTAL_STRINGS = {
     npOpenO360: 'فتح مشروع O360 ينشئ تقييمه تلقائياً (الرمز P0360-CLIENT-NNN).',
     pjDelete: 'حذف',
     pjDeleteConfirm: 'حذف هذا المشروع؟ في مشاريع O360 يُحذف تقييمه وكل بياناته أيضاً. لا يمكن التراجع.',
+    dsCompanies: 'شركات',
+    dsPeople: 'أشخاص',
+    dsProducts: 'منتجات مفعلة',
+    dsProjects: 'مشاريع',
+    dsAssessments: 'تقييمات',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',

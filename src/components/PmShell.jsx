@@ -40,7 +40,7 @@ export default function PmShell({ children }) {
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
   const isAr = lang === 'ar'
   const isStaff = ['superadmin', 'admin', 'account_manager', 'consultant'].includes(role)
-  const isAdmin = ['superadmin', 'admin'].includes(role)
+  const isAdmin = role === 'superadmin'   // CRM/administration: superadmin only (migration-16)
 
   const [zones, setZones] = useState(ZONE_FALLBACK)
   const [myZones, setMyZones] = useState(null)   // null = unknown yet

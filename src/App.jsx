@@ -100,7 +100,7 @@ export default function App() {
             <Route
               path="/portal/contacts"
               element={
-                <ProtectedRoute roles={['admin']}>
+                <ProtectedRoute roles={['superadmin']}>
                   <Contacts />
                 </ProtectedRoute>
               }
@@ -108,7 +108,7 @@ export default function App() {
             <Route
               path="/portal/companies"
               element={
-                <ProtectedRoute roles={['admin']}>
+                <ProtectedRoute roles={['superadmin']}>
                   <Companies />
                 </ProtectedRoute>
               }

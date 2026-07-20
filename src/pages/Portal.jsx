@@ -82,6 +82,24 @@ export default function Portal() {
   const accountById = useMemo(
     () => Object.fromEntries(accounts.map(a => [a.id, a])), [accounts])
 
+  /* ---------- minimal KPI strip ---------- */
+  const [stats, setStats] = useState(null)
+  useEffect(() => {
+    if (!supabase || !user) return
+    const count = (q) => q.select('*', { count: 'exact', head: true })
+      .then(({ count: c }) => c ?? 0).catch(() => 0)
+    Promise.all([
+      count(supabase.from('projects')),
+      count(supabase.from('assessments')),
+      role === 'superadmin' ? count(supabase.from('accounts')) : Promise.resolve(null),
+      role === 'superadmin' ? count(supabase.from('profiles')) : Promise.resolve(null),
+      role === 'superadmin'
+        ? count(supabase.from('subscriptions').in('status', ['trial', 'active']))
+        : Promise.resolve(null),
+    ]).then(([pj, asmt, comp, ppl, subs]) =>
+      setStats({ pj, asmt, comp, ppl, subs }))
+  }, [user, role])
+
   /* ---------- who can open projects & where ---------- */
   const [scopes, setScopes] = useState([])
   useEffect(() => {
@@ -103,7 +121,7 @@ export default function Portal() {
       .in('project_id', projects.map(p => p.id))
       .then(({ data }) => setMembers(data ?? []))
     if (canManageMembers) {
-      supabase.from('profiles').select('id, full_name, email').order('full_name')
+      supabase.rpc('list_people_min')
         .then(({ data }) => setAllUsers(data ?? []))
     }
   }, [user, projects, canManageMembers])
@@ -157,32 +175,38 @@ export default function Portal() {
   return (
     <PmShell>
       <div className="pm-content">
-        <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
-        <p className="sub">{s.sub}</p>
+        <header className="dash-head">
+          <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
+        </header>
 
-        {/* ---------------- THE THREE ZONES ---------------- */}
+        {/* ---------------- KPI STRIP (numbers first) ---------------- */}
+        {stats && (
+          <div className="dash-stats">
+            {stats.comp != null && <div className="dash-stat"><b>{stats.comp}</b><span>{s.dsCompanies}</span></div>}
+            {stats.ppl != null && <div className="dash-stat"><b>{stats.ppl}</b><span>{s.dsPeople}</span></div>}
+            {stats.subs != null && <div className="dash-stat"><b>{stats.subs}</b><span>{s.dsProducts}</span></div>}
+            <div className="dash-stat"><b>{stats.pj}</b><span>{s.dsProjects}</span></div>
+            <div className="dash-stat"><b>{stats.asmt}</b><span>{s.dsAssessments}</span></div>
+          </div>
+        )}
+
         {isClient && Array.isArray(myZones) && myZones.length === 0 && (
-          <section className="portal-card wide2 pm-empty">
-            <h3>{s.pmNoProducts}</h3>
-            <p className="sub">{s.pmNoProductsHint}</p>
-            <Link className="btn btn-primary btn-xs" to="/portal/account">{s.pmMyAccount}</Link>
+          <section className="dash-empty">
+            <p><b>{s.pmNoProducts}</b> {s.pmNoProductsHint}</p>
+            <Link className="btn btn-ghost btn-xs" to="/portal/account">{s.pmMyAccount}</Link>
           </section>
         )}
 
-        <h2 className="portal-sec-title">{s.zonesTitle}</h2>
-        <div className="zone-grid">
+        {/* ---------------- PRODUCTS AS QUIET CHIPS ---------------- */}
+        <div className="dash-zones">
           {zones.map((z) => {
             const zt = zoneText(z, lang)
             return (
-              <button
-                key={z.code}
-                className="zone-card"
-                onClick={() => navigate(`/portal/${z.code}`)}
-              >
-                <div className="glyph"><Icon name={z.icon} /></div>
-                <h3>{zt.name}</h3>
-                <p>{zt.desc}</p>
-                <span className="zone-open">{s.open} →</span>
+              <button key={z.code} className="dash-zone"
+                      onClick={() => navigate(`/portal/${z.code}`)}>
+                <span className="dash-zone-glyph"><Icon name={z.icon} /></span>
+                <span className="dash-zone-name">{zt.name}</span>
+                <span className="dash-zone-arrow">→</span>
               </button>
             )
           })}

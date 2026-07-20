@@ -794,9 +794,7 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
     setAssigned((asg ?? []).map(x => x.consultant_id))
     setReviews(Object.fromEntries((rev ?? []).map(r => [r.criterion_code, r])))
     if (isAdmin) {
-      const { data: cons } = await supabase.from('profiles')
-        .select('id, full_name, email').in('role', ['consultant', 'admin', 'superadmin'])
-        .order('full_name')
+      const { data: cons } = await supabase.rpc('list_people_min')
       setConsultants(cons ?? [])
     }
   }
