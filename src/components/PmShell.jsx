@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Component, useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -90,7 +90,7 @@ export default function PmShell({ children }) {
         </div>
       </aside>
 
-      <main className="pm-main">{children}</main>
+      <main className="pm-main"><ContentBoundary s={s}>{children}</ContentBoundary></main>
     </div>
   )
 }

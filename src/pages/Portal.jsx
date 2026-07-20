@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { Icon } from '../components/Chrome.jsx'
@@ -23,6 +23,7 @@ export default function Portal() {
   const isAr = lang === 'ar'
 
   const [zones, setZones] = useState(ZONE_FALLBACK)
+  const [myZones, setMyZones] = useState(null)
   const [accounts, setAccounts] = useState([])
   const [projects, setProjects] = useState([])
   const [activity, setActivity] = useState([])
@@ -34,6 +35,12 @@ export default function Portal() {
   /* ---------- data ---------- */
   useEffect(() => {
     if (!supabase || !user) return
+
+    if (!canSeeCRM && role !== 'consultant') {
+      supabase.rpc('my_product_zones')
+        .then(({ data }) => setMyZones((data ?? []).map(r => r?.my_product_zones ?? r)))
+        .catch(() => setMyZones([]))
+    }
 
     supabase.from('zones')
       .select('code, name_en, name_ar, desc_en, desc_ar, sort_order')
@@ -87,6 +94,14 @@ export default function Portal() {
         <p className="sub">{s.sub}</p>
 
         {/* ---------------- THE THREE ZONES ---------------- */}
+        {isClient && Array.isArray(myZones) && myZones.length === 0 && (
+          <section className="portal-card wide2 pm-empty">
+            <h3>{s.pmNoProducts}</h3>
+            <p className="sub">{s.pmNoProductsHint}</p>
+            <Link className="btn btn-primary btn-xs" to="/portal/account">{s.pmMyAccount}</Link>
+          </section>
+        )}
+
         <h2 className="portal-sec-title">{s.zonesTitle}</h2>
         <div className="zone-grid">
           {zones.map((z) => {

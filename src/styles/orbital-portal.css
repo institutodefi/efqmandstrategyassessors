@@ -359,3 +359,6 @@
   .as-dual { grid-template-columns: 1fr 74px; }
   .as-dual .as-bars { grid-column: 1 / -1; }
 }
+
+.pm-empty { margin-bottom: 22px; border-color: rgba(82,211,162,0.35) !important; }
+.pm-empty h3 { color: var(--glow, #52d3a2); }
