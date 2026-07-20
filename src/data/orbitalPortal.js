@@ -292,13 +292,16 @@ export const PORTAL_STRINGS = {
     asAddUser: 'Add user',
     asNoTeam: 'No team members yet — add users with their roles.',
     npOpenO360: 'Opening an O360 project creates its assessment automatically (code P0360-CLIENT-NNN).',
+    pjDelete: 'Delete',
+    pjDeleteConfirm: 'Delete this project? For O360 projects, its assessment and all its data are deleted too. This cannot be undone.',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
     },
     projStatus: {
       draft: 'Draft', design: 'In design', in_progress: 'In progress',
-      review: 'In review', delivered: 'Delivered', archived: 'Archived',
+      on_hold: 'Suspended', review: 'In review', delivered: 'Delivered',
+      archived: 'Archived',
     },
   },
   ar: {
@@ -534,13 +537,16 @@ export const PORTAL_STRINGS = {
     asAddUser: 'إضافة مستخدم',
     asNoTeam: 'لا يوجد أعضاء بعد — أضيفوا المستخدمين بأدوارهم.',
     npOpenO360: 'فتح مشروع O360 ينشئ تقييمه تلقائياً (الرمز P0360-CLIENT-NNN).',
+    pjDelete: 'حذف',
+    pjDeleteConfirm: 'حذف هذا المشروع؟ في مشاريع O360 يُحذف تقييمه وكل بياناته أيضاً. لا يمكن التراجع.',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',
     },
     projStatus: {
       draft: 'مسودة', design: 'قيد التصميم', in_progress: 'قيد التنفيذ',
-      review: 'قيد المراجعة', delivered: 'مُسلَّم', archived: 'مؤرشف',
+      on_hold: 'معلّق', review: 'قيد المراجعة', delivered: 'مُسلَّم',
+      archived: 'مؤرشف',
     },
   },
 }

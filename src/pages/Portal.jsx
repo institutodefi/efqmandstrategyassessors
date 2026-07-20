@@ -92,6 +92,7 @@ export default function Portal() {
   /* ---------- project members ---------- */
   const [membersFor, setMembersFor] = useState(null)
   const [members, setMembers] = useState([])
+  const [memberErr, setMemberErr] = useState(null)
   const [allUsers, setAllUsers] = useState([])
   const canManageMembers = ['superadmin', 'admin', 'consultant'].includes(role)
 
@@ -116,15 +117,30 @@ export default function Portal() {
     e.preventDefault()
     const f = e.target
     if (!f.muser.value) return
+    setMemberErr(null)
     const { error } = await supabase.from('project_members').upsert({
       project_id: projectId, user_id: f.muser.value, member_role: f.mrole.value,
     })
-    if (error) setStatus?.({ ok: false, msg: error.message })
+    if (error) { setMemberErr(error.message); return }
     f.reset()
     const { data } = await supabase.from('project_members')
       .select('project_id, user_id, member_role')
       .in('project_id', projects.map(p => p.id))
     setMembers(data ?? [])
+  }
+
+  async function setProjectStatus(projectId, newStatus) {
+    const { error } = await supabase.from('projects')
+      .update({ status: newStatus }).eq('id', projectId)
+    if (error) setMemberErr(error.message)
+    else setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: newStatus } : p))
+  }
+
+  async function deleteProject(p) {
+    if (!window.confirm(s.pjDeleteConfirm)) return
+    const { error } = await supabase.from('projects').delete().eq('id', p.id)
+    if (error) setMemberErr(error.message)
+    else setProjects(prev => prev.filter(x => x.id !== p.id))
   }
 
   async function removeMember(projectId, userId) {
@@ -206,9 +222,21 @@ export default function Portal() {
                   <li key={p.id}>
                     <div className="proj-top">
                       <b>{projTitle(p)}</b>
-                      <span className={`pill pill-${p.status}`}>
-                        {s.projStatus[p.status] || p.status}
-                      </span>
+                      {canManageMembers ? (
+                        <select className="pj-status" value={p.status}
+                                onChange={(e) => setProjectStatus(p.id, e.target.value)}>
+                          {Object.entries(s.projStatus).map(([k, v]) =>
+                            <option key={k} value={k}>{v}</option>)}
+                        </select>
+                      ) : (
+                        <span className={`pill pill-${p.status}`}>
+                          {s.projStatus[p.status] || p.status}
+                        </span>
+                      )}
+                      {canManageMembers && (
+                        <button className="btn btn-ghost btn-xs"
+                                onClick={() => deleteProject(p)}>{s.pjDelete}</button>
+                      )}
                     </div>
                     <div className="proj-meta">
                       <span>{zoneText(zones.find(z => z.code === p.zone_code) || {}, lang).name || p.zone_code}</span>
@@ -227,6 +255,7 @@ export default function Portal() {
                       </button>
                       {membersFor === p.id && (
                         <div className="cp-detail">
+                          {memberErr && <p className="form-status err">{memberErr}</p>}
                           {members.filter(m => m.project_id === p.id).length === 0
                             ? <p className="proj-meta">{s.pjNoMembers}</p>
                             : members.filter(m => m.project_id === p.id).map(m => (

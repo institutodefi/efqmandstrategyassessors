@@ -252,12 +252,20 @@ as $$
 $$;
 grant execute on function public.my_project_scopes() to authenticated;
 
--- Backfill: enlazar assessments existentes sin código (código propio simple)
+-- Backfill: código para assessments existentes sin él (numeración por cliente,
+-- calculada en subconsulta — las funciones ventana no se permiten en UPDATE)
+with numbered as (
+  select id,
+         'P0360-' || public.company_code3(company_id) || '-' ||
+         lpad((row_number() over (partition by company_id order by created_at))::text, 3, '0')
+         as new_code
+  from public.assessments
+  where code is null
+)
 update public.assessments a
-   set code = 'P0360-' || public.company_code3(a.company_id) || '-'
-              || lpad((row_number() over (partition by a.company_id order by a.created_at))::text, 3, '0')
-  from (select id from public.assessments where code is null) x
- where a.id = x.id and a.code is null;
+   set code = n.new_code
+  from numbered n
+ where a.id = n.id;
 
 -- VERIFICAR:
 --   Nuevo proyecto O360 desde la app → código P0360-XXX-001 y assessment

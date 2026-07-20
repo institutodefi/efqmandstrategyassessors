@@ -368,3 +368,13 @@
 .cp-licenses { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; }
 .cp-lic-input { width: 64px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line);
   background: var(--white); color: var(--ink); font-size: 0.85rem; }
+
+/* ---- Color scores ---- */
+.score-chip { display: inline-grid; place-items: center; min-width: 34px; height: 26px;
+  padding: 0 8px; border-radius: 999px; font-size: 0.78rem; font-weight: 800; }
+.score-chip.chip-aud { outline: 2px dashed rgba(232,180,79,0.6); outline-offset: 1px; }
+.score-good { background: rgba(82,211,162,0.18); color: #52d3a2; border: 1px solid #52d3a2; }
+.score-mid  { background: rgba(232,180,79,0.16); color: #e8b44f; border: 1px solid #e8b44f; }
+.score-low  { background: rgba(232,110,79,0.16); color: #e86e4f; border: 1px solid #e86e4f; }
+.pj-status { padding: 5px 9px; border-radius: 999px; font-size: 0.76rem;
+  border: 1px solid var(--line); background: var(--white); color: var(--ink); }

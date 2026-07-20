@@ -55,10 +55,12 @@ function AssessmentList() {
 
   useEffect(() => {
     if (!supabase || !user) return
-    supabase.from('assessments')
-      .select('id, title, status, company_id, created_at, updated_at')
-      .order('updated_at', { ascending: false })
+    supabase.rpc('my_assessment_summaries')
       .then(({ data }) => setRows(data ?? []))
+      .catch(() => supabase.from('assessments')
+        .select('id, title, status, company_id, created_at, updated_at')
+        .order('updated_at', { ascending: false })
+        .then(({ data }) => setRows(data ?? [])))
     supabase.rpc('my_assessment_companies').then(async ({ data }) => {
       const ids = (data ?? []).map(r => r.my_assessment_companies ?? r)
       if (!ids.length) { setCompanies([]); return }
@@ -116,21 +118,42 @@ function AssessmentList() {
         <section className="portal-card wide2">
           {rows.length === 0 ? <p>{s.asNone}</p> : (
             <ul className="proj-list">
-              {rows.map(a => (
-                <li key={a.id}>
-                  <div className="proj-top">
-                    <b>{a.title}</b>
-                    <span className="pm-actions">
-                      <span className={`pill pill-${a.status === 'in_progress' ? 'in_progress' : a.status === 'submitted' ? 'review' : a.status === 'assessed' ? 'delivered' : 'archived'}`}>
-                        {s.asStatus[a.status]}
+              {rows.map(a => {
+                const pct = a.total_questions
+                  ? Math.round(((a.answered ?? 0) / a.total_questions) * 100) : null
+                const grade = (v) => v == null ? '' : v >= 70 ? 'score-good' : v >= 40 ? 'score-mid' : 'score-low'
+                return (
+                  <li key={a.id}>
+                    <div className="proj-top">
+                      <b>{a.code ? `${a.code}${a.title && a.title !== a.code ? ' · ' + a.title : ''}` : a.title}</b>
+                      <span className="pm-actions">
+                        {a.client_score != null && (
+                          <span className={`score-chip ${grade(a.client_score)}`}
+                                title={s.asClientScore}>{a.client_score}</span>
+                        )}
+                        {a.auditor_score != null && (
+                          <span className={`score-chip chip-aud ${grade(a.auditor_score)}`}
+                                title={s.asAuditorScore}>{a.auditor_score}</span>
+                        )}
+                        <span className={`pill pill-${a.status === 'in_progress' ? 'in_progress' : a.status === 'submitted' ? 'review' : a.status === 'assessed' ? 'delivered' : 'archived'}`}>
+                          {s.asStatus[a.status]}
+                        </span>
+                        <button className="btn btn-ghost btn-xs"
+                                onClick={() => navigate(`/portal/assessment/${a.id}`)}>{s.asOpen}</button>
                       </span>
-                      <button className="btn btn-ghost btn-xs"
-                              onClick={() => navigate(`/portal/assessment/${a.id}`)}>{s.asOpen}</button>
-                    </span>
-                  </div>
-                  <div className="proj-meta">{new Date(a.updated_at).toLocaleDateString('en-GB')}</div>
-                </li>
-              ))}
+                    </div>
+                    {pct != null && (
+                      <div className="proj-bar" title={`${s.asProgress}: ${pct}%`}>
+                        <span style={{ width: `${pct}%` }} />
+                      </div>
+                    )}
+                    <div className="proj-meta">
+                      {pct != null && <>{a.answered}/{a.total_questions} {s.asAnswered} · </>}
+                      {new Date(a.updated_at).toLocaleDateString('en-GB')}
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           )}
         </section>
