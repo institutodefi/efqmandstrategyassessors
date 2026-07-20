@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useLang } from '../i18n.jsx'
-import PortalShell from '../components/PortalShell.jsx'
+import PmShell from '../components/PmShell.jsx'
 import { PORTAL_STRINGS, ROLE_LABEL } from '../data/orbitalPortal.js'
 
 const ROLES = ['client', 'consultant', 'account_manager', 'admin', 'superadmin']
@@ -17,6 +17,8 @@ export default function Users() {
 
   const [tab, setTab] = useState('users')
   const [profiles, setProfiles] = useState([])
+  const [companies, setCompanies] = useState([])
+  const [editing, setEditing] = useState(null)   // profile id being edited
   const [pending, setPending] = useState([])
   const [inquiries, setInquiries] = useState([])
   const [status, setStatus] = useState(null)
@@ -24,9 +26,9 @@ export default function Users() {
 
   async function loadAll() {
     if (!supabase) return
-    const [p, a, q] = await Promise.all([
+    const [p, a, q, co] = await Promise.all([
       supabase.from('profiles')
-        .select('id, email, first_name, last_name, full_name, role, created_at')
+        .select('id, email, first_name, last_name, full_name, phone, company_id, role, created_at')
         .order('created_at'),
       supabase.from('authorized_users')
         .select('email, first_name, last_name, role, authorized')
@@ -35,7 +37,9 @@ export default function Users() {
         .select('id, name, first_name, last_name, email, organisation, message, created_at')
         .order('created_at', { ascending: false })
         .limit(50),
+      supabase.from('accounts').select('id, name').order('name'),
     ])
+    setCompanies(co.data ?? [])
     const profs = p.data ?? []
     setProfiles(profs)
     const emails = new Set(profs.map(x => (x.email || '').toLowerCase()))
@@ -72,6 +76,24 @@ export default function Users() {
     if (!error) loadAll()
   }
 
+  async function saveUserEdit(e, u) {
+    e.preventDefault()
+    const f = e.target
+    setBusy(true); setStatus(null)
+    const first = f.first.value.trim(), last = f.last.value.trim()
+    const { error } = await supabase.from('profiles').update({
+      first_name: first,
+      last_name: last,
+      full_name: `${first} ${last}`.trim(),
+      phone: f.phone.value.trim() || null,
+      company_id: f.company.value || null,
+    }).eq('id', u.id)
+    setBusy(false)
+    setStatus(error ? { ok: false, msg: s.uError + ' ' + (error.message || '') }
+                    : { ok: true, msg: s.accSaved })
+    if (!error) { setEditing(null); loadAll() }
+  }
+
   async function authorizeNew(e) {
     e.preventDefault()
     const f = e.target
@@ -89,7 +111,7 @@ export default function Users() {
   }
 
   return (
-    <PortalShell>
+    <PmShell>
       <h1>{s.usersTitle}</h1>
       <p className="sub">{s.usersSub}</p>
 
@@ -132,14 +154,37 @@ export default function Users() {
                           </select>
                         )}
                       </td>
-                      <td>
+                      <td className="pm-actions">
+                        <button className="btn btn-ghost btn-xs" disabled={busy}
+                                onClick={() => setEditing(editing === u.id ? null : u.id)}>
+                          {s.coEdit}
+                        </button>
                         {u.email?.toLowerCase() !== 'alejandro@efqmassessors.ae' && (
                           <button className="btn btn-ghost btn-xs" disabled={busy}
                                   onClick={() => revoke(u.email)}>{s.uRevoke}</button>
                         )}
                       </td>
                     </tr>
-                  ))}
+                  )).flatMap((row, i) => {
+                    const u = profiles[i]
+                    if (editing !== u.id) return [row]
+                    return [row, (
+                      <tr key={u.id + '-edit'}>
+                        <td colSpan="4">
+                          <form className="cp-inline" onSubmit={(e) => saveUserEdit(e, u)}>
+                            <input name="first" defaultValue={u.first_name || ''} placeholder={s.accFirst} required />
+                            <input name="last" defaultValue={u.last_name || ''} placeholder={s.accLast} required />
+                            <input name="phone" defaultValue={u.phone || ''} placeholder={s.coCell} />
+                            <select name="company" defaultValue={u.company_id || ''}>
+                              <option value="">{s.coCompany} —</option>
+                              {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                            </select>
+                            <button className="btn btn-primary btn-xs" disabled={busy} type="submit">{s.accSave}</button>
+                          </form>
+                        </td>
+                      </tr>
+                    )]
+                  })}
                   {pending.map(u => (
                     <tr key={'p-' + u.email} className="row-pending">
                       <td><b>{`${u.first_name || ''} ${u.last_name || ''}`.trim() || '—'}</b></td>
@@ -214,6 +259,6 @@ export default function Users() {
           </section>
         </div>
       )}
-    </PortalShell>
+    </PmShell>
   )
 }

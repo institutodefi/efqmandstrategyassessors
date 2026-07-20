@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useLang } from '../i18n.jsx'
-import PortalShell from '../components/PortalShell.jsx'
+import PmShell from '../components/PmShell.jsx'
 import { PORTAL_STRINGS } from '../data/orbitalPortal.js'
 
 /** /portal/account — every user's personal zone. */
@@ -66,7 +66,7 @@ export default function Account() {
   }
 
   return (
-    <PortalShell>
+    <PmShell>
       <h1>{s.accTitle}</h1>
       <p className="sub">{s.accSub} · <b>{user?.email}</b></p>
 
@@ -115,6 +115,6 @@ export default function Account() {
           </form>
         </section>
       </div>
-    </PortalShell>
+    </PmShell>
   )
 }

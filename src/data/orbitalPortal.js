@@ -120,6 +120,64 @@ export const PORTAL_STRINGS = {
     cMsg: 'Message',
     cEmpty: 'No contacts yet.',
     uEmpty: 'No users yet.',
+    // PM Tool shell
+    pmWelcome: 'Welcome to ',
+    pmName: 'Orbital360 PM Tool',
+    products: 'Products',
+    administration: 'Administration',
+    contacts: 'Contacts',
+    companies: 'Companies',
+    dashboard: 'Dashboard',
+    locked: 'Not contracted',
+    // Contacts CRM
+    coTitle: 'Contacts (CRM)',
+    coSub: 'People, GDPR consent and Brevo marketing sync.',
+    coNew: 'New contact',
+    coCell: 'Cell (optional)',
+    coCompany: 'Company',
+    coPosition: 'Position',
+    coConsent: 'GDPR consent (may be contacted about their enquiry)',
+    coMarketing: 'Marketing consent (newsletter / Brevo)',
+    coSource: 'Consent source',
+    coSave: 'Save contact',
+    coSaved: 'Contact saved.',
+    coEdit: 'Edit',
+    coErase: 'GDPR erase',
+    coEraseConfirm: 'Anonymise this contact (right to erasure)? This cannot be undone.',
+    coImport: 'Import web inquiries',
+    coImported: 'inquiries imported as contacts.',
+    coExportBrevo: 'Export to Brevo (CSV)',
+    coExportNote: 'Exports only contacts with marketing consent and marks them as synced.',
+    coNone: 'No contacts yet.',
+    coEmailInvalid: 'Valid email required.',
+    coRequired: 'First name, last name and email are required.',
+    coPhoneInvalid: 'Phone must be digits, spaces, + ( ) - only.',
+    // Companies
+    cpTitle: 'Companies',
+    cpSub: 'Company profiles, products and user access.',
+    cpNew: 'New company',
+    cpName: 'Company name',
+    cpVat: 'VAT',
+    cpAddress: 'Address',
+    cpPrimary: 'Primary contact',
+    cpSave: 'Save company',
+    cpSaved: 'Company saved.',
+    cpRequiredMsg: 'Name, VAT, address and primary contact are required.',
+    cpVatInvalid: 'VAT: 5–20 letters/numbers.',
+    cpNone: 'No companies yet.',
+    cpProducts: 'Products & access',
+    cpSubscribe: 'Activate product',
+    cpStatus: 'Status',
+    cpGrant: 'Grant user access',
+    cpUser: 'User',
+    cpLevel: 'Level',
+    cpGrantBtn: 'Grant',
+    cpRevokeAccess: 'Remove',
+    cpNoSubs: 'No products contracted.',
+    cpNoUsers: 'No users with access.',
+    subStatus: { trial: 'Trial', active: 'Active', suspended: 'Suspended',
+                 expired: 'Expired', cancelled: 'Cancelled' },
+    accessLevels: { view: 'View', edit: 'Edit', manage: 'Manage' },
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       on_hold: 'On hold', closed: 'Closed',
@@ -195,6 +253,61 @@ export const PORTAL_STRINGS = {
     cMsg: 'الرسالة',
     cEmpty: 'لا توجد جهات اتصال بعد.',
     uEmpty: 'لا يوجد مستخدمون بعد.',
+    pmWelcome: 'مرحباً بكم في ',
+    pmName: 'أداة أوربيتال 360 لإدارة المشاريع',
+    products: 'المنتجات',
+    administration: 'الإدارة',
+    contacts: 'جهات الاتصال',
+    companies: 'الشركات',
+    dashboard: 'لوحة التحكم',
+    locked: 'غير متعاقد عليه',
+    coTitle: 'جهات الاتصال (CRM)',
+    coSub: 'الأشخاص وموافقات GDPR ومزامنة التسويق مع Brevo.',
+    coNew: 'جهة اتصال جديدة',
+    coCell: 'الجوال (اختياري)',
+    coCompany: 'الشركة',
+    coPosition: 'المنصب',
+    coConsent: 'موافقة GDPR (يمكن التواصل بشأن استفساره)',
+    coMarketing: 'موافقة تسويقية (النشرة / Brevo)',
+    coSource: 'مصدر الموافقة',
+    coSave: 'حفظ جهة الاتصال',
+    coSaved: 'تم حفظ جهة الاتصال.',
+    coEdit: 'تعديل',
+    coErase: 'محو GDPR',
+    coEraseConfirm: 'إخفاء هوية جهة الاتصال (حق المحو)؟ لا يمكن التراجع.',
+    coImport: 'استيراد استفسارات الموقع',
+    coImported: 'استفساراً تم استيرادها كجهات اتصال.',
+    coExportBrevo: 'تصدير إلى Brevo (CSV)',
+    coExportNote: 'يصدّر فقط جهات الاتصال ذات الموافقة التسويقية ويعلّمها كمتزامنة.',
+    coNone: 'لا توجد جهات اتصال بعد.',
+    coEmailInvalid: 'مطلوب بريد إلكتروني صالح.',
+    coRequired: 'الاسم الأول واسم العائلة والبريد مطلوبة.',
+    coPhoneInvalid: 'الهاتف: أرقام ومسافات و + ( ) - فقط.',
+    cpTitle: 'الشركات',
+    cpSub: 'ملفات الشركات والمنتجات وصلاحيات المستخدمين.',
+    cpNew: 'شركة جديدة',
+    cpName: 'اسم الشركة',
+    cpVat: 'الرقم الضريبي',
+    cpAddress: 'العنوان',
+    cpPrimary: 'جهة الاتصال الرئيسية',
+    cpSave: 'حفظ الشركة',
+    cpSaved: 'تم حفظ الشركة.',
+    cpRequiredMsg: 'الاسم والرقم الضريبي والعنوان وجهة الاتصال الرئيسية مطلوبة.',
+    cpVatInvalid: 'الرقم الضريبي: 5–20 حرفاً/رقماً.',
+    cpNone: 'لا توجد شركات بعد.',
+    cpProducts: 'المنتجات والصلاحيات',
+    cpSubscribe: 'تفعيل المنتج',
+    cpStatus: 'الحالة',
+    cpGrant: 'منح صلاحية لمستخدم',
+    cpUser: 'المستخدم',
+    cpLevel: 'المستوى',
+    cpGrantBtn: 'منح',
+    cpRevokeAccess: 'إزالة',
+    cpNoSubs: 'لا توجد منتجات متعاقد عليها.',
+    cpNoUsers: 'لا يوجد مستخدمون بصلاحية.',
+    subStatus: { trial: 'تجريبي', active: 'نشط', suspended: 'معلّق',
+                 expired: 'منتهٍ', cancelled: 'ملغى' },
+    accessLevels: { view: 'عرض', edit: 'تحرير', manage: 'إدارة' },
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       on_hold: 'معلّق', closed: 'مغلق',
@@ -213,4 +326,28 @@ export function zoneText(zone, lang) {
     name: (ar ? zone.name_ar : zone.name_en) || zone.name_en,
     desc: (ar ? zone.desc_ar : zone.desc_en) || zone.desc_en || '',
   }
+}
+
+
+/* ---------------- Validation (shared by Contacts / Companies) ------------- */
+export const RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+export const RE_PHONE = /^[+()\-\s\d]{6,20}$/
+export const RE_VAT   = /^[A-Za-z0-9\-\s]{5,20}$/
+
+export function validateContact(c) {
+  const errs = {}
+  if (!c.first_name?.trim()) errs.first_name = true
+  if (!c.last_name?.trim()) errs.last_name = true
+  if (!c.email?.trim() || !RE_EMAIL.test(c.email.trim())) errs.email = true
+  if (c.phone && !RE_PHONE.test(c.phone.trim())) errs.phone = true
+  return errs
+}
+
+export function validateCompany(c) {
+  const errs = {}
+  if (!c.name?.trim()) errs.name = true
+  if (!c.vat?.trim() || !RE_VAT.test(c.vat.trim())) errs.vat = true
+  if (!c.address?.trim()) errs.address = true
+  if (!c.primary_contact) errs.primary_contact = true
+  return errs
 }

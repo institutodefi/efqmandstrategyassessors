@@ -185,3 +185,58 @@
 .tab-row { display: flex; gap: 8px; margin: 22px 0 14px; }
 .tab-btn { padding: 9px 22px; border-radius: 999px; border: 1px solid var(--line-on-dark, var(--line)); background: transparent; color: inherit; font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
 .tab-btn.on { background: color-mix(in srgb, var(--glow) 16%, transparent); border-color: var(--glow); color: var(--glow); }
+
+/* ================= Orbital360 PM Tool — sidebar layout ================= */
+.pm { display: flex; min-height: 100vh; background: var(--pm-bg, #0b2530); color: #e8f1ee; }
+.pm-side {
+  flex: 0 0 250px; display: flex; flex-direction: column;
+  padding: 22px 16px; gap: 18px;
+  background: color-mix(in srgb, #000 22%, #0b2530);
+  border-inline-end: 1px solid rgba(255,255,255,0.08);
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.pm-logo img { width: 168px; max-width: 100%; display: block; }
+.pm-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.pm-sec {
+  margin: 18px 8px 6px; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;
+}
+.pm-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  color: #c6d6d0; font-size: 0.9rem; text-decoration: none;
+  border: 1px solid transparent;
+}
+.pm-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.pm-link.active { background: color-mix(in srgb, var(--glow, #52d3a2) 14%, transparent);
+  border-color: color-mix(in srgb, var(--glow, #52d3a2) 45%, transparent); color: #fff; }
+.pm-dot { flex: 0 0 7px; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--glow, #52d3a2); opacity: 0.65; }
+.pm-link.active .pm-dot { opacity: 1; }
+.pm-link-txt { flex: 1; line-height: 1.3; }
+.pm-locked { opacity: 0.45; cursor: not-allowed; }
+.pm-lock { font-size: 0.75rem; }
+.pm-foot { display: grid; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; }
+.pm-user { color: inherit; text-decoration: none; font-size: 0.85rem; display: grid; gap: 4px; }
+.pm-user:hover b { color: var(--glow, #52d3a2); }
+.pm-main { flex: 1; padding: 40px 44px; min-width: 0; }
+.pm-main h1 { font-size: 1.5rem; margin: 0 0 6px; }
+.pm-main .sub { color: #9fb6ad; margin: 0 0 22px; }
+.pm-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+.pm .portal-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 16px; padding: 22px; }
+.pm .portal-card h3 { margin: 0 0 14px; font-size: 1rem; }
+/* company items */
+.cp-item { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 14px 0; }
+.cp-item:last-child { border-bottom: 0; }
+.cp-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.cp-detail { margin-top: 14px; padding: 14px; border-radius: 12px; background: rgba(0,0,0,0.18); display: grid; gap: 12px; }
+.cp-h4 { margin: 6px 0 0; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; color: #9fb6ad; }
+.cp-inline { display: flex; gap: 8px; flex-wrap: wrap; }
+.cp-inline select, .cp-inline input { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font-family: inherit; font-size: 0.85rem; }
+@media (max-width: 900px) {
+  .pm { flex-direction: column; }
+  .pm-side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .pm-nav { flex-direction: row; flex-wrap: wrap; }
+  .pm-main { padding: 24px 18px; }
+}

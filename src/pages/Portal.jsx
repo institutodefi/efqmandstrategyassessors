@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { Icon } from '../components/Chrome.jsx'
+import PmShell from '../components/PmShell.jsx'
 import { useLang } from '../i18n.jsx'
-import {
-  ZONE_FALLBACK, ROLE_LABEL, PORTAL_STRINGS, zoneText,
-} from '../data/orbitalPortal.js'
+import { ZONE_FALLBACK, PORTAL_STRINGS, zoneText } from '../data/orbitalPortal.js'
 
 /**
  * Orbital 360 portal — role-aware hub.
@@ -17,7 +16,7 @@ import {
  *  client              → interacts with their projects (progress + activity)
  */
 export default function Portal() {
-  const { user, profile, role } = useAuth()
+  const { user, role } = useAuth()
   const navigate = useNavigate()
   const { lang } = useLang()
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
@@ -73,39 +72,15 @@ export default function Portal() {
       .then(({ data }) => setActivity(data ?? []))
   }, [user, isClient, projects])
 
-  async function signOut() {
-    await supabase?.auth.signOut()
-    navigate('/')
-  }
-
-  const name = profile?.full_name || user?.user_metadata?.full_name || user?.email
-  const roleLabel = role ? (ROLE_LABEL[lang] || ROLE_LABEL.en)[role] : ''
   const accountById = useMemo(
     () => Object.fromEntries(accounts.map(a => [a.id, a])), [accounts])
 
   const projTitle = (p) => (isAr && p.title_ar) ? p.title_ar : p.title_en
 
   return (
-    <div className="portal" dir={isAr ? 'rtl' : 'ltr'}>
-      <nav className="portal-nav">
-        <img src="/brand/wordmark-white.png" alt="EFQM and Strategy Assessors" />
-        <div className="portal-nav-right">
-          <Link to="/portal/account" className="btn btn-ghost portal-signout">{s.account}</Link>
-          {['superadmin','admin'].includes(role) && (
-            <Link to="/portal/users" className="btn btn-ghost portal-signout">{s.users}</Link>
-          )}
-          <span className="who">
-            {s.signedInAs} <b>{name}</b>
-            {roleLabel && <span className="role-badge">{roleLabel}</span>}
-          </span>
-          <button className="btn btn-ghost portal-signout" onClick={signOut}>
-            {s.signOut}
-          </button>
-        </div>
-      </nav>
-
-      <main className="portal-main">
-        <h1>{s.welcomeA}<strong>{s.strong}</strong></h1>
+    <PmShell>
+      <div className="pm-content">
+        <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
         <p className="sub">{s.sub}</p>
 
         {/* ---------------- THE THREE ZONES ---------------- */}
@@ -196,8 +171,8 @@ export default function Portal() {
             />
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </PmShell>
   )
 }
 
