@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { Icon } from '../components/Chrome.jsx'
@@ -16,7 +16,7 @@ import { ZONE_FALLBACK, PORTAL_STRINGS, zoneText } from '../data/orbitalPortal.j
  *  client              → interacts with their projects (progress + activity)
  */
 export default function Portal() {
-  const { user, role } = useAuth()
+  const { user, role, profile } = useAuth()
   const { zone: zoneParam } = useParams()
   const navigate = useNavigate()
   const { lang } = useLang()
@@ -191,6 +191,12 @@ export default function Portal() {
             <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
           )}
         </header>
+
+        {!zoneParam && role === 'admin' && profile?.company_id && (
+          <p className="dash-company">
+            {s.dsMyCompany}: <b>{accounts.find(a => a.id === profile.company_id)?.name || '…'}</b>
+          </p>
+        )}
 
         {/* ---------------- KPI STRIP (numbers first) ---------------- */}
         {!zoneParam && stats && (

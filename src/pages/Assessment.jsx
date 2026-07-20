@@ -856,7 +856,7 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
 
       {isAdmin && (
         <div className="as-assign">
-          <h4 className="cp-h4">{s.asAssignments}</h4>
+          <h4 className="cp-h4">{s.asAssignConsultants}</h4>
           {assigned.length === 0
             ? <p className="proj-meta">{s.asNoAssessors}</p>
             : assigned.map(uid => (

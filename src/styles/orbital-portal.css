@@ -426,3 +426,6 @@
   .dash-stat { min-width: 45%; border-inline-end: none;
     border-bottom: 1px solid rgba(255,255,255,0.06); }
 }
+
+.dash-company { margin: -12px 0 18px; font-size: 0.85rem; color: #9fb6ad; }
+.dash-company b { color: var(--glow, #52d3a2); }

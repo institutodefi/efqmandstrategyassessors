@@ -41,7 +41,7 @@ export default function Companies() {
       supabase.from('zones').select('code, name_en, name_ar, sort_order')
         .eq('is_active', true).order('sort_order'),
       supabase.from('subscriptions')
-        .select('id, account_id, zone_code, status, primary_contact_id, start_date, licenses'),
+        .select('id, account_id, zone_code, status, primary_contact_id, start_date, licenses, project_limit'),
       supabase.from('user_product_access')
         .select('user_id, account_id, zone_code, access_level'),
       supabase.from('profiles')
@@ -133,6 +133,16 @@ export default function Companies() {
           .update({ status: on ? 'active' : 'suspended' }).eq('id', existing.id)
       : await supabase.from('subscriptions').insert({
           account_id: accountId, zone_code: zoneCode, status: 'active', licenses: 1 })
+    setBusy(false)
+    if (error) setStatus({ ok: false, msg: error.message })
+    else load()
+  }
+
+  async function setProjectLimit(sub, n) {
+    const v = Math.max(1, Number(n) || 1)
+    setBusy(true)
+    const { error } = await supabase.from('subscriptions')
+      .update({ project_limit: v }).eq('id', sub.id)
     setBusy(false)
     if (error) setStatus({ ok: false, msg: error.message })
     else load()
@@ -314,6 +324,13 @@ export default function Companies() {
                                              && setLicenses(sub, e.target.value)} />
                                   ) : <b>{sub.licenses ?? 1}</b>}
                                   <span className="proj-meta"> · {used}/{sub.licenses ?? 1} {s.cpSeats}</span>
+                                  <span className="proj-meta"> · {s.cpProjLimit}: </span>
+                                  {isSuper ? (
+                                    <input type="number" min="1" className="cp-lic-input"
+                                           defaultValue={sub.project_limit ?? 1} disabled={busy}
+                                           onBlur={(e) => Number(e.target.value) !== (sub.project_limit ?? 1)
+                                             && setProjectLimit(sub, e.target.value)} />
+                                  ) : <b>{sub.project_limit ?? 1}</b>}
                                 </span>
                               )}
                             </div>
