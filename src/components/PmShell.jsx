@@ -5,6 +5,27 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useLang } from '../i18n.jsx'
 import { PORTAL_STRINGS, ROLE_LABEL, ZONE_FALLBACK, zoneText } from '../data/orbitalPortal.js'
 
+/** Catches render crashes in the content area — the sidebar always survives. */
+class ContentBoundary extends Component {
+  constructor(props) { super(props); this.state = { error: null } }
+  static getDerivedStateFromError(error) { return { error } }
+  componentDidCatch(error, info) { console.error('[pm-content]', error, info) }
+  render() {
+    if (!this.state.error) return this.props.children
+    const { s } = this.props
+    return (
+      <div className="portal-card wide2">
+        <h3>{s.pmError}</h3>
+        <p className="proj-meta">{String(this.state.error?.message || this.state.error)}</p>
+        <p className="sub">{s.pmErrorHint}</p>
+        <button className="btn btn-primary btn-xs" onClick={() => window.location.reload()}>
+          {s.pmReload}
+        </button>
+      </div>
+    )
+  }
+}
+
 /**
  * PmShell — Orbital360 PM Tool layout: sidebar (logo, products,
  * administration, account) + content area. RTL-aware.
