@@ -55,9 +55,10 @@ export default function Contact() {
       name: `${firstName} ${lastName}`.trim(),
       email: f.email.value.trim(),
       organisation: f.organisation.value.trim(),
+      source: 'contact',
       message: f.message.value.trim(),
     }
-    if (!firstName || !lastName || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
+    if (!firstName || !lastName || !payload.organisation || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
       setStatus({ ok: false, msg: t.contact.valMsg }); return
     }
     if (!consent) { setStatus({ ok: false, msg: t.consent.required }); return }
@@ -109,7 +110,7 @@ export default function Contact() {
               </div>
               <div className="field">
                 <label htmlFor="c-org">{t.contact.fOrg}</label>
-                <input id="c-org" name="organisation" autoComplete="organization" />
+                <input id="c-org" name="organisation" autoComplete="organization" required />
               </div>
               <div className="field">
                 <label htmlFor="c-msg">{t.contact.fMsg}</label>

@@ -59,9 +59,10 @@ export default function Request() {
       name: `${firstName} ${lastName}`.trim(),
       email: f.email.value.trim(),
       organisation: f.organisation.value.trim(),
+      source: 'request',
       message: f.message.value.trim(),
     }
-    if (!firstName || !lastName || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
+    if (!firstName || !lastName || !payload.organisation || !payload.email || !EMAIL_RE.test(payload.email) || !payload.message) {
       setStatus({ ok: false, msg: t.contact.valMsg }); return
     }
     if (!consent) { setStatus({ ok: false, msg: t.consent.required }); return }
@@ -118,7 +119,7 @@ export default function Request() {
               </div>
               <div className="field">
                 <label htmlFor="r-org">{t.contact.fOrg}</label>
-                <input id="r-org" name="organisation" autoComplete="organization" />
+                <input id="r-org" name="organisation" autoComplete="organization" required />
               </div>
               <div className="field">
                 <label htmlFor="r-msg">{t.contact.fMsg}</label>

@@ -26,7 +26,7 @@ export default function Contacts() {
     if (!supabase) return
     const [c, a] = await Promise.all([
       supabase.from('contacts')
-        .select('id, first_name, last_name, email, phone, company_id, position, consent, marketing_consent, brevo_synced_at, erasure_requested, created_at')
+        .select('id, first_name, last_name, email, phone, company_id, company_name, position, consent, marketing_consent, brevo_synced_at, erasure_requested, created_at')
         .order('created_at', { ascending: false }),
       supabase.from('accounts').select('id, name').order('name'),
     ])
@@ -35,7 +35,7 @@ export default function Contacts() {
   }
   useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const companyName = (id) => companies.find(c => c.id === id)?.name || '—'
+  const companyName = (id, raw) => companies.find(c => c.id === id)?.name || raw || '—'
   const set = (k) => (e) => setForm(f => ({
     ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
   }))
@@ -98,7 +98,7 @@ export default function Contacts() {
     if (!list.length) return
     const head = 'EMAIL;FIRSTNAME;LASTNAME;SMS;COMPANY'
     const csv = [head, ...list.map(r =>
-      [r.email, r.first_name, r.last_name, r.phone || '', companyName(r.company_id)]
+      [r.email, r.first_name, r.last_name, r.phone || '', companyName(r.company_id, r.company_name)]
         .map(v => String(v).replaceAll(';', ',')).join(';')
     )].join('\n')
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' })
@@ -200,7 +200,7 @@ export default function Contacts() {
                         {r.position && <span className="proj-meta"> · {r.position}</span>}</td>
                     <td>{r.email}</td>
                     <td>{r.phone || '—'}</td>
-                    <td>{companyName(r.company_id)}</td>
+                    <td>{companyName(r.company_id, r.company_name)}</td>
                     <td>{r.consent ? '✓' : '—'}{r.marketing_consent ? ' ✉' : ''}</td>
                     <td>{r.brevo_synced_at ? '✓' : '—'}</td>
                     <td>

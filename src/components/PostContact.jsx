@@ -33,6 +33,7 @@ export default function PostContact({ title }) {
     if (!payload.last_name) e.lastName = true
     if (!payload.email || !EMAIL_RE.test(payload.email)) e.email = true
     if (!payload.message) e.message = true
+    if (!payload.organisation) e.company = true
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -47,12 +48,13 @@ export default function PostContact({ title }) {
       last_name: lastName,
       name: `${firstName} ${lastName}`.trim(),
       email: form.email.value.trim(),
+      organisation: form.company.value.trim(),
       message: form.message.value.trim(),
     }
     if (!validate(payload)) { setStatus({ ok: false, msg: t.contact.valMsg }); return }
     if (!consent) { setStatus({ ok: false, msg: t.consent.required }); return }
 
-    const record = { ...payload, organisation: `Blog: ${title}` }
+    const record = { ...payload, source: `blog:${title}` }
     if (!supabase) {
       window.location.href = `mailto:hello@efqmassessors.ae?subject=${encodeURIComponent(
         'Blog enquiry: ' + title
@@ -94,10 +96,17 @@ export default function PostContact({ title }) {
                    aria-invalid={errors.lastName || undefined} />
           </div>
         </div>
-        <div className="field">
-          <label htmlFor="pc-email">{t.contact.fEmail}</label>
-          <input id="pc-email" name="email" type="email" autoComplete="email" required
-                 aria-invalid={errors.email || undefined} />
+        <div className="pc-name-row">
+          <div className="field">
+            <label htmlFor="pc-email">{t.contact.fEmail}</label>
+            <input id="pc-email" name="email" type="email" autoComplete="email" required
+                   aria-invalid={errors.email || undefined} />
+          </div>
+          <div className="field">
+            <label htmlFor="pc-company">{t.contact.fOrg}</label>
+            <input id="pc-company" name="company" autoComplete="organization" required
+                   aria-invalid={errors.company || undefined} />
+          </div>
         </div>
         <div className="field">
           <label htmlFor="pc-msg">{t.contact.fMsg}</label>
