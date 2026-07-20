@@ -362,3 +362,9 @@
 
 .pm-empty { margin-bottom: 22px; border-color: rgba(82,211,162,0.35) !important; }
 .pm-empty h3 { color: var(--glow, #52d3a2); }
+
+.cp-products .cp-check { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.cp-products .cp-check input { width: 17px; height: 17px; accent-color: var(--glow, #52d3a2); }
+.cp-licenses { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; }
+.cp-lic-input { width: 64px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--white); color: var(--ink); font-size: 0.85rem; }

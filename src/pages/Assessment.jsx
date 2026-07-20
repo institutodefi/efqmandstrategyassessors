@@ -26,18 +26,21 @@ const useS = () => {
 }
 const L = (row, base, lang) => (lang === 'ar' ? row[`${base}_ar`] : row[`${base}_en`]) || row[`${base}_en`]
 
-function useIsAssessor(assessmentId) {
+function useAssessCaps(assessmentId) {
   const { user, role } = useAuth()
-  const [assigned, setAssigned] = useState(false)
+  const isPlatformAdmin = ['superadmin', 'admin'].includes(role)
+  const [caps, setCaps] = useState({
+    can_view: true, can_edit_client: true, is_assessor: isPlatformAdmin, product_role: null,
+  })
   useEffect(() => {
     if (!supabase || !user || !assessmentId) return
-    supabase.from('assessment_assignments')
-      .select('consultant_id').eq('assessment_id', assessmentId)
-      .eq('consultant_id', user.id).maybeSingle()
-      .then(({ data }) => setAssigned(!!data))
+    supabase.rpc('assessment_capabilities', { aid: assessmentId })
+      .then(({ data }) => { if (data?.[0]) setCaps(data[0]) })
+      .catch(() => {})
   }, [user, assessmentId])
-  return ['superadmin', 'admin'].includes(role) || assigned
+  return { ...caps, is_assessor: caps.is_assessor || isPlatformAdmin }
 }
+const useIsAssessor = (assessmentId) => useAssessCaps(assessmentId).is_assessor
 
 /* ============================= LIST ============================= */
 function AssessmentList() {
@@ -351,7 +354,9 @@ function AssessmentDetail({ assessmentId }) {
 /* ============================= QUESTIONNAIRE ============================= */
 function Questionnaire({ assessmentId }) {
   const { user } = useAuth()
-  const isAssessor = useIsAssessor(assessmentId)
+  const caps = useAssessCaps(assessmentId)
+  const isAssessor = caps.is_assessor
+  const canEdit = caps.can_edit_client
   const [s, lang] = useS()
   const navigate = useNavigate()
   const [criteria, setCriteria] = useState([])
@@ -505,6 +510,7 @@ function Questionnaire({ assessmentId }) {
               {(lang === 'ar' ? q.levels_ar : q.levels_en).map((lvl, i) => (
                 <label key={i} className={`as-level ${an.level === i ? 'on' : ''}`}>
                   <input type="radio" name={`lvl-${q.code}`} checked={an.level === i}
+                         disabled={!canEdit}
                          onChange={() => persist(q.code, { level: i })} />
                   <span className="as-level-score">{i * 20}</span>
                   <span className="as-level-txt">{lvl}</span>
@@ -515,7 +521,7 @@ function Questionnaire({ assessmentId }) {
             <div className="field" style={{ marginTop: 12 }}>
               <label>{s.asJustification}</label>
               <textarea rows="3" value={an.justification || ''}
-                        placeholder={s.asJustPh}
+                        placeholder={s.asJustPh} disabled={!canEdit}
                         onChange={(e) => persist(q.code, { justification: e.target.value }, 800)} />
             </div>
 
@@ -534,10 +540,12 @@ function Questionnaire({ assessmentId }) {
                   <button className="btn btn-ghost btn-xs" onClick={() => removeDoc(d)}>✕</button>
                 </span>
               ))}
-              <label className="btn btn-ghost btn-xs as-upload">
-                {s.asUpload}
-                <input type="file" hidden onChange={(e) => upload(q.code, e)} />
-              </label>
+              {canEdit && (
+                <label className="btn btn-ghost btn-xs as-upload">
+                  {s.asUpload}
+                  <input type="file" hidden onChange={(e) => upload(q.code, e)} />
+                </label>
+              )}
             </div>
 
             {/* auditor score chip visible to everyone once it exists */}

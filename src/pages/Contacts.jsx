@@ -483,7 +483,7 @@ export default function Contacts() {
                                     <tr key={g.account_id + g.zone_code}>
                                       <td><b>{companyName(g.account_id)}</b></td>
                                       <td>{zName(g.zone_code)}</td>
-                                      <td>{s.accessLevels[g.access_level]}</td>
+                                      <td>{s.productRoles[g.access_level] || s.accessLevels?.[g.access_level] || g.access_level}</td>
                                       <td>
                                         <button className="btn btn-ghost btn-xs" disabled={busy}
                                                 onClick={() => removeGrant(g)}>{s.cpRevokeAccess}</button>
@@ -501,8 +501,8 @@ export default function Contacts() {
                               <select name="gzone" required>
                                 {zones.map(z => <option key={z.code} value={z.code}>{zName(z.code)}</option>)}
                               </select>
-                              <select name="glevel" defaultValue="view">
-                                {Object.entries(s.accessLevels).map(([k, v]) =>
+                              <select name="glevel" defaultValue="assessor">
+                                {Object.entries(s.productRoles).map(([k, v]) =>
                                   <option key={k} value={k}>{v}</option>)}
                               </select>
                               <button className="btn btn-primary btn-xs" disabled={busy} type="submit">

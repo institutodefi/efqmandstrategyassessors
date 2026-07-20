@@ -41,7 +41,7 @@ export default function Companies() {
       supabase.from('zones').select('code, name_en, name_ar, sort_order')
         .eq('is_active', true).order('sort_order'),
       supabase.from('subscriptions')
-        .select('id, account_id, zone_code, status, primary_contact_id, start_date'),
+        .select('id, account_id, zone_code, status, primary_contact_id, start_date, licenses'),
       supabase.from('user_product_access')
         .select('user_id, account_id, zone_code, access_level'),
       supabase.from('profiles')
@@ -123,6 +123,29 @@ export default function Companies() {
     setBusy(true)
     await supabase.from('subscriptions').update({ status: newStatus }).eq('id', sub.id)
     setBusy(false); load()
+  }
+
+  // Product check: on = active subscription; off = suspended (grants remain, access locks)
+  async function toggleProduct(accountId, zoneCode, on, existing) {
+    setBusy(true); setStatus(null)
+    const { error } = existing
+      ? await supabase.from('subscriptions')
+          .update({ status: on ? 'active' : 'suspended' }).eq('id', existing.id)
+      : await supabase.from('subscriptions').insert({
+          account_id: accountId, zone_code: zoneCode, status: 'active', licenses: 1 })
+    setBusy(false)
+    if (error) setStatus({ ok: false, msg: error.message })
+    else load()
+  }
+
+  async function setLicenses(sub, n) {
+    const v = Math.max(1, Number(n) || 1)
+    setBusy(true)
+    const { error } = await supabase.from('subscriptions')
+      .update({ licenses: v }).eq('id', sub.id)
+    setBusy(false)
+    if (error) setStatus({ ok: false, msg: error.message })
+    else load()
   }
 
   async function grant(accountId, e) {
@@ -264,43 +287,41 @@ export default function Companies() {
                       )
                     })()}
 
-                    {/* subscriptions */}
-                    {rSubs.length === 0 ? <p className="proj-meta">{s.cpNoSubs}</p> : (
-                      <ul className="proj-list">
-                        {rSubs.map(sub => (
-                          <li key={sub.id}>
+                    {/* products: one CHECK per product + licenses (superadmin) */}
+                    <ul className="proj-list cp-products">
+                      {zones.map(z => {
+                        const sub = rSubs.find(x => x.zone_code === z.code)
+                        const on = !!sub && ['trial', 'active'].includes(sub.status)
+                        const used = grants.filter(g =>
+                          g.account_id === r.id && g.zone_code === z.code).length
+                        return (
+                          <li key={z.code}>
                             <div className="proj-top">
-                              <b>{zName(sub.zone_code)}</b>
-                              {isSuper ? (
-                                <select value={sub.status} disabled={busy}
-                                        onChange={(e) => setSubStatus(sub, e.target.value)}>
-                                  {Object.entries(s.subStatus).map(([k, v]) =>
-                                    <option key={k} value={k}>{v}</option>)}
-                                </select>
-                              ) : (
-                                <span className={`pill pill-${sub.status === 'active' ? 'active' : 'on_hold'}`}>
-                                  {s.subStatus[sub.status]}
+                              <label className="cp-check">
+                                <input type="checkbox" checked={on}
+                                       disabled={busy || !isSuper}
+                                       onChange={(e) => toggleProduct(r.id, z.code, e.target.checked, sub)} />
+                                <b>{zName(z.code)}</b>
+                                {on && <span className="pill pill-active">{s.cpProductOn}</span>}
+                              </label>
+                              {sub && on && (
+                                <span className="cp-licenses">
+                                  {s.cpLicenses}:{' '}
+                                  {isSuper ? (
+                                    <input type="number" min="1" className="cp-lic-input"
+                                           defaultValue={sub.licenses ?? 1} disabled={busy}
+                                           onBlur={(e) => Number(e.target.value) !== (sub.licenses ?? 1)
+                                             && setLicenses(sub, e.target.value)} />
+                                  ) : <b>{sub.licenses ?? 1}</b>}
+                                  <span className="proj-meta"> · {used}/{sub.licenses ?? 1} {s.cpSeats}</span>
                                 </span>
                               )}
                             </div>
                           </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    {isSuper && (
-                      <form className="cp-inline" onSubmit={(e) => subscribe(r.id, e)}>
-                        <select name="zone" required>
-                          {zones.map(z => <option key={z.code} value={z.code}>{zName(z.code)}</option>)}
-                        </select>
-                        <select name="status" defaultValue="active">
-                          {Object.entries(s.subStatus).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                        </select>
-                        <button className="btn btn-primary btn-xs" disabled={busy} type="submit">
-                          {s.cpSubscribe}
-                        </button>
-                      </form>
-                    )}
+                        )
+                      })}
+                    </ul>
+                    {isSuper && <p className="proj-meta">{s.cpLicenseHint}</p>}
 
                     {/* user access */}
                     <h4 className="cp-h4">{s.cpGrant}</h4>
@@ -311,7 +332,7 @@ export default function Companies() {
                             <tr key={g.user_id + g.zone_code}>
                               <td><b>{userName(g.user_id)}</b></td>
                               <td>{zName(g.zone_code)}</td>
-                              <td>{s.accessLevels[g.access_level]}</td>
+                              <td>{s.productRoles[g.access_level] || g.access_level}</td>
                               <td>
                                 {isSuper && (
                                   <button className="btn btn-ghost btn-xs" disabled={busy}
@@ -336,8 +357,8 @@ export default function Companies() {
                           {(rSubs.length ? rSubs.map(x => x.zone_code) : zones.map(z => z.code))
                             .map(code => <option key={code} value={code}>{zName(code)}</option>)}
                         </select>
-                        <select name="level" defaultValue="view">
-                          {Object.entries(s.accessLevels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                        <select name="level" defaultValue="assessor">
+                          {Object.entries(s.productRoles).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
                         <button className="btn btn-primary btn-xs" disabled={busy} type="submit">
                           {s.cpGrantBtn}
