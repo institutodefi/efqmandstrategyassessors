@@ -17,6 +17,7 @@ import { ZONE_FALLBACK, PORTAL_STRINGS, zoneText } from '../data/orbitalPortal.j
  */
 export default function Portal() {
   const { user, role } = useAuth()
+  const { zone: zoneParam } = useParams()
   const navigate = useNavigate()
   const { lang } = useLang()
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
@@ -86,15 +87,18 @@ export default function Portal() {
   const [stats, setStats] = useState(null)
   useEffect(() => {
     if (!supabase || !user) return
-    const count = (q) => q.select('*', { count: 'exact', head: true })
-      .then(({ count: c }) => c ?? 0).catch(() => 0)
+    const count = (table, filter) => {
+      let q = supabase.from(table).select('*', { count: 'exact', head: true })
+      if (filter) q = filter(q)
+      return q.then(({ count: c }) => c ?? 0).catch(() => 0)
+    }
     Promise.all([
-      count(supabase.from('projects')),
-      count(supabase.from('assessments')),
-      role === 'superadmin' ? count(supabase.from('accounts')) : Promise.resolve(null),
-      role === 'superadmin' ? count(supabase.from('profiles')) : Promise.resolve(null),
+      count('projects'),
+      count('assessments'),
+      role === 'superadmin' ? count('accounts') : Promise.resolve(null),
+      role === 'superadmin' ? count('profiles') : Promise.resolve(null),
       role === 'superadmin'
-        ? count(supabase.from('subscriptions').in('status', ['trial', 'active']))
+        ? count('subscriptions', (q) => q.in('status', ['trial', 'active']))
         : Promise.resolve(null),
     ]).then(([pj, asmt, comp, ppl, subs]) =>
       setStats({ pj, asmt, comp, ppl, subs }))
@@ -113,6 +117,7 @@ export default function Portal() {
   const [memberErr, setMemberErr] = useState(null)
   const [allUsers, setAllUsers] = useState([])
   const canManageMembers = ['superadmin', 'admin', 'consultant'].includes(role)
+  const canCreateDelete = ['superadmin', 'admin'].includes(role)
 
   useEffect(() => {
     if (!supabase || !user || projects.length === 0) return
@@ -176,11 +181,19 @@ export default function Portal() {
     <PmShell>
       <div className="pm-content">
         <header className="dash-head">
-          <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
+          {zoneParam ? (
+            <>
+              <button className="btn btn-ghost btn-xs"
+                      onClick={() => navigate('/portal')}>← {s.dashboard}</button>
+              <h1>{zoneText(zones.find(z => z.code === zoneParam) || {}, lang).name || zoneParam}</h1>
+            </>
+          ) : (
+            <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
+          )}
         </header>
 
         {/* ---------------- KPI STRIP (numbers first) ---------------- */}
-        {stats && (
+        {!zoneParam && stats && (
           <div className="dash-stats">
             {stats.comp != null && <div className="dash-stat"><b>{stats.comp}</b><span>{s.dsCompanies}</span></div>}
             {stats.ppl != null && <div className="dash-stat"><b>{stats.ppl}</b><span>{s.dsPeople}</span></div>}
@@ -190,7 +203,7 @@ export default function Portal() {
           </div>
         )}
 
-        {isClient && Array.isArray(myZones) && myZones.length === 0 && (
+        {!zoneParam && isClient && Array.isArray(myZones) && myZones.length === 0 && (
           <section className="dash-empty">
             <p><b>{s.pmNoProducts}</b> {s.pmNoProductsHint}</p>
             <Link className="btn btn-ghost btn-xs" to="/portal/account">{s.pmMyAccount}</Link>
@@ -198,7 +211,7 @@ export default function Portal() {
         )}
 
         {/* ---------------- PRODUCTS AS QUIET CHIPS ---------------- */}
-        <div className="dash-zones">
+        {!zoneParam && <div className="dash-zones">
           {zones.map((z) => {
             const zt = zoneText(z, lang)
             return (
@@ -210,11 +223,11 @@ export default function Portal() {
               </button>
             )
           })}
-        </div>
+        </div>}
 
         <div className="portal-panels">
           {/* ------------- CRM (superadmin / admin / account manager) ------------- */}
-          {canSeeCRM && (
+          {!zoneParam && canSeeCRM && (
             <section className="portal-card wide">
               <h3>{s.crmTitle}</h3>
               {accounts.length === 0 ? <p>{s.crmEmpty}</p> : (
@@ -257,7 +270,7 @@ export default function Portal() {
                           {s.projStatus[p.status] || p.status}
                         </span>
                       )}
-                      {canManageMembers && (
+                      {canCreateDelete && (
                         <button className="btn btn-ghost btn-xs"
                                 onClick={() => deleteProject(p)}>{s.pjDelete}</button>
                       )}
@@ -320,10 +333,10 @@ export default function Portal() {
             )}
           </section>
 
-          {/* ------------- open a project (staff, or product-admin of a company) ------------- */}
-          {(isConsultant || role === 'superadmin' || role === 'admin' || scopes.length > 0) && (
+          {/* ------------- open a project (admin / superadmin only) ------------- */}
+          {canCreateDelete && (
             <NewProject zones={zones} lang={lang} s={s} scopes={scopes}
-              staff={isConsultant || role === 'superadmin' || role === 'admin'}
+              staff={true} fixedZone={zoneParam || ''}
               onCreated={(p) => setProjects(prev => [p, ...prev])} />
           )}
 
@@ -342,11 +355,11 @@ export default function Portal() {
 }
 
 /* ======================= Consultant: new project ======================= */
-function NewProject({ zones, lang, s, scopes, staff, onCreated }) {
+function NewProject({ zones, lang, s, scopes, staff, fixedZone, onCreated }) {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [accounts, setAccounts] = useState([])
-  const [zoneSel, setZoneSel] = useState('')
+  const [zoneSel, setZoneSel] = useState(fixedZone || '')
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState(null)
 
@@ -412,6 +425,7 @@ function NewProject({ zones, lang, s, scopes, staff, onCreated }) {
           <div className="field">
             <label htmlFor="np-zone">{s.npZone}</label>
             <select id="np-zone" name="zone" required value={zoneSel}
+                    disabled={!!fixedZone}
                     onChange={(e) => setZoneSel(e.target.value)}>
               <option value="">—</option>
               {zonesFor(accountSel).map(z => (
