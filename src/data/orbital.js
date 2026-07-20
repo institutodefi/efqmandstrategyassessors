@@ -9,7 +9,7 @@ export const ORBITAL = {
     seoDesc:
       'Orbital360 is the AI project-management tool from EFQM and Strategy Assessors: implement, maintain, assess and audit your management, governance and excellence transformation system in one place.',
     keywords:
-      'Orbital360, AI PMTool, AI project management tool, management system software, governance software, EFQM software, excellence transformation, ISO audit tool, compliance management Dubai, assessment platform, management system implementation',
+      'Orbital360 PM Tool, EFQM assessment software, governance management system software, project management transformation tool, organisational excellence platform, أداة إدارة المشاريع أوربيتال, منصة التميز المؤسسي, Orbital360, AI PMTool, AI project management tool, management system software, governance software, EFQM software, excellence transformation, ISO audit tool, compliance management Dubai, assessment platform, management system implementation',
 
     eyebrow: 'Orbital360 · AI PMTool',
     titleA: 'Your transformation system, ', strong: 'in orbit', titleB: '',
@@ -89,7 +89,7 @@ export const ORBITAL = {
     seoDesc:
       'Orbital360 هي أداة إدارة المشاريع المدعومة بالذكاء الاصطناعي من EFQM and Strategy Assessors: طبّقوا نظام الإدارة والحوكمة والتحوّل نحو التميّز وحافظوا عليه وقيّموه ودقّقوه في مكان واحد.',
     keywords:
-      'Orbital360, أداة إدارة مشاريع بالذكاء الاصطناعي, برنامج نظام الإدارة, برنامج الحوكمة, برنامج EFQM, التحوّل نحو التميّز, أداة تدقيق ISO, منصّة التقييم',
+      'Orbital360 PM Tool, EFQM assessment software, governance management system software, project management transformation tool, organisational excellence platform, أداة إدارة المشاريع أوربيتال, منصة التميز المؤسسي, Orbital360, أداة إدارة مشاريع بالذكاء الاصطناعي, برنامج نظام الإدارة, برنامج الحوكمة, برنامج EFQM, التحوّل نحو التميّز, أداة تدقيق ISO, منصّة التقييم',
 
     eyebrow: 'Orbital360 · أداة إدارة بالذكاء الاصطناعي',
     titleA: 'نظام تحوّلكم، ', strong: 'في مداره', titleB: '',

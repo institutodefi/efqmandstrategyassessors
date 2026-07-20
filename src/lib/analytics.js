@@ -145,3 +145,16 @@ export function trackPageView(path, title) {
 export function trackInitialPageView() {
   sendPageView(window.location.pathname + window.location.search)
 }
+
+
+/**
+ * Conversion / interaction events. Names follow GA4 recommended events where
+ * one exists (generate_lead, sign_up) so GA4 reporting picks them up natively.
+ * Mark these as Key Events in GA4 Admin:
+ *   generate_lead · contact_whatsapp · newsletter_signup · sign_up
+ */
+export function trackEvent(name, params = {}) {
+  if (typeof window === 'undefined') return
+  dl().push({ event: name, ...params })
+  if (ga4Injected) gtag('event', name, params)
+}

@@ -4,13 +4,27 @@ import { Nav, Footer, Icon } from '../components/Chrome.jsx'
 import ServiceActions from '../components/ServiceActions.jsx'
 import { useLang } from '../i18n.jsx'
 import { ORBITAL } from '../data/orbital.js'
-import { useSeo } from '../lib/seo.js'
+import { useSeo, useJsonLd } from '../lib/seo.js'
 
 export default function Orbital() {
   const { lang } = useLang()
   const o = ORBITAL[lang] || ORBITAL.en
 
   useSeo(o.seoTitle, o.seoDesc, '/orbital360', '/orbital360/og-orbital360.png', o.keywords)
+  useJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Orbital360 PM Tool',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    description: 'EFQM-based assessment, management & governance system and project management / transformation tool for organisations.',
+    url: 'https://efqmassessors.ae/orbital360',
+    image: 'https://efqmassessors.ae/orbital360/og-orbital360.png',
+    inLanguage: ['en', 'ar'],
+    publisher: { '@type': 'Organization', name: 'EFQM and Strategy Assessors FZCO', url: 'https://efqmassessors.ae' },
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'AED',
+              description: 'Demo on request' },
+  })
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
   return (

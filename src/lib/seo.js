@@ -52,3 +52,20 @@ export function useSeo(title, description, path = '/', image = null, keywords = 
     upsertLink('alternate', url, 'x-default')
   }, [title, description, path, image, keywords])
 }
+
+
+/** Inject a per-page JSON-LD block (replaced on route change). */
+export function useJsonLd(obj, id = 'page-jsonld') {
+  useEffect(() => {
+    if (!obj) return
+    let el = document.getElementById(id)
+    if (!el) {
+      el = document.createElement('script')
+      el.type = 'application/ld+json'
+      el.id = id
+      document.head.appendChild(el)
+    }
+    el.textContent = JSON.stringify(obj)
+    return () => { el && el.remove() }
+  }, [JSON.stringify(obj), id]) // eslint-disable-line react-hooks/exhaustive-deps
+}

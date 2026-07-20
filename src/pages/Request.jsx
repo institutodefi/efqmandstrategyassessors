@@ -6,6 +6,7 @@ import { useLang } from '../i18n.jsx'
 import { SERVICES } from '../data/services.js'
 import { supabase } from '../lib/supabase.js'
 import { useSeo } from '../lib/seo.js'
+import { trackEvent } from '../lib/analytics.js'
 
 const WA_NUMBER = '971507369400'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -79,7 +80,7 @@ export default function Request() {
     const { error } = await supabase.from('inquiries').insert(record)
     setSending(false)
     if (error) setStatus({ ok: false, msg: t.contact.errMsg })
-    else { f.reset(); setConsent(false); setStatus({ ok: true, msg: t.contact.okMsg }) }
+    else { f.reset(); setConsent(false); setStatus({ ok: true, msg: t.contact.okMsg }); trackEvent('generate_lead', { form: 'request' }) }
   }
 
   return (

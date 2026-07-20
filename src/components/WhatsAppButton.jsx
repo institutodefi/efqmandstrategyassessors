@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLang } from '../i18n.jsx'
 
 import { waLink } from '../lib/whatsapp.js'
+import { trackEvent } from '../lib/analytics.js'
 
 export default function WhatsAppButton() {
   const { t } = useLang()
@@ -29,6 +30,7 @@ export default function WhatsAppButton() {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackEvent('contact_whatsapp', { source: 'floating-button' })}
         aria-label={w.label}
         title={w.label}
       >

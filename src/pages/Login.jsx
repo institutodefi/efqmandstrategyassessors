@@ -4,6 +4,44 @@ import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useLang } from '../i18n.jsx'
 import { useSeo } from '../lib/seo.js'
+import { trackEvent } from '../lib/analytics.js'
+
+function PasswordField({ id, name, label, autoComplete, showLbl, hideLbl }) {
+  const [visible, setVisible] = useState(false)
+  return (
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
+      <div className="pass-wrap">
+        <input
+          id={id} name={name} type={visible ? 'text' : 'password'}
+          autoComplete={autoComplete} minLength="8" required
+        />
+        <button
+          type="button" className="pass-eye"
+          aria-label={visible ? hideLbl : showLbl}
+          title={visible ? hideLbl : showLbl}
+          onClick={() => setVisible(v => !v)}
+        >
+          {visible ? (
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.5 10.5 0 0 1 12 20C5 20 1 12 1 12a20.3 20.3 0 0 1 5.06-6.06M9.9 4.24A9.9 9.9 0 0 1 12 4c7 0 11 8 11 8a20.4 20.4 0 0 1-3.22 4.31M14.12 14.12A3 3 0 1 1 9.88 9.88" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" /><circle cx="12" cy="12" r="3" /></svg>
+          )}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function friendlyAuthError(err, a) {
+  const m = (typeof err?.message === 'string' && err.message) ? err.message : ''
+  const low = m.toLowerCase()
+  if (low.includes('invalid login credentials')) return a.errCreds
+  if (low.includes('already registered') || low.includes('already exists')) return a.errExists
+  if (low.includes('rate limit') || err?.status === 429) return a.errRate
+  if (low.includes('at least 8') || low.includes('password should be')) return a.passShort
+  return m || a.failed || 'Something went wrong. Please try again.'
+}
 
 export default function Login() {
   const [mode, setMode] = useState('signin') // signin | signup | reset
@@ -46,6 +84,11 @@ export default function Login() {
       } else if (mode === 'signup') {
         const firstName = form.firstName.value.trim()
         const lastName = form.lastName.value.trim()
+        if (form.password.value !== form.password2.value) {
+          setStatus({ ok: false, msg: a.passMismatch })
+          setBusy(false)
+          return
+        }
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -58,6 +101,7 @@ export default function Login() {
           },
         })
         if (error) throw error
+        trackEvent('sign_up', { method: 'email' })
         setStatus({ ok: true, msg: a.created })
         setMode('signin')
       } else {
@@ -68,7 +112,7 @@ export default function Login() {
         setStatus({ ok: true, msg: a.resetSent })
       }
     } catch (err) {
-      setStatus({ ok: false, msg: err.message || a.failed })
+      setStatus({ ok: false, msg: friendlyAuthError(err, a) })
     } finally {
       setBusy(false)
     }
@@ -130,14 +174,18 @@ export default function Login() {
             <input id="a-email" name="email" type="email" autoComplete="email" required />
           </div>
           {mode !== 'reset' && (
-            <div className="field">
-              <label htmlFor="a-pass">{a.password}</label>
-              <input
-                id="a-pass" name="password" type="password"
-                autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                minLength="8" required
-              />
-            </div>
+            <PasswordField
+              id="a-pass" name="password" label={a.password}
+              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+              showLbl={a.showPass} hideLbl={a.hidePass}
+            />
+          )}
+          {mode === 'signup' && (
+            <PasswordField
+              id="a-pass2" name="password2" label={a.confirmPassword}
+              autoComplete="new-password"
+              showLbl={a.showPass} hideLbl={a.hidePass}
+            />
           )}
 
           <button className="btn btn-primary" type="submit" disabled={busy}>

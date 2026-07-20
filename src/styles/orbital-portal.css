@@ -246,3 +246,14 @@
 .badge-partial { display: inline-block; padding: 2px 9px; border-radius: 999px;
   font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
   color: #e8b44f; border: 1px solid #e8b44f; margin-inline-start: 8px; }
+
+/* Password field with visibility toggle */
+.pass-wrap { position: relative; }
+.pass-wrap input { width: 100%; padding-inline-end: 46px; }
+.pass-eye {
+  position: absolute; inset-inline-end: 8px; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center; width: 34px; height: 34px;
+  border: none; background: transparent; cursor: pointer;
+  color: var(--muted, #7c8f97); border-radius: 8px;
+}
+.pass-eye:hover { color: var(--teal, #1f9d77); background: rgba(0,0,0,0.05); }

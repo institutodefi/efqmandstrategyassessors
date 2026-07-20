@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../i18n.jsx'
+import { trackEvent } from '../lib/analytics.js'
 import { supabase } from '../lib/supabase.js'
 
 // Brevo (Sendinblue) hosted-form submission URL, e.g.
@@ -35,7 +36,7 @@ export default function Newsletter() {
       setSending(true)
       setTimeout(() => {
         setSending(false)
-        setStatus({ ok: true, msg: n.ok })
+        setStatus({ ok: true, msg: n.ok }); trackEvent('newsletter_signup', {})
         setEmail(''); setConsent(false)
       }, 600)
       return // do NOT preventDefault — the form submits to the iframe

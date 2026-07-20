@@ -33,7 +33,7 @@ function setTag(html, pattern, replacement) {
   return pattern.test(html) ? html.replace(pattern, replacement) : html
 }
 
-function render({ title, desc, url, image, type = 'website', published }) {
+function render({ title, desc, url, image, type = 'website', published, jsonld }) {
   let h = shell
   const img = image.startsWith('http') ? image : ORIGIN + image
 
@@ -65,6 +65,10 @@ function render({ title, desc, url, image, type = 'website', published }) {
   if (published) {
     h = h.replace('</head>',
       `  <meta property="article:published_time" content="${published}" />\n  </head>`)
+  }
+  if (jsonld) {
+    h = h.replace('</head>',
+      `  <script type="application/ld+json">${JSON.stringify(jsonld)}</script>\n  </head>`)
   }
   return h
 }
@@ -129,13 +133,36 @@ for (const p of POSTS) {
     image: `/blog/${p.slug}.png`,
     type: 'article',
     published: d.toISOString(),
+    jsonld: {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: p.title,
+      description: p.body.split('\n\n')[0].slice(0, 200),
+      image: `${ORIGIN}/blog/${p.slug}.png`,
+      datePublished: d.toISOString(),
+      dateModified: d.toISOString(),
+      inLanguage: 'en',
+      mainEntityOfPage: `${ORIGIN}/blog/${p.slug}`,
+      author: {
+        '@type': 'Person',
+        name: 'Alejandro San Nicolás',
+        url: `${ORIGIN}/`,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'EFQM and Strategy Assessors FZCO',
+        logo: { '@type': 'ImageObject', url: `${ORIGIN}/brand/wordmark-full.png` },
+      },
+      isPartOf: { '@type': 'Blog', name: 'The 120-day EFQM & ISO excellence programme',
+                  url: `${ORIGIN}/blog` },
+    },
   })
 }
 
 for (const r of routes) {
   write(r.path, render({
     title: r.title, desc: r.desc, url: ORIGIN + r.path,
-    image: r.image, type: r.type, published: r.published,
+    image: r.image, type: r.type, published: r.published, jsonld: r.jsonld,
   }))
 }
 

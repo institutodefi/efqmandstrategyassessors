@@ -6,6 +6,7 @@ import { useLang } from '../i18n.jsx'
 import { SERVICES } from '../data/services.js'
 import { supabase } from '../lib/supabase.js'
 import { useSeo } from '../lib/seo.js'
+import { trackEvent } from '../lib/analytics.js'
 
 const WA_NUMBER = '971507369400'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -29,7 +30,9 @@ export default function Contact() {
     lang === 'ar'
       ? 'تواصلوا مع EFQM and Strategy Assessors في دبي — نموذج تواصل وواتساب.'
       : 'Get in touch with EFQM and Strategy Assessors in Dubai — contact form and WhatsApp.',
-    '/contact'
+    '/contact',
+    '/brand/og-image.png',
+    'contact EFQM assessor Dubai, EFQM consultancy contact UAE, ISO consultant Dubai contact, book EFQM assessment, management consultancy Dubai WhatsApp, استشارات EFQM دبي, تواصل مستشار جودة'
   )
 
   useEffect(() => {
@@ -74,7 +77,7 @@ export default function Contact() {
     const { error } = await supabase.from('inquiries').insert({ ...payload, organisation: `${payload.organisation} · Contact page`.trim() })
     setSending(false)
     if (error) setStatus({ ok: false, msg: t.contact.errMsg })
-    else { f.reset(); setConsent(false); setStatus({ ok: true, msg: t.contact.okMsg }) }
+    else { f.reset(); setConsent(false); setStatus({ ok: true, msg: t.contact.okMsg }); trackEvent('generate_lead', { form: 'contact' }) }
   }
 
   return (
