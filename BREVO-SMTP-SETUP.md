@@ -164,3 +164,19 @@ Webhook (Dashboard → Database → Webhooks → Create):
 
 Prueba: envía el formulario de /contact y comprueba hello@ (llega en
 segundos; también visible en Brevo → Statistics → Transactional).
+
+---
+
+## 10. Activar contactos como usuarios (Edge Function `activate-contact`)
+
+Desde /portal/contacts, "Activate as user" crea la cuenta del contacto:
+pre-autoriza su email con el rol elegido, envía la invitación (plantilla
+"Invite user" de Orbital360 vía Brevo SMTP) y copia móvil + empresa al
+perfil. Si ya era usuario, solo actualiza rol y datos. Despliegue:
+
+    supabase functions deploy activate-contact
+
+(usa SUPABASE_SERVICE_ROLE_KEY inyectada automáticamente; requiere el
+SMTP de Supabase configurado — sección 3 — para que llegue la invitación).
+Solo superadmin puede conceder roles admin. Los permisos de producto se
+gestionan después en Companies → Products & access, y el rol en Users.

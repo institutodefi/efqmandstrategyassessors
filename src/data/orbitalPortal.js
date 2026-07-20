@@ -242,6 +242,11 @@ export const PORTAL_STRINGS = {
     asSave: 'Save question',
     asLevels6: 'Each language needs exactly 6 levels.',
     npCode: 'Project code is generated automatically.',
+    coActivate: 'Activate as user',
+    coActivated: 'Invitation sent — the contact can set their password from the email.',
+    coActivatedExisting: 'Contact was already a user — role and data updated.',
+    coIsUser: 'User',
+    coActivateRole: 'Role',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -435,6 +440,11 @@ export const PORTAL_STRINGS = {
     asSave: 'حفظ السؤال',
     asLevels6: 'كل لغة تحتاج 6 مستويات بالضبط.',
     npCode: 'يُنشأ رمز المشروع تلقائياً.',
+    coActivate: 'تفعيل كمستخدم',
+    coActivated: 'أُرسلت الدعوة — يمكن لجهة الاتصال تعيين كلمة المرور من البريد.',
+    coActivatedExisting: 'جهة الاتصال مستخدم بالفعل — تم تحديث الدور والبيانات.',
+    coIsUser: 'مستخدم',
+    coActivateRole: 'الدور',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',

@@ -12,12 +12,14 @@ const EMPTY = { id: null, first_name: '', last_name: '', email: '', phone: '',
 
 /** /portal/contacts — CRM contacts, GDPR-compliant, Brevo export. */
 export default function Contacts() {
-  const { user } = useAuth()
+  const { user, role } = useAuth()
   const { lang } = useLang()
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
 
   const [rows, setRows] = useState([])
   const [companies, setCompanies] = useState([])
+  const [userEmails, setUserEmails] = useState(new Set())
+  const [activating, setActivating] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [errors, setErrors] = useState({})
   const [newCompany, setNewCompany] = useState('')
@@ -26,12 +28,14 @@ export default function Contacts() {
 
   async function load() {
     if (!supabase) return
-    const [c, a] = await Promise.all([
+    const [c, a, pr] = await Promise.all([
       supabase.from('contacts')
         .select('id, first_name, last_name, email, phone, company_id, company_name, position, consent, marketing_consent, consent_source, brevo_synced_at, erasure_requested, created_at')
         .order('created_at', { ascending: false }),
       supabase.from('accounts').select('id, name, crm_status').order('name'),
+      supabase.from('profiles').select('email'),
     ])
+    setUserEmails(new Set((pr.data ?? []).map(x => (x.email || '').toLowerCase())))
     setRows(c.data ?? [])
     setCompanies(a.data ?? [])
   }
@@ -96,6 +100,20 @@ export default function Contacts() {
     if (!error) await brevoDelete(r.email)   // right to erasure reaches Brevo too
     setBusy(false)
     if (!error) load()
+  }
+
+  async function activate(r, chosenRole) {
+    setBusy(true); setStatus(null)
+    const { data, error } = await supabase.functions.invoke('activate-contact', {
+      body: { contact_id: r.id, role: chosenRole,
+              redirect_to: `${window.location.origin}/login` },
+    })
+    setBusy(false); setActivating(null)
+    if (error || data?.error) setStatus({ ok: false, msg: (data?.error || error.message) })
+    else {
+      setStatus({ ok: true, msg: data.existed ? s.coActivatedExisting : s.coActivated })
+      load()
+    }
   }
 
   async function syncOne(r) {
@@ -304,6 +322,27 @@ export default function Contacts() {
                     <td>
                       {!r.erasure_requested && (
                         <>
+                          {userEmails.has((r.email || '').toLowerCase()) ? (
+                            <span className="role-badge">{s.coIsUser}</span>
+                          ) : activating === r.id ? (
+                            <span className="pm-actions">
+                              <select defaultValue="client" id={`act-role-${r.id}`}
+                                      aria-label={s.coActivateRole}>
+                                {['client','consultant','account_manager']
+                                  .concat(role === 'superadmin' ? ['admin'] : [])
+                                  .map(rr => <option key={rr} value={rr}>{rr}</option>)}
+                              </select>
+                              <button className="btn btn-primary btn-xs" disabled={busy}
+                                      onClick={() => activate(r, document.getElementById(`act-role-${r.id}`).value)}>
+                                ✓
+                              </button>
+                              <button className="btn btn-ghost btn-xs"
+                                      onClick={() => setActivating(null)}>✕</button>
+                            </span>
+                          ) : (
+                            <button className="btn btn-ghost btn-xs" disabled={busy}
+                                    onClick={() => setActivating(r.id)}>{s.coActivate}</button>
+                          )}{' '}
                           <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>{' '}
                           <button className="btn btn-ghost btn-xs" disabled={busy}
                                   onClick={() => syncOne(r)}>{s.coSyncOne}</button>{' '}
