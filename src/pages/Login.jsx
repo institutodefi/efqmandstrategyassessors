@@ -34,13 +34,15 @@ function PasswordField({ id, name, label, autoComplete, showLbl, hideLbl }) {
 }
 
 function friendlyAuthError(err, a) {
-  const m = (typeof err?.message === 'string' && err.message) ? err.message : ''
+  console.error('[auth]', err)   // real error for debugging (F12 → Console)
+  let m = (typeof err?.message === 'string' && err.message) ? err.message.trim() : ''
+  if (/^[{\[]?[}\]]?$/.test(m) || m === 'Failed to fetch') m = ''   // '{}', '[]', empty bodies
   const low = m.toLowerCase()
   if (low.includes('invalid login credentials')) return a.errCreds
   if (low.includes('already registered') || low.includes('already exists')) return a.errExists
   if (low.includes('rate limit') || err?.status === 429) return a.errRate
   if (low.includes('at least 8') || low.includes('password should be')) return a.passShort
-  return m || a.failed || 'Something went wrong. Please try again.'
+  return m || a.failed || 'Something went wrong (server error). Check Supabase Auth logs or try again.'
 }
 
 export default function Login() {

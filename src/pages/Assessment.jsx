@@ -61,8 +61,16 @@ function AssessmentList() {
       created_by: user.id,
     }).select().single()
     setBusy(false)
-    if (error) setStatus({ ok: false, msg: error.message })
-    else {
+    if (error) {
+      let msg = error.message
+      if (/row-level security/i.test(msg)) {
+        const { data: dbg } = await supabase.rpc('debug_assessment_access',
+          { p_company: f.company.value })
+        const d = dbg?.[0]
+        if (d) msg += ` — role: ${d.my_role} · subscription active: ${d.has_active_subscription} · your grant: ${d.my_grant}`
+      }
+      setStatus({ ok: false, msg })
+    } else {
       await supabase.from('assessment_scope').insert({ assessment_id: data.id })
       navigate(`/portal/assessment/${data.id}`)
     }

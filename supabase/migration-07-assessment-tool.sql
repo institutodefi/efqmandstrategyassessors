@@ -376,21 +376,28 @@ insert into storage.buckets (id, name, public)
 values ('assessment-evidence', 'assessment-evidence', false)
 on conflict (id) do nothing;
 
-drop policy if exists "evidence read" on storage.objects;
-create policy "evidence read" on storage.objects for select using (
-  bucket_id = 'assessment-evidence'
-  and public.can_view_assessment((split_part(name, '/', 1))::uuid)
-);
-drop policy if exists "evidence insert" on storage.objects;
-create policy "evidence insert" on storage.objects for insert with check (
-  bucket_id = 'assessment-evidence'
-  and public.can_edit_assessment_client((split_part(name, '/', 1))::uuid)
-);
-drop policy if exists "evidence delete" on storage.objects;
-create policy "evidence delete" on storage.objects for delete using (
-  bucket_id = 'assessment-evidence'
-  and public.can_edit_assessment_client((split_part(name, '/', 1))::uuid)
-);
+do $$
+begin
+  begin
+    drop policy if exists "evidence read" on storage.objects;
+    create policy "evidence read" on storage.objects for select using (
+      bucket_id = 'assessment-evidence'
+      and public.can_view_assessment((split_part(name, '/', 1))::uuid)
+    );
+    drop policy if exists "evidence insert" on storage.objects;
+    create policy "evidence insert" on storage.objects for insert with check (
+      bucket_id = 'assessment-evidence'
+      and public.can_edit_assessment_client((split_part(name, '/', 1))::uuid)
+    );
+    drop policy if exists "evidence delete" on storage.objects;
+    create policy "evidence delete" on storage.objects for delete using (
+      bucket_id = 'assessment-evidence'
+      and public.can_edit_assessment_client((split_part(name, '/', 1))::uuid)
+    );
+  exception when insufficient_privilege then
+    raise warning 'storage.objects: crear las políticas desde Dashboard → Storage → Policies';
+  end;
+end $$;
 
 -- ----------------------------------------------------------------------------
 -- 6) SEED — CRITERIOS (EN/AR)
