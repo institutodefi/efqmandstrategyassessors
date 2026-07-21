@@ -147,6 +147,14 @@ export default function App() {
               }
             />
             <Route
+              path="/portal/management/:id/sub/:subId"
+              element={
+                <ProtectedRoute>
+                  <Management />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/portal/management/:id/:tab"
               element={
                 <ProtectedRoute>

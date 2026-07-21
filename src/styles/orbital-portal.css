@@ -654,3 +654,200 @@
   .mg-fase-head { display: none; }
   .mg-grid .mg-card { grid-column: 1 / span 1 !important; }
 }
+
+/* ---------- Management · Roles (People / Functions) ---------- */
+.mg-subtabs { display: flex; align-items: center; gap: 8px; margin: 4px 0 14px; }
+.mg-subtab {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.14)); border-radius: 9px;
+  background: transparent; color: var(--muted-on-dark, var(--muted));
+  padding: 6px 13px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.mg-subtab em {
+  font-style: normal; font-size: 0.66rem; font-weight: 800;
+  background: color-mix(in srgb, var(--white) 10%, transparent);
+  border-radius: 999px; padding: 1px 7px;
+}
+.mg-subtab:hover { color: var(--glow); border-color: var(--glow); }
+.mg-subtab.active {
+  color: var(--glow); border-color: var(--glow);
+  background: color-mix(in srgb, var(--glow) 10%, transparent);
+}
+.mg-subtabs-add { --pb: var(--glow, #52d3a2); margin-inline-start: auto; }
+
+.mg-rows { display: flex; flex-direction: column; gap: 8px; }
+.mg-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.12)); border-radius: 11px;
+  padding: 9px 13px; background: color-mix(in srgb, var(--white) 3%, transparent);
+}
+.mg-row .mg-code { --pb: var(--glow, #52d3a2); white-space: nowrap; }
+.mg-row-name { font-size: 0.86rem; }
+.mg-chip {
+  font-size: 0.68rem; font-weight: 700; color: var(--glow);
+  border: 1px solid color-mix(in srgb, var(--glow) 55%, transparent);
+  border-radius: 999px; padding: 2px 9px; white-space: nowrap;
+}
+.mg-chip.empty { color: var(--muted-on-dark, var(--muted));
+  border-color: var(--line-on-dark, rgba(255,255,255,0.16)); border-style: dashed; }
+.mg-row-meta { font-size: 0.72rem; color: var(--muted-on-dark, var(--muted)); }
+.mg-row-desc { flex-basis: 100%; }
+.mg-row-tools { margin-inline-start: auto; display: flex; gap: 3px; }
+.mg-row-tools button {
+  border: none; background: transparent; cursor: pointer; font-size: 0.76rem;
+  color: var(--muted-on-dark, var(--muted)); padding: 2px 4px;
+}
+.mg-row-tools button:hover { color: var(--glow); }
+
+.mg-row-edit { align-items: flex-end; }
+.mg-row-edit label {
+  display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 160px;
+  font-size: 0.66rem; font-weight: 700; color: var(--muted-on-dark, var(--muted));
+}
+.mg-row-edit input, .mg-row-edit select, .mg-row-edit textarea {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.16)); border-radius: 7px;
+  padding: 6px 8px; font-size: 0.82rem; font-family: inherit; resize: vertical;
+  background: color-mix(in srgb, var(--white) 6%, transparent); color: inherit;
+}
+.mg-row-edit select option { color: var(--ink, #111); }
+.mg-row-edit .mg-edit-btns { margin: 0 0 2px; }
+
+/* ---------- Management · Organization chart (auto from Roles) ---------- */
+.mg-org-empty { display: flex; align-items: center; gap: 12px; }
+.mg-org-empty p { margin: 0; }
+.org-scroll { overflow-x: auto; padding-bottom: 10px; }
+.org-tree, .org-tree ul {
+  display: flex; justify-content: center; align-items: flex-start;
+  list-style: none; margin: 0; padding: 22px 0 0; position: relative;
+}
+.org-tree.org-top { padding-top: 0; }
+.org-tree li {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; padding: 22px 10px 0;
+}
+.org-tree.org-top > li { padding-top: 0; }
+/* connectors */
+.org-tree li::before, .org-tree li::after {
+  content: ''; position: absolute; top: 0; width: 50%; height: 22px;
+  border-top: 1px solid var(--line-on-dark, rgba(255,255,255,0.22));
+}
+.org-tree li::before { right: 50%; }
+.org-tree li::after  { left: 50%; border-left: 1px solid var(--line-on-dark, rgba(255,255,255,0.22)); }
+.org-tree li:only-child::before, .org-tree li:only-child::after { border-top: none; }
+.org-tree li:only-child::after { left: 50%; height: 22px; }
+.org-tree li:first-child::before, .org-tree li:last-child::after { border-top: none; }
+.org-tree li:last-child::before {
+  border-right: 1px solid var(--line-on-dark, rgba(255,255,255,0.22)); border-radius: 0 6px 0 0;
+}
+.org-tree li:first-child::after { border-radius: 6px 0 0 0; }
+.org-tree.org-top > li::before, .org-tree.org-top > li::after { display: none; }
+.org-tree ul::before {
+  content: ''; position: absolute; top: 0; left: 50%; height: 22px;
+  border-left: 1px solid var(--line-on-dark, rgba(255,255,255,0.22));
+}
+.org-card {
+  display: flex; flex-direction: column; gap: 3px; min-width: 130px; max-width: 200px;
+  border: 1.5px solid var(--glow, #52d3a2); border-radius: 11px;
+  padding: 8px 12px; text-align: center;
+  background: color-mix(in srgb, var(--white) 5%, transparent);
+}
+.org-card b { font-size: 0.8rem; line-height: 1.25; }
+.org-fn { font-size: 0.64rem; font-weight: 700; color: var(--glow); }
+.org-fn.empty { color: var(--muted-on-dark, var(--muted)); font-weight: 600; }
+
+/* ---------- Management · ISO standards + process tags ---------- */
+.mg-std-bar { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin: 0 0 14px; }
+.mg-std-label {
+  font-size: 0.66rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted-on-dark, var(--muted));
+}
+.mg-std-chip {
+  border: 1px dashed var(--line-on-dark, rgba(255,255,255,0.2)); border-radius: 999px;
+  background: transparent; color: var(--muted-on-dark, var(--muted));
+  padding: 3px 11px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.mg-std-chip.active {
+  border-style: solid; border-color: var(--glow); color: var(--glow);
+  background: color-mix(in srgb, var(--glow) 10%, transparent);
+}
+.mg-std-chip[onclick], .mg-std-chip:not([disabled]):hover { border-color: var(--glow); }
+.mg-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.mg-tag {
+  font-size: 0.56rem; font-weight: 800; letter-spacing: 0.04em;
+  border: 1px solid var(--pb); color: var(--pb); border-radius: 5px; padding: 1px 5px;
+}
+.mg-subs-note { margin: 2px 0 0; font-size: 0.64rem; color: var(--muted-on-dark, var(--muted)); }
+
+/* ---------- Management · subprocess activities sheet ---------- */
+.mg-sub-open { cursor: pointer; transition: transform .1s; }
+.mg-sub-open:hover { transform: translateX(2px); background: color-mix(in srgb, var(--pb) 16%, transparent); }
+.mg-sub-badge {
+  margin-inline-start: auto; background: var(--pb); color: #0d1512;
+  border-radius: 6px; padding: 1px 8px; font-size: 0.58rem; font-weight: 800;
+}
+.mg-sub-badge.empty { background: transparent; color: var(--pb); border: 1px dashed var(--pb); }
+
+.mg-ficha { display: flex; flex-direction: column; gap: 10px; }
+.mg-ficha-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.mg-ficha-title {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.12));
+  border-inline-start: 5px solid var(--pb); border-radius: 12px; padding: 10px 14px;
+  background: color-mix(in srgb, var(--white) 3%, transparent);
+}
+.mg-ficha-title .mg-code { --pb: inherit; font-size: 0.78rem; }
+.mg-ficha-title h2 { margin: 0; font-size: 1.05rem; }
+.mg-ficha-name {
+  flex: 1; min-width: 200px; font-size: 1rem; font-weight: 700;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.16)); border-radius: 8px;
+  padding: 7px 10px; font-family: inherit;
+  background: color-mix(in srgb, var(--white) 6%, transparent); color: inherit;
+}
+.mg-ficha-resp {
+  width: 200px; font-size: 0.82rem;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.16)); border-radius: 8px;
+  padding: 7px 10px; font-family: inherit;
+  background: color-mix(in srgb, var(--white) 6%, transparent); color: inherit;
+}
+.mg-ficha-sec {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.12)); border-radius: 12px;
+  padding: 12px 14px 14px; background: color-mix(in srgb, var(--white) 2%, transparent);
+}
+.mg-count {
+  font-style: normal; font-size: 0.62rem; font-weight: 800;
+  background: color-mix(in srgb, var(--white) 10%, transparent);
+  border-radius: 999px; padding: 1px 7px;
+}
+
+.mg-act-table, .mg-risk-table { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.mg-act-row  { display: grid; grid-template-columns: 44px 1.4fr 1fr 1fr 1fr 70px; gap: 8px; align-items: start; }
+.mg-risk-row { display: grid; grid-template-columns: 44px 1.5fr 68px 68px 110px 1.2fr 34px; gap: 8px; align-items: start; }
+.mg-act-headrow span {
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted-on-dark, var(--muted));
+  border-bottom: 1px solid var(--line-on-dark, rgba(255,255,255,0.14)); padding-bottom: 4px;
+}
+.mg-act-row textarea, .mg-risk-row textarea, .mg-risk-row select {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.14)); border-radius: 7px;
+  padding: 6px 8px; font-size: 0.78rem; font-family: inherit; resize: vertical; width: 100%;
+  background: color-mix(in srgb, var(--white) 5%, transparent); color: inherit; min-height: 32px;
+}
+.mg-risk-row select { min-height: 0; }
+.mg-risk-row select option { color: var(--ink, #111); }
+.mg-act-cell { font-size: 0.78rem; line-height: 1.4; white-space: pre-wrap; }
+.mg-act-row .mg-row-tools, .mg-risk-row .mg-row-tools { margin: 0; padding-top: 4px; }
+.mg-act-row .mg-row-tools button[disabled] { opacity: 0.3; cursor: default; }
+
+.mg-risk-value {
+  display: inline-block; font-size: 0.68rem; font-weight: 800; text-align: center;
+  border-radius: 7px; padding: 6px 4px; white-space: nowrap;
+}
+.mg-risk-low      { background: color-mix(in srgb, #52d3a2 18%, transparent); color: #52d3a2; }
+.mg-risk-medium   { background: color-mix(in srgb, #e5a54b 18%, transparent); color: #e5a54b; }
+.mg-risk-high     { background: color-mix(in srgb, #f0894e 20%, transparent); color: #f0894e; }
+.mg-risk-critical { background: color-mix(in srgb, #e05252 22%, transparent); color: #ff7b7b; }
+
+@media (max-width: 760px) {
+  .mg-act-row, .mg-risk-row { grid-template-columns: 1fr 1fr; }
+  .mg-act-headrow { display: none; }
+}
