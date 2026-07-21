@@ -17,7 +17,26 @@ export default function Companies() {
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
   const isSuper = role === 'superadmin'
 
+  useEffect(() => {
+    if (!supabase || !isSuper) return
+    supabase.rpc('pending_company_requests')
+      .then(({ data }) => setRequests(data ?? [])).catch(() => {})
+  }, [isSuper])
+
+  async function resolveRequest(id, approve) {
+    setBusy(true)
+    const { error } = await supabase.rpc('resolve_company_request',
+      { p_id: id, p_approve: approve })
+    setBusy(false)
+    if (error) setStatus({ ok: false, msg: error.message })
+    else {
+      setRequests(prev => prev.filter(r => r.id !== id))
+      load()
+    }
+  }
+
   const [rows, setRows] = useState([])
+  const [requests, setRequests] = useState([])
   const [contacts, setContacts] = useState([])
   const [zones, setZones] = useState(ZONE_FALLBACK)
   const [subs, setSubs] = useState([])
@@ -238,6 +257,26 @@ export default function Companies() {
           </form>
         </section>)}
 
+        {isSuper && requests.length > 0 && (
+          <section className="portal-card wide2">
+            <h3>{s.cpRequests} ({requests.length})</h3>
+            {requests.map(rq => (
+              <div key={rq.id} className="proj-top">
+                <span>
+                  <b>{rq.company_name}</b>
+                  <span className="proj-meta"> · {rq.requester} · {rq.email} · {new Date(rq.created_at).toLocaleDateString('en-GB')}</span>
+                </span>
+                <span className="pm-actions">
+                  <button className="btn btn-primary btn-xs" disabled={busy}
+                          onClick={() => resolveRequest(rq.id, true)}>{s.cpApprove}</button>
+                  <button className="btn btn-ghost btn-xs" disabled={busy}
+                          onClick={() => resolveRequest(rq.id, false)}>{s.cpReject}</button>
+                </span>
+              </div>
+            ))}
+          </section>
+        )}
+
         {/* ---------------- list ---------------- */}
         <section className="portal-card wide2">
           {(() => {
@@ -262,7 +301,8 @@ export default function Companies() {
                   </div>
                   <div className="pm-actions">
                     <span className={`pill pill-${r.crm_status}`}>{s.crmStatus[r.crm_status] || r.crm_status}</span>
-                    {(isSuper || r.id === profile?.company_id) &&
+                    {(isSuper || r.id === profile?.company_id
+                      || r.id === localStorage.getItem('o360.company')) &&
                       <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>}
                     <button className="btn btn-ghost btn-xs"
                             onClick={() => setOpenId(open ? null : r.id)}>

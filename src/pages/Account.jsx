@@ -15,6 +15,47 @@ export default function Account() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(null)
   const [passStatus, setPassStatus] = useState(null)
+  const [companies, setCompanies] = useState([])
+  const [myCompanyName, setMyCompanyName] = useState(null)
+  const [pendingReq, setPendingReq] = useState(null)
+  const [linkSel, setLinkSel] = useState('')
+  const [linkNew, setLinkNew] = useState('')
+  const [linkMsg, setLinkMsg] = useState(null)
+  const [linkBusy, setLinkBusy] = useState(false)
+
+  useEffect(() => {
+    if (!supabase || !profile) return
+    supabase.rpc('list_companies_min').then(({ data }) => setCompanies(data ?? []))
+    if (profile.company_id) {
+      supabase.from('accounts').select('name').eq('id', profile.company_id)
+        .maybeSingle().then(({ data }) => setMyCompanyName(data?.name || null))
+    } else setMyCompanyName(null)
+    supabase.from('company_link_requests').select('company_name, status')
+      .eq('status', 'pending').maybeSingle()
+      .then(({ data }) => setPendingReq(data?.company_name || null))
+      .catch(() => {})
+  }, [profile])
+
+  async function linkCompany() {
+    setLinkBusy(true); setLinkMsg(null)
+    const isNew = linkSel === '__new__'
+    const { data, error } = await supabase.rpc('request_company', {
+      p_company: isNew ? null : (linkSel || null),
+      p_name: isNew ? linkNew.trim() : null,
+    })
+    setLinkBusy(false)
+    if (error) { setLinkMsg({ ok: false, msg: error.message }); return }
+    if (data === 'linked') {
+      setLinkMsg({ ok: true, msg: s.accLinked })
+      window.location.reload()   // refresh profile + sidebar context
+    } else if (data === 'pending') {
+      setPendingReq(isNew ? linkNew.trim() : '')
+      setLinkMsg({ ok: true, msg: `${s.accPendingReq} ${linkNew.trim()}` })
+    } else if (data === 'already_pending') {
+      setLinkMsg({ ok: false, msg: s.accAlreadyPending })
+    } else setLinkMsg({ ok: false, msg: data })
+  }
+
   const [passBusy, setPassBusy] = useState(false)
 
   useEffect(() => {
@@ -84,8 +125,32 @@ export default function Account() {
               </div>
             </div>
             <div className="field">
-              <label htmlFor="ac-org">{s.accOrg}</label>
-              <input id="ac-org" value={form.organisation} onChange={set('organisation')} />
+              <label htmlFor="ac-company">{s.accCompany}</label>
+              {myCompanyName ? (
+                <p className="acc-company-now"><b>{myCompanyName}</b></p>
+              ) : pendingReq != null ? (
+                <p className="acc-company-now">{s.accPendingReq} <b>{pendingReq}</b></p>
+              ) : (
+                <>
+                  <select id="ac-company" value={linkSel}
+                          onChange={(e) => setLinkSel(e.target.value)}>
+                    <option value="">{s.accCompanyPick}</option>
+                    {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    <option value="__new__">{s.accCompanyNew}</option>
+                  </select>
+                  {linkSel === '__new__' && (
+                    <input style={{ marginTop: 8 }} placeholder={s.accCompanyNewPh}
+                           value={linkNew} onChange={(e) => setLinkNew(e.target.value)} />
+                  )}
+                  <button type="button" className="btn btn-ghost btn-xs"
+                          style={{ marginTop: 8 }}
+                          disabled={linkBusy || !linkSel || (linkSel === '__new__' && !linkNew.trim())}
+                          onClick={linkCompany}>
+                    {s.accLink}
+                  </button>
+                  {linkMsg && <p className={`form-status ${linkMsg.ok ? 'ok' : 'err'}`}>{linkMsg.msg}</p>}
+                </>
+              )}
             </div>
             <div className="field">
               <label htmlFor="ac-lang">{s.accLang}</label>
