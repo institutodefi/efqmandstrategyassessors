@@ -45,7 +45,7 @@ export default function Contacts() {
         .select('id, first_name, last_name, email, phone, company_id, company_name, position, consent, marketing_consent, consent_source, brevo_synced_at, erasure_requested, created_at')
         .order('created_at', { ascending: false }),
       supabase.from('profiles')
-        .select('id, email, first_name, last_name, full_name, phone, company_id, role'),
+        .select('id, email, first_name, last_name, full_name, phone, company_id, role, design_permit'),
       supabase.from('accounts').select('id, name, crm_status').order('name'),
       supabase.from('authorized_users')
         .select('email, first_name, last_name, role, authorized').eq('authorized', true),
@@ -269,6 +269,15 @@ export default function Contacts() {
     if (!error) load()
   }
 
+  async function setDesign(userId, permit) {
+    setBusy(true); setStatus(null)
+    const { error } = await supabase.rpc('set_design_permit',
+      { p_user: userId, p_permit: permit })
+    setBusy(false)
+    if (error) setStatus({ ok: false, msg: error.message })
+    else load()
+  }
+
   async function addGrant(userId, e) {
     e.preventDefault()
     const f = e.target
@@ -422,12 +431,22 @@ export default function Contacts() {
                           isAlejandro(r)
                             ? <span className="role-badge">{roleLabels.superadmin}</span>
                             : (
-                            <select value={prof.role}
-                                    disabled={busy || (!isSuper && ['admin','superadmin'].includes(prof.role))}
-                                    onChange={(e) => setUserRole(r, e.target.value)}>
-                              {(roleOptions.includes(prof.role) ? roleOptions : [...roleOptions, prof.role])
-                                .map(rr => <option key={rr} value={rr}>{roleLabels[rr]}</option>)}
-                            </select>
+                            <span className="ct-role-stack">
+                              <select value={prof.role}
+                                      disabled={busy || (!isSuper && ['admin','superadmin'].includes(prof.role))}
+                                      onChange={(e) => setUserRole(r, e.target.value)}>
+                                {(roleOptions.includes(prof.role) ? roleOptions : [...roleOptions, prof.role])
+                                  .map(rr => <option key={rr} value={rr}>{roleLabels[rr]}</option>)}
+                              </select>
+                              {isSuper && (
+                                <select value={prof.design_permit || 'none'} disabled={busy}
+                                        title={s.designPermit}
+                                        onChange={(e) => setDesign(prof.id, e.target.value)}>
+                                  {Object.entries(s.designPermits).map(([k, v]) =>
+                                    <option key={k} value={k}>{s.designPermit}: {v}</option>)}
+                                </select>
+                              )}
+                            </span>
                           )
                         ) : r.kind === 'contact' && !r.erasure_requested ? (
                           activating === r.id ? (

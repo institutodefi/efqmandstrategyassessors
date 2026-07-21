@@ -31,7 +31,8 @@ function useAssessCaps(assessmentId) {
   const isPlatformAdmin = ['superadmin', 'admin'].includes(role)
   const [caps, setCaps] = useState({
     can_view: true, can_edit_client: true, is_assessor: isPlatformAdmin,
-    can_manage_members: isPlatformAdmin, product_role: null,
+    can_view_auditor: isPlatformAdmin, can_manage_members: isPlatformAdmin,
+    product_role: null, design_permit: null,
   })
   useEffect(() => {
     if (!supabase || !user || !assessmentId) return
@@ -45,7 +46,9 @@ const useIsAssessor = (assessmentId) => useAssessCaps(assessmentId).is_assessor
 
 /* ============================= LIST ============================= */
 function AssessmentList() {
-  const { user, role } = useAuth()
+  const { user, role, profile } = useAuth()
+  const isSuper = role === 'superadmin'
+  const canCreate = ['superadmin', 'admin'].includes(role)
   const [s] = useS()
   const navigate = useNavigate()
   const [rows, setRows] = useState([])
@@ -61,13 +64,8 @@ function AssessmentList() {
         .select('id, title, status, company_id, created_at, updated_at')
         .order('updated_at', { ascending: false })
         .then(({ data }) => setRows(data ?? [])))
-    supabase.rpc('my_assessment_companies').then(async ({ data }) => {
-      const ids = (data ?? []).map(r => r.my_assessment_companies ?? r)
-      if (!ids.length) { setCompanies([]); return }
-      const { data: accs } = await supabase.from('accounts')
-        .select('id, name').in('id', ids).order('name')
-      setCompanies(accs ?? [])
-    })
+    supabase.from('accounts').select('id, name').order('name')
+      .then(({ data }) => setCompanies(data ?? []))
   }, [user])
 
   async function create(e) {
@@ -104,15 +102,14 @@ function AssessmentList() {
     <PmShell>
       <h1>{s.asTitle}</h1>
       <p className="sub">{s.asList}</p>
-      {['superadmin', 'admin'].includes(role) && (
-        <div className="pm-actions">
-          <button className="btn btn-ghost btn-xs"
-                  onClick={() => navigate('/portal/assessment/design')}>
-            {s.asDesign}
-          </button>
-        </div>
-      )}
+      <DesignButton s={s} role={role} navigate={navigate} />
       {status && <p className="form-status err">{status.msg}</p>}
+
+      {canCreate && (
+        <NewO360Project s={s} isSuper={isSuper} companies={companies}
+                        companyId={profile?.company_id} user={user}
+                        onOpen={(id) => navigate(`/portal/assessment/${id}`)} />
+      )}
 
       <div className="portal-panels">
         <section className="portal-card wide2">
@@ -167,6 +164,7 @@ function AssessmentDetail({ assessmentId }) {
   const { user, role } = useAuth()
   const caps = useAssessCaps(assessmentId)
   const isAssessor = caps.is_assessor
+  const canSeeAud = caps.can_view_auditor || isAssessor
   const isAdmin = ['superadmin', 'admin'].includes(role)
   const [s, lang] = useS()
   const navigate = useNavigate()
@@ -295,7 +293,7 @@ function AssessmentDetail({ assessmentId }) {
           <h3>{s.asScore}</h3>
           <p className="as-legend">
             <span className="as-leg-client">■ {s.asClientScore}{scores.total != null && ` · ${scores.total}`}</span>
-            <span className="as-leg-auditor">■ {s.asAuditorScore}{scores.audTotal != null && ` · ${scores.audTotal}`}</span>
+            {canSeeAud && <span className="as-leg-auditor">■ {s.asAuditorScore}{scores.audTotal != null && ` · ${scores.audTotal}`}</span>}
           </p>
           <div className="as-scores">
             {scores.perCrit.map(c => (
@@ -303,9 +301,9 @@ function AssessmentDetail({ assessmentId }) {
                 <span className="as-score-label">C{c.num} · {critName(c.code)}</span>
                 <span className="as-bars">
                   <span className="proj-bar"><span style={{ width: `${c.avg ?? 0}%` }} /></span>
-                  <span className="proj-bar bar-auditor"><span style={{ width: `${c.audAvg ?? 0}%` }} /></span>
+                  {canSeeAud && <span className="proj-bar bar-auditor"><span style={{ width: `${c.audAvg ?? 0}%` }} /></span>}
                 </span>
-                <span className="as-score-num">{c.avg ?? '—'} / <b>{c.audAvg ?? '—'}</b></span>
+                <span className="as-score-num">{c.avg ?? '—'}{canSeeAud && <> / <b>{c.audAvg ?? '—'}</b></>}</span>
               </div>
             ))}
           </div>
@@ -378,6 +376,7 @@ function Questionnaire({ assessmentId }) {
   const caps = useAssessCaps(assessmentId)
   const isAssessor = caps.is_assessor
   const canEdit = caps.can_edit_client
+  const canSeeAud = caps.can_view_auditor || isAssessor
   const [s, lang] = useS()
   const navigate = useNavigate()
   const [criteria, setCriteria] = useState([])
@@ -389,6 +388,39 @@ function Questionnaire({ assessmentId }) {
   const [crit, setCrit] = useState(null)
   const [saveState, setSaveState] = useState(null)
   const timers = useRef({})
+  const answersRef = useRef({})
+  const audRef = useRef({})
+  const dirtyRef = useRef({ ans: new Set(), aud: new Set() })
+
+  // flush every 5s: saves everything typed, never overwrites with stale data
+  useEffect(() => {
+    const flush = async () => {
+      const dAns = [...dirtyRef.current.ans]; dirtyRef.current.ans.clear()
+      const dAud = [...dirtyRef.current.aud]; dirtyRef.current.aud.clear()
+      if (!dAns.length && !dAud.length) return
+      setSaveState(s.asSaving)
+      for (const code of dAns) {
+        const cur = answersRef.current[code] || {}
+        await supabase.from('assessment_answers').upsert({
+          assessment_id: assessmentId, question_code: code,
+          level: cur.level ?? null, justification: cur.justification ?? null,
+          updated_by: user.id,
+        })
+      }
+      for (const code of dAud) {
+        const cur = audRef.current[code] || {}
+        await supabase.from('assessment_auditor_scores').upsert({
+          assessment_id: assessmentId, question_code: code,
+          level: cur.level ?? null, note: cur.note ?? null, auditor_id: user.id,
+        })
+      }
+      setSaveState(s.asSaved)
+    }
+    const t = setInterval(flush, 5000)
+    const onHide = () => flush()
+    window.addEventListener('pagehide', onHide)
+    return () => { clearInterval(t); window.removeEventListener('pagehide', onHide); flush() }
+  }, [assessmentId, user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!supabase) return
@@ -402,9 +434,11 @@ function Questionnaire({ assessmentId }) {
     ]).then(([c, q, a, d, au, fi]) => {
       setCriteria(c.data ?? [])
       setQuestions(q.data ?? [])
-      setAnswers(Object.fromEntries((a.data ?? []).map(x => [x.question_code, x])))
+      const ansMap = Object.fromEntries((a.data ?? []).map(x => [x.question_code, x]))
+      setAnswers(ansMap); answersRef.current = ansMap
       setDocs(d.data ?? [])
-      setAudScores(Object.fromEntries((au.data ?? []).map(x => [x.question_code, x])))
+      const audMap = Object.fromEntries((au.data ?? []).map(x => [x.question_code, x]))
+      setAudScores(audMap); audRef.current = audMap
       setFindings(fi.data ?? [])
       if (c.data?.length) setCrit(prev => prev ?? c.data[0].code)
     })
@@ -415,20 +449,25 @@ function Questionnaire({ assessmentId }) {
   const answered = Object.values(answers).filter(a => a.level != null).length
 
   function persist(code, patch, debounce = 0) {
-    setAnswers(prev => ({ ...prev, [code]: { ...prev[code], question_code: code, ...patch } }))
+    const merged = { ...(answersRef.current[code] || {}), question_code: code, ...patch }
+    answersRef.current = { ...answersRef.current, [code]: merged }
+    setAnswers(prev => ({ ...prev, [code]: merged }))
     setSaveState(s.asSaving)
-    clearTimeout(timers.current[code])
-    timers.current[code] = setTimeout(async () => {
-      const cur = { ...(answers[code] || {}), ...patch }
-      await supabase.from('assessment_answers').upsert({
-        assessment_id: assessmentId,
-        question_code: code,
-        level: cur.level ?? null,
-        justification: cur.justification ?? null,
-        updated_by: user.id,
-      })
-      setSaveState(s.asSaved)
-    }, debounce)
+    if (debounce === 0) {
+      // level clicks: save at once (always from the ref → never stale)
+      clearTimeout(timers.current[code])
+      timers.current[code] = setTimeout(async () => {
+        const cur = answersRef.current[code] || {}
+        await supabase.from('assessment_answers').upsert({
+          assessment_id: assessmentId, question_code: code,
+          level: cur.level ?? null, justification: cur.justification ?? null,
+          updated_by: user.id,
+        })
+        setSaveState(s.asSaved)
+      }, 50)
+    } else {
+      dirtyRef.current.ans.add(code)   // typed text → the 5s flush picks it up
+    }
   }
 
   async function upload(code, e) {
@@ -462,17 +501,23 @@ function Questionnaire({ assessmentId }) {
   }
 
   function persistAud(code, patch, debounce = 0) {
-    setAudScores(prev => ({ ...prev, [code]: { ...prev[code], question_code: code, ...patch } }))
+    const merged = { ...(audRef.current[code] || {}), question_code: code, ...patch }
+    audRef.current = { ...audRef.current, [code]: merged }
+    setAudScores(prev => ({ ...prev, [code]: merged }))
     setSaveState(s.asSaving)
-    clearTimeout(timers.current['aud' + code])
-    timers.current['aud' + code] = setTimeout(async () => {
-      const cur = { ...(audScores[code] || {}), ...patch }
-      await supabase.from('assessment_auditor_scores').upsert({
-        assessment_id: assessmentId, question_code: code,
-        level: cur.level ?? null, note: cur.note ?? null, auditor_id: user.id,
-      })
-      setSaveState(s.asSaved)
-    }, debounce)
+    if (debounce === 0) {
+      clearTimeout(timers.current['aud' + code])
+      timers.current['aud' + code] = setTimeout(async () => {
+        const cur = audRef.current[code] || {}
+        await supabase.from('assessment_auditor_scores').upsert({
+          assessment_id: assessmentId, question_code: code,
+          level: cur.level ?? null, note: cur.note ?? null, auditor_id: user.id,
+        })
+        setSaveState(s.asSaved)
+      }, 50)
+    } else {
+      dirtyRef.current.aud.add(code)
+    }
   }
 
   async function addFinding(code, type, e) {
@@ -483,7 +528,8 @@ function Questionnaire({ assessmentId }) {
     const { data, error } = await supabase.from('assessment_findings').insert({
       assessment_id: assessmentId, question_code: code, type, body, created_by: user.id,
     }).select().single()
-    if (!error && data) { setFindings(prev => [...prev, data]); f.reset() }
+    if (error) { setSaveState(`✕ ${error.message}`); return }
+    setFindings(prev => [...prev, data]); f.reset(); setSaveState(s.asSaved)
   }
 
   async function removeFinding(id) {
@@ -570,7 +616,7 @@ function Questionnaire({ assessmentId }) {
             </div>
 
             {/* auditor score chip visible to everyone once it exists */}
-            {!isAssessor && audScores[q.code]?.level != null && (
+            {!isAssessor && canSeeAud && audScores[q.code]?.level != null && (
               <p className="as-aud-chip">
                 {s.asAuditorScore}: <b>{audScores[q.code].level * 20}</b>
                 {audScores[q.code].note && <span className="proj-meta"> · {audScores[q.code].note}</span>}
@@ -578,9 +624,10 @@ function Questionnaire({ assessmentId }) {
             )}
 
             {/* auditor correction panel */}
-            {isAssessor && (
-              <div className="as-aud-panel">
-                <h4 className="cp-h4">{s.asAuditorPanel}</h4>
+            {canSeeAud && (
+              <div className={`as-aud-panel ${!isAssessor ? 'aud-ro' : ''}`}>
+                <h4 className="cp-h4">{s.asAuditorPanel}
+                  {!isAssessor && <span className="proj-meta"> · {s.asReadOnly}</span>}</h4>
                 <p className="proj-meta">
                   {s.asClientAnswer}: <b>{an.level != null ? an.level * 20 : s.asNoAnswer}</b>
                 </p>
@@ -591,6 +638,7 @@ function Questionnaire({ assessmentId }) {
                            title={(lang === 'ar' ? q.levels_ar : q.levels_en)[i]}>
                       <input type="radio" name={`aud-${q.code}`}
                              checked={audScores[q.code]?.level === i}
+                             disabled={!isAssessor}
                              onChange={() => persistAud(q.code, { level: i })} />
                       {i * 20}
                     </label>
@@ -599,7 +647,7 @@ function Questionnaire({ assessmentId }) {
                 <div className="field">
                   <label>{s.asAuditorNote}</label>
                   <textarea rows="2" value={audScores[q.code]?.note || ''}
-                            placeholder={s.asAuditorNotePh}
+                            placeholder={s.asAuditorNotePh} disabled={!isAssessor}
                             onChange={(e) => persistAud(q.code, { note: e.target.value }, 800)} />
                 </div>
 
@@ -611,21 +659,25 @@ function Questionnaire({ assessmentId }) {
                         {x.type === 'strength' ? s.asStrength : s.asImprovement}
                       </span>
                       <span className="as-find-body">{x.body}</span>
-                      <button className="btn btn-ghost btn-xs"
-                              onClick={() => removeFinding(x.id)}>✕</button>
+                      {isAssessor && (
+                        <button className="btn btn-ghost btn-xs"
+                                onClick={() => removeFinding(x.id)}>✕</button>
+                      )}
                     </li>
                   ))}
                 </ul>
+                {isAssessor && (
                 <div className="as-find-forms">
-                  <form className="cp-inline" onSubmit={(e) => addFinding(q.code, 'strength', e)}>
-                    <input name="body" placeholder={`${s.asStrength}…`} />
+                  <form className="cp-inline as-find-form" onSubmit={(e) => addFinding(q.code, 'strength', e)}>
+                    <textarea name="body" rows="2" placeholder={`${s.asStrength}…`} />
                     <button className="btn btn-primary btn-xs" type="submit">{s.asAddFinding}</button>
                   </form>
-                  <form className="cp-inline" onSubmit={(e) => addFinding(q.code, 'improvement', e)}>
-                    <input name="body" placeholder={`${s.asImprovement}…`} />
+                  <form className="cp-inline as-find-form" onSubmit={(e) => addFinding(q.code, 'improvement', e)}>
+                    <textarea name="body" rows="2" placeholder={`${s.asImprovement}…`} />
                     <button className="btn btn-primary btn-xs" type="submit">{s.asAddFinding}</button>
                   </form>
                 </div>
+                )}
               </div>
             )}
           </section>
@@ -638,6 +690,13 @@ function Questionnaire({ assessmentId }) {
 
 /* ============================= MODEL DESIGNER (superadmin/admin) ============================= */
 function ModelDesigner() {
+  const { role } = useAuth()
+  const [permit, setPermit] = useState(role === 'superadmin' ? 'admin' : null)
+  useEffect(() => {
+    if (role === 'superadmin') return
+    supabase.rpc('my_design_permit').then(({ data }) => setPermit(data || 'none'))
+  }, [role])
+  const canEditDesign = permit === 'admin'
   const [s, lang] = useS()
   const navigate = useNavigate()
   const [criteria, setCriteria] = useState([])
@@ -765,7 +824,7 @@ function ModelDesigner() {
                   <textarea name="levels_ar" rows="7" defaultValue={(q.levels_ar || []).join('\n')} dir="rtl" required />
                 </div>
               </div>
-              <button className="btn btn-primary btn-xs" type="submit">{s.asSave}</button>
+              {canEditDesign && <button className="btn btn-primary btn-xs" type="submit">{s.asSave}</button>}
             </form>
           )}
         </section>
@@ -824,18 +883,35 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
     setBusy(false); load()
   }
 
-  function saveReview(code, field, value) {
-    setReviews(prev => ({ ...prev, [code]: { ...prev[code], criterion_code: code, [field]: value } }))
-    setSaveState(s.asSaving)
-    clearTimeout(timers.current[code + field])
-    timers.current[code + field] = setTimeout(async () => {
-      const cur = { ...(reviews[code] || {}), [field]: value }
-      await supabase.from('assessment_criterion_reviews').upsert({
-        assessment_id: assessmentId, criterion_code: code,
-        strengths: cur.strengths ?? null, improvements: cur.improvements ?? null,
-      })
+  const reviewsRef = useRef({})
+  const dirtyRev = useRef(new Set())
+  useEffect(() => { reviewsRef.current = reviews }, [reviews])
+  useEffect(() => {
+    const flush = async () => {
+      const codes = [...dirtyRev.current]; dirtyRev.current.clear()
+      if (!codes.length) return
+      setSaveState(s.asSaving)
+      for (const code of codes) {
+        const cur = reviewsRef.current[code] || {}
+        await supabase.from('assessment_criterion_reviews').upsert({
+          assessment_id: assessmentId, criterion_code: code,
+          strengths: cur.strengths ?? null, improvements: cur.improvements ?? null,
+        })
+      }
       setSaveState(s.asSaved)
-    }, 800)
+    }
+    const t = setInterval(flush, 5000)
+    const onHide = () => flush()
+    window.addEventListener('pagehide', onHide)
+    return () => { clearInterval(t); window.removeEventListener('pagehide', onHide); flush() }
+  }, [assessmentId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function saveReview(code, field, value) {
+    const merged = { ...(reviewsRef.current[code] || {}), criterion_code: code, [field]: value }
+    reviewsRef.current = { ...reviewsRef.current, [code]: merged }
+    setReviews(prev => ({ ...prev, [code]: merged }))
+    dirtyRev.current.add(code)
+    setSaveState(s.asSaving)
   }
 
   const consName = (id) =>
@@ -885,12 +961,12 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
           <div className="np-row">
             <div className="field">
               <label>{s.asRevStrengths}</label>
-              <textarea rows="3" value={reviews[c.code]?.strengths || ''}
+              <textarea rows="8" className="as-review-ta" value={reviews[c.code]?.strengths || ''}
                         onChange={(e) => saveReview(c.code, 'strengths', e.target.value)} />
             </div>
             <div className="field">
               <label>{s.asRevImprovements}</label>
-              <textarea rows="3" value={reviews[c.code]?.improvements || ''}
+              <textarea rows="8" className="as-review-ta" value={reviews[c.code]?.improvements || ''}
                         onChange={(e) => saveReview(c.code, 'improvements', e.target.value)} />
             </div>
           </div>
@@ -981,5 +1057,75 @@ function TeamPanel({ assessmentId, s, canManage }) {
         </form>
       )}
     </section>
+  )
+}
+
+
+/* =================== New O360 project (zone-local) =================== */
+function NewO360Project({ s, isSuper, companies, companyId, user, onOpen }) {
+  const [accountSel, setAccountSel] = useState('')
+  const activeCompany = localStorage.getItem('o360.company') || ''
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState(null)
+  const cid = isSuper ? accountSel : (activeCompany || companyId || '')
+
+  async function create(e) {
+    e.preventDefault()
+    if (!cid) return
+    setBusy(true); setErr(null)
+    const { data, error } = await supabase.from('projects').insert({
+      account_id: cid, zone_code: 'assessment',
+      created_by: user.id, status: 'design',
+    }).select().single()
+    if (error) { setBusy(false); setErr(error.message); return }
+    await supabase.from('project_members').upsert({
+      project_id: data.id, user_id: user.id, member_role: 'admin',
+    })
+    const { data: a } = await supabase.from('assessments')
+      .select('id').eq('project_id', data.id).maybeSingle()
+    setBusy(false)
+    if (a) onOpen(a.id)
+  }
+
+  return (
+    <section className="portal-card wide2 np-lean">
+      <h3>{s.newProject}</h3>
+      {err && <p className="form-status err">{err}</p>}
+      <form onSubmit={create}>
+        <div className="np-lean-row">
+          {isSuper ? (
+            <select aria-label={s.npAccount} required value={accountSel}
+                    onChange={(e) => setAccountSel(e.target.value)}>
+              <option value="">{s.npAccount} —</option>
+              {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          ) : (
+            <span className="np-fixed-company">{s.npYourCompany}</span>
+          )}
+          <button className="btn btn-primary" disabled={busy || !cid} type="submit">
+            {s.npCreate}
+          </button>
+        </div>
+        <p className="proj-meta">{s.npCode} {s.npRolesInside} {s.npOpenO360}</p>
+      </form>
+    </section>
+  )
+}
+
+
+function DesignButton({ s, role, navigate }) {
+  const [permit, setPermit] = useState(role === 'superadmin' ? 'admin' : null)
+  useEffect(() => {
+    if (role === 'superadmin') return
+    supabase.rpc('my_design_permit').then(({ data }) => setPermit(data || 'none'))
+  }, [role])
+  if (permit !== 'admin' && permit !== 'manager') return null
+  return (
+    <div className="pm-actions">
+      <button className="btn btn-ghost btn-xs"
+              onClick={() => navigate('/portal/assessment/design')}>
+        {s.asDesign}{permit === 'manager' && <> · {s.asReadOnly}</>}
+      </button>
+    </div>
   )
 }

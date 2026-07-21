@@ -36,14 +36,35 @@ class ContentBoundary extends Component {
 export default function PmShell({ children }) {
   const { user, profile, role } = useAuth()
   const navigate = useNavigate()
-  const { lang } = useLang()
+  const { lang, setLang } = useLang()
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
   const isAr = lang === 'ar'
   const isStaff = ['superadmin', 'admin', 'account_manager', 'consultant'].includes(role)
+  useEffect(() => {
+    if (!supabase || !user || role === 'superadmin') return
+    supabase.rpc('my_companies').then(({ data }) => {
+      const list = data ?? []
+      setMyCompanies(list)
+      if (list.length && !list.some(c => c.account_id === localStorage.getItem('o360.company'))) {
+        localStorage.setItem('o360.company', list[0].account_id)
+        setActiveCompany(list[0].account_id)
+      }
+    }).catch(() => {})
+  }, [user, role])
+
+  function pickCompany(id) {
+    localStorage.setItem('o360.company', id)
+    setActiveCompany(id)
+    window.location.reload()   // simplest way to re-scope every list
+  }
+
   const isAdmin = role === 'superadmin'   // CRM/administration: superadmin only (migration-16)
 
   const [zones, setZones] = useState(ZONE_FALLBACK)
-  const [myZones, setMyZones] = useState(null)   // null = unknown yet
+  const [myZones, setMyZones] = useState(null)
+  const [myCompanies, setMyCompanies] = useState([])
+  const [activeCompany, setActiveCompany] = useState(
+    () => localStorage.getItem('o360.company') || '')   // null = unknown yet
 
   useEffect(() => {
     if (!supabase || !user) return
@@ -93,6 +114,11 @@ export default function PmShell({ children }) {
             </NavLink>
           ))}
 
+          {role === 'admin' && (
+            <NavLink to="/portal/companies" className="pm-link">
+              <span className="pm-dot" />{s.navMyCompany}
+            </NavLink>
+          )}
           {isAdmin && (
             <>
               <p className="pm-sec">{s.administration}</p>
@@ -103,6 +129,19 @@ export default function PmShell({ children }) {
         </nav>
 
         <div className="pm-foot">
+          {myCompanies.length > 1 && (
+            <select className="pm-company" value={activeCompany}
+                    aria-label={s.pmCompanyCtx}
+                    onChange={(e) => pickCompany(e.target.value)}>
+              {myCompanies.map(c => (
+                <option key={c.account_id} value={c.account_id}>{c.name}</option>
+              ))}
+            </select>
+          )}
+          <div className="pm-langs">
+            <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>EN</button>
+            <button className={lang === 'ar' ? 'on' : ''} onClick={() => setLang('ar')}>ع</button>
+          </div>
           <Link to="/portal/account" className="pm-user">
             <b>{name}</b>
             {roleLabel && <span className="role-badge">{roleLabel}</span>}

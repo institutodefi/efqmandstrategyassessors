@@ -469,3 +469,24 @@
   .np-lean-row { flex-direction: column; }
   .dash-client-name { flex-basis: 100%; }
 }
+
+.np-fixed-company { flex: 1; display: inline-flex; align-items: center;
+  padding: 11px 14px; border: 1px dashed rgba(82,211,162,0.45); border-radius: 10px;
+  font-size: 0.86rem; color: var(--glow, #52d3a2); font-weight: 600; }
+.as-find-form { align-items: stretch; }
+.as-find-form textarea { flex: 1; min-height: 52px; }
+.as-review-ta { min-height: 170px; font-size: 0.9rem; line-height: 1.6; }
+
+.pm-company { flex-basis: 100%; padding: 8px 10px; border-radius: 10px;
+  border: 1px solid rgba(82,211,162,0.4); background: transparent; color: inherit;
+  font-size: 0.8rem; margin-bottom: 8px; }
+.pm-company option { color: #0b2530; }
+.pm-langs { display: inline-flex; gap: 4px; }
+.pm-langs button { border: 1px solid rgba(255,255,255,0.18); background: transparent;
+  color: inherit; border-radius: 8px; padding: 4px 9px; font-size: 0.72rem;
+  font-weight: 700; cursor: pointer; }
+.pm-langs button.on { border-color: var(--glow, #52d3a2); color: var(--glow, #52d3a2); }
+.aud-ro { opacity: 0.85; }
+.aud-ro .as-aud-lvl { cursor: default; }
+.ct-role-stack { display: grid; gap: 4px; }
+.ct-role-stack select { font-size: 0.76rem; }

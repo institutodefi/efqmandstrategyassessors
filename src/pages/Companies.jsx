@@ -233,7 +233,7 @@ export default function Companies() {
               )}
             </div>
           </form>
-        </section>
+        </section>)}
 
         {/* ---------------- list ---------------- */}
         <section className="portal-card wide2">
@@ -255,7 +255,7 @@ export default function Companies() {
                   </div>
                   <div className="pm-actions">
                     <span className={`pill pill-${r.crm_status}`}>{s.crmStatus[r.crm_status] || r.crm_status}</span>
-                    <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>
+                    {isSuper && <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>}
                     <button className="btn btn-ghost btn-xs"
                             onClick={() => setOpenId(open ? null : r.id)}>
                       {s.cpProducts} {open ? '▴' : '▾'}
@@ -266,8 +266,8 @@ export default function Companies() {
                 {open && (
                   <div className="cp-detail">
                     {/* company contacts */}
-                    <h4 className="cp-h4">{s.contacts}</h4>
-                    {(() => {
+                    {isSuper && <h4 className="cp-h4">{s.contacts}</h4>}
+                    {isSuper && (() => {
                       const cc = contacts.filter(c => c.company_id === r.id)
                       if (cc.length === 0) return <p className="proj-meta">{s.coNone}</p>
                       return (
