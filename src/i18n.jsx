@@ -165,9 +165,9 @@ export const STRINGS = {
       note: 'Prepaid monthly subscription · prices exclude VAT · 12-month minimum term.',
       priceIn: 'Prices in', fromEur: 'converted from EUR at indicative rates',
       tiers: [
-        { name: 'Relationship', tagline: 'To start exploring', price: '350', features: ['TuConsultor AI platform', '1 specialised consultant', 'On-demand sessions', 'Free initial diagnosis', '24/7 chat support'] },
-        { name: 'Involvement', tagline: 'To advance with focus', price: '625', popular: true, features: ['Everything in Relationship, +', '2 dedicated consultants', '6 h/month of consultancy', 'Personalised roadmap', 'Premium templates', 'Monthly review', 'Teams & SharePoint'] },
-        { name: 'Commitment', tagline: 'To truly transform', price: '800', features: ['Everything in Involvement, +', 'Multidisciplinary team', '7 h/month of consultancy', 'Co-defined KPIs', 'Guided implementation', 'Sector experts', 'Executive review', 'External-audit assistance'] },
+        { name: 'Relationship', tagline: 'To start exploring', price: '350', features: ['Orbital360 PM Tool — O360 self-assessment', 'TuConsultor AI platform', '1 specialised consultant', 'On-demand sessions', 'Free initial diagnosis', '24/7 chat support'] },
+        { name: 'Involvement', tagline: 'To advance with focus', price: '625', popular: true, features: ['Everything in Relationship, +', 'Orbital360 PM Tool — full suite (3 products)', '2 dedicated consultants', '6 h/month of consultancy', 'Personalised roadmap', 'Premium templates', 'Monthly review', 'Teams & SharePoint'] },
+        { name: 'Commitment', tagline: 'To truly transform', price: '800', features: ['Everything in Involvement, +', 'Orbital360 PM Tool — audited assessment & extra licenses', 'Multidisciplinary team', '7 h/month of consultancy', 'Co-defined KPIs', 'Guided implementation', 'Sector experts', 'Executive review', 'External-audit assistance'] },
       ],
     },
     newsletter: {
@@ -426,9 +426,9 @@ export const STRINGS = {
       note: 'اشتراك شهري مدفوع مسبقاً · الأسعار لا تشمل ضريبة القيمة المضافة · حدّ أدنى 12 شهراً.',
       priceIn: 'الأسعار بعملة', fromEur: 'محوّلة من اليورو بأسعار استرشادية',
       tiers: [
-        { name: 'العلاقة', tagline: 'للبدء في الاستكشاف', price: '350', features: ['منصّة TuConsultor للذكاء الاصطناعي', 'مستشار متخصص واحد', 'جلسات عند الطلب', 'تشخيص أولي مجاني', 'دعم محادثة 24/7'] },
-        { name: 'المشاركة', tagline: 'للتقدّم بتركيز', price: '625', popular: true, features: ['كل ما في «العلاقة»، +', 'مستشاران مخصّصان', '6 ساعات استشارة شهرياً', 'خارطة طريق مخصّصة', 'قوالب متميّزة', 'مراجعة شهرية', 'Teams وSharePoint'] },
-        { name: 'الالتزام', tagline: 'للتحوّل الحقيقي', price: '800', features: ['كل ما في «المشاركة»، +', 'فريق متعدّد التخصصات', '7 ساعات استشارة شهرياً', 'مؤشرات أداء مشتركة', 'تطبيق مصحوب', 'خبراء قطاعيون', 'مراجعة تنفيذية', 'المساعدة في التدقيق الخارجي'] },
+        { name: 'العلاقة', tagline: 'للبدء في الاستكشاف', price: '350', features: ['أداة Orbital360 PM — التقييم الذاتي O360', 'منصّة TuConsultor للذكاء الاصطناعي', 'مستشار متخصص واحد', 'جلسات عند الطلب', 'تشخيص أولي مجاني', 'دعم محادثة 24/7'] },
+        { name: 'المشاركة', tagline: 'للتقدّم بتركيز', price: '625', popular: true, features: ['كل ما في «العلاقة»، +', 'أداة Orbital360 PM — الباقة الكاملة (3 منتجات)', 'مستشاران مخصّصان', '6 ساعات استشارة شهرياً', 'خارطة طريق مخصّصة', 'قوالب متميّزة', 'مراجعة شهرية', 'Teams وSharePoint'] },
+        { name: 'الالتزام', tagline: 'للتحوّل الحقيقي', price: '800', features: ['كل ما في «المشاركة»، +', 'أداة Orbital360 PM — تقييم مُدقّق وتراخيص إضافية', 'فريق متعدّد التخصصات', '7 ساعات استشارة شهرياً', 'مؤشرات أداء مشتركة', 'تطبيق مصحوب', 'خبراء قطاعيون', 'مراجعة تنفيذية', 'المساعدة في التدقيق الخارجي'] },
       ],
     },
     newsletter: {
