@@ -111,6 +111,8 @@ function normalize(doc) {
     f.code = 'FN-' + String(i + 1).padStart(2, '0')
     f.name = f.name || ''
     f.desc = f.desc || ''
+    f.resps = (Array.isArray(f.resps) ? f.resps : [])
+      .map(r => typeof r === 'string' ? r : (r?.text || ''))
   })
 
   if (!Array.isArray(d.people)) d.people = []
@@ -121,6 +123,13 @@ function normalize(doc) {
     p.name = p.name || ''
     if (p.functionId && !fnIds.has(p.functionId)) p.functionId = null
     if (p.reportsTo && (!pplIds.has(p.reportsTo) || p.reportsTo === p.id)) p.reportsTo = null
+    if (!Array.isArray(p.titles)) p.titles = []
+    p.titles.forEach(t => {
+      if (!t.id) t.id = 't' + uid()
+      t.name = t.name || ''
+      t.path = t.path || null
+      t.fileName = t.fileName || null
+    })
   })
   // break reporting cycles (walk up; if we revisit, cut the link)
   d.people.forEach(p => {
@@ -132,6 +141,32 @@ function normalize(doc) {
       cur = d.people.find(x => x.id === cur.reportsTo)
       if (!cur) break
     }
+  })
+
+  /* governance: dynamic levels (Strategic / Tactical / Operational seeded) */
+  if (!d.gov || !Array.isArray(d.gov.levels)) {
+    d.gov = { levels: [
+      { id: 'g_str', tkey: 'strategic',   pref: 'GB-STR', color: '#b07ae0', bodies: [] },
+      { id: 'g_tac', tkey: 'tactical',    pref: 'GB-TAC', color: '#5aa9e6', bodies: [] },
+      { id: 'g_ope', tkey: 'operational', pref: 'GB-OPE', color: '#e5a54b', bodies: [] },
+    ] }
+  }
+  d.gov.levels.forEach((lv, i) => {
+    if (!lv.id) lv.id = 'g' + uid()
+    if (!lv.color) lv.color = PALETTE[i % PALETTE.length]
+    if (!lv.pref) {
+      const w = String(lv.title || 'GOV').toUpperCase().replace(/[^A-Z0-9 ]/g, ' ')
+        .trim().split(/\s+/)[0] || 'GOV'
+      lv.pref = 'GB-' + w.slice(0, 4)
+    }
+    if (!Array.isArray(lv.bodies)) lv.bodies = []
+    lv.bodies.forEach((gb, j) => {
+      if (!gb.id) gb.id = 'gb' + uid()
+      gb.code = lv.pref + '-' + String(j + 1).padStart(2, '0')
+      gb.name = gb.name || ''; gb.purpose = gb.purpose || ''; gb.freq = gb.freq || ''
+      if (gb.chair && !pplIds.has(gb.chair)) gb.chair = null
+      gb.members = (Array.isArray(gb.members) ? gb.members : []).filter(id => pplIds.has(id))
+    })
   })
   return d
 }
@@ -149,6 +184,24 @@ function findSub(d, subId) {
     if (sb) return { band: b, proc: p, sub: sb }
   }
   return null
+}
+
+/* ---------- title documents (private management-docs bucket) ---------- */
+async function uploadTitleDoc(projectId, file) {
+  const clean = file.name.replace(/[^\w.\-]/g, '_')
+  const path = `${projectId}/titles/${Date.now()}-${clean}`
+  const { error } = await supabase.storage.from('management-docs')
+    .upload(path, file, { contentType: file.type || undefined })
+  if (error) throw error
+  return { path, fileName: file.name }
+}
+async function openTitleDoc(path) {
+  const { data } = await supabase.storage.from('management-docs')
+    .createSignedUrl(path, 3600)
+  if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener')
+}
+const removeTitleDoc = (path) => {
+  if (path) supabase.storage.from('management-docs').remove([path]).catch(() => {})
 }
 
 /* ========================= project shell + tabs ========================= */
@@ -173,7 +226,7 @@ function ManagementProject({ projectId, tab, subId }) {
 
   useEffect(() => {
     if (!supabase || !project?.account_id) return
-    supabase.from('accounts').select('id, name, name_ar')
+    supabase.from('accounts').select('id, name, name_ar, logo_url')
       .eq('id', project.account_id).maybeSingle()
       .then(({ data }) => setAccount(data))
   }, [project?.account_id])
@@ -274,7 +327,12 @@ function ManagementProject({ projectId, tab, subId }) {
             ← {s.mgZone}
           </button>
           <h1>{title}</h1>
-          {account && <span className="proj-meta">{(isAr && account.name_ar) || account.name}</span>}
+          {account && (
+            <span className="proj-meta mg-head-co">
+              {account.logo_url && <img className="mg-co-logo" src={account.logo_url} alt="" />}
+              {(isAr && account.name_ar) || account.name}
+            </span>
+          )}
         </header>
 
         {missing && <p className="form-status err">{s.mgNotFound}</p>}
@@ -306,8 +364,9 @@ function ManagementProject({ projectId, tab, subId }) {
             <ProcessMap doc={doc} mutate={mutate} canEdit={canEdit} s={s}
               onOpenSub={(sid) => navigate(`/portal/management/${projectId}/sub/${sid}`)} />
           )
-          : activeTab === 'roles' ? <RolesTab doc={doc} mutate={mutate} canEdit={canEdit} s={s} />
-          : activeTab === 'org'   ? <OrgChart doc={doc} s={s}
+          : activeTab === 'roles' ? <RolesTab doc={doc} mutate={mutate} canEdit={canEdit} s={s} projectId={projectId} />
+          : activeTab === 'bodies' ? <GovernanceTab doc={doc} mutate={mutate} canEdit={canEdit} s={s} />
+          : activeTab === 'org'   ? <OrgChart doc={doc} s={s} account={account}
                                       onGoRoles={() => navigate(`/portal/management/${projectId}/roles`, { replace: true })} />
           : (
             <section className="portal-card wide mg-soon">
@@ -619,13 +678,13 @@ function ProcEditor({ proc, bands, bandId, bandTitle, standards, s, onSave, onCa
 }
 
 /* ---------- inline band editor ---------- */
-function BandEditor({ band, title, s, onSave, onDelete, onCancel }) {
+function BandEditor({ band, title, s, titleLabel, onSave, onDelete, onCancel }) {
   const [t, setT] = useState(title)
   const [pref, setPref] = useState(band.pref || '')
   const [color, setColor] = useState(band.color)
   return (
     <div className="mg-band-editor">
-      <label>{s.mgBandTitle}<input value={t} onChange={e => setT(e.target.value)} /></label>
+      <label>{titleLabel || s.mgBandTitle}<input value={t} onChange={e => setT(e.target.value)} /></label>
       <label>{s.mgBandPref}<input value={pref} onChange={e => setPref(e.target.value)} /></label>
       <div className="mg-swatches">
         {PALETTE.map(c => (
@@ -811,7 +870,7 @@ function SubFicha({ doc, mutate, canEdit, s, subId, onBack }) {
 /* ================================ ROLES ================================
    Two sub-tabs: People and Functions. Each person links to a function and
    to whom they report; the Organization chart is built from that. */
-function RolesTab({ doc, mutate, canEdit, s }) {
+function RolesTab({ doc, mutate, canEdit, s, projectId }) {
   const [sub, setSub] = useState('people')
   const [editing, setEditing] = useState(null)   // person or function id
 
@@ -846,6 +905,7 @@ function RolesTab({ doc, mutate, canEdit, s }) {
       p.name = draft.name.trim()
       p.functionId = draft.functionId || null
       p.reportsTo = draft.reportsTo || null
+      p.titles = draft.titles
     })
     setEditing(null)
   }
@@ -854,6 +914,7 @@ function RolesTab({ doc, mutate, canEdit, s }) {
     if (editing === pid) setEditing(null)
     mutate(d => {
       const gone = d.people.find(x => x.id === pid)
+      ;(gone?.titles || []).forEach(t => removeTitleDoc(t.path))
       d.people.forEach(p => { if (p.reportsTo === pid) p.reportsTo = gone?.reportsTo ?? null })
       d.people = d.people.filter(x => x.id !== pid)
     })
@@ -872,6 +933,7 @@ function RolesTab({ doc, mutate, canEdit, s }) {
     mutate(d => {
       const f = d.functions.find(x => x.id === fid); if (!f) return
       f.name = draft.name.trim(); f.desc = draft.desc
+      f.resps = draft.resps.map(r => r.trim()).filter(Boolean)
     })
     setEditing(null)
   }
@@ -915,7 +977,7 @@ function RolesTab({ doc, mutate, canEdit, s }) {
                 editing === p.id && canEdit ? (
                   <PersonEditor key={p.id} person={p} functions={doc.functions}
                     people={doc.people.filter(x => x.id !== p.id && !descendants(p.id).has(x.id))}
-                    s={s}
+                    s={s} projectId={projectId}
                     onSave={(draft) => savePerson(p.id, draft)}
                     onCancel={() => setEditing(null)} />
                 ) : (
@@ -931,6 +993,18 @@ function RolesTab({ doc, mutate, canEdit, s }) {
                         ? `${s.mgReportsTo}: ${pById[p.reportsTo]?.name || s.mgNoName}`
                         : s.mgTopLevel}
                     </span>
+                    {(p.titles || []).length > 0 && (
+                      <span className="mg-titles">
+                        {p.titles.map(t => (
+                          <button key={t.id} type="button"
+                            className={'mg-title-chip' + (t.path ? ' has-doc' : '')}
+                            title={t.path ? `${s.mgOpenDoc} · ${t.fileName || ''}` : s.mgNoDoc}
+                            onClick={t.path ? () => openTitleDoc(t.path) : undefined}>
+                            🎓 {t.name || s.mgNoName}{t.path ? ' 📎' : ''}
+                          </button>
+                        ))}
+                      </span>
+                    )}
                     {canEdit && (
                       <span className="mg-row-tools">
                         <button title={s.mgEdit} onClick={() => setEditing(p.id)}>✎</button>
@@ -958,6 +1032,11 @@ function RolesTab({ doc, mutate, canEdit, s }) {
                     <b className="mg-row-name">{f.name || s.mgNoName}</b>
                     <span className="mg-chip">{linkedCount(f.id)} {s.mgPeopleLinked}</span>
                     {!!f.desc?.trim() && <span className="mg-row-meta mg-row-desc">{f.desc}</span>}
+                    {(f.resps || []).length > 0 && (
+                      <ul className="mg-resps">
+                        {f.resps.map((r, i) => <li key={i}>{r}</li>)}
+                      </ul>
+                    )}
                     {canEdit && (
                       <span className="mg-row-tools">
                         <button title={s.mgEdit} onClick={() => setEditing(f.id)}>✎</button>
@@ -974,15 +1053,35 @@ function RolesTab({ doc, mutate, canEdit, s }) {
   )
 }
 
-function PersonEditor({ person, functions, people, s, onSave, onCancel }) {
+function PersonEditor({ person, functions, people, s, projectId, onSave, onCancel }) {
   const [d, setD] = useState(() => ({
     name: person.name || '',
     functionId: person.functionId || '',
     reportsTo: person.reportsTo || '',
+    titles: (person.titles || []).map(t => ({ ...t })),
   }))
+  const [upBusy, setUpBusy] = useState(null)   // title id being uploaded
+  const [upErr, setUpErr] = useState(null)
   const set = (k, v) => setD(prev => ({ ...prev, [k]: v }))
+  const setTitle = (i, patch) =>
+    set('titles', d.titles.map((x, j) => j === i ? { ...x, ...patch } : x))
+
+  async function attach(i, e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const t = d.titles[i]
+    setUpBusy(t.id || i); setUpErr(null)
+    try {
+      const { path, fileName } = await uploadTitleDoc(projectId, file)
+      removeTitleDoc(t.path)               // replacing → drop the old file
+      setTitle(i, { path, fileName })
+    } catch { setUpErr(s.mgUploadErr) }
+    setUpBusy(null)
+  }
+
   return (
-    <div className="mg-row mg-row-edit">
+    <div className="mg-row mg-row-edit mg-person-edit">
       <label>{s.mgPerson}
         <input autoFocus list="mgPeople" value={d.name} onChange={e => set('name', e.target.value)} />
       </label>
@@ -998,8 +1097,43 @@ function PersonEditor({ person, functions, people, s, onSave, onCancel }) {
           {people.map(p => <option key={p.id} value={p.id}>{p.name || s.mgNoName}</option>)}
         </select>
       </label>
+
+      <div className="mg-subs-box mg-titles-box">
+        <div className="mg-subs-head">{s.mgTitles}
+          <button type="button" className="mg-add"
+            onClick={() => set('titles', [...d.titles, { id: 't' + uid(), name: '', path: null, fileName: null }])}>
+            {s.mgAddTitle}
+          </button>
+        </div>
+        {upErr && <p className="form-status err">{upErr}</p>}
+        {d.titles.map((t, i) => (
+          <div key={t.id || i} className="mg-sub-row">
+            <input placeholder={s.mgTitlePh} value={t.name}
+              onChange={e => setTitle(i, { name: e.target.value })} />
+            {t.path ? (
+              <button type="button" className="mg-title-chip has-doc"
+                title={t.fileName || ''} onClick={() => openTitleDoc(t.path)}>
+                📎 {s.mgOpenDoc}
+              </button>
+            ) : null}
+            <label className="mg-attach-btn" title={s.mgAttach}>
+              {upBusy === (t.id || i) ? s.mgUploading : '📎 ' + (t.path ? '↺' : s.mgAttach)}
+              <input type="file" style={{ display: 'none' }}
+                disabled={upBusy != null} onChange={(e) => attach(i, e)} />
+            </label>
+            <button type="button" className="mg-sub-del" title={s.mgDelete}
+              onClick={() => {
+                if (!window.confirm(s.mgDelTitleConfirm)) return
+                removeTitleDoc(t.path)
+                set('titles', d.titles.filter((_, j) => j !== i))
+              }}>×</button>
+          </div>
+        ))}
+      </div>
+
       <div className="mg-edit-btns">
-        <button className="btn btn-primary btn-xs" onClick={() => onSave(d)}>{s.mgSave}</button>
+        <button className="btn btn-primary btn-xs" disabled={upBusy != null}
+          onClick={() => onSave(d)}>{s.mgSave}</button>
         <button className="btn btn-ghost btn-xs" onClick={onCancel}>{s.mgCancel}</button>
       </div>
     </div>
@@ -1007,7 +1141,10 @@ function PersonEditor({ person, functions, people, s, onSave, onCancel }) {
 }
 
 function FunctionEditor({ fn, s, onSave, onCancel }) {
-  const [d, setD] = useState(() => ({ name: fn.name || '', desc: fn.desc || '' }))
+  const [d, setD] = useState(() => ({
+    name: fn.name || '', desc: fn.desc || '',
+    resps: [...(fn.resps || [])],
+  }))
   const set = (k, v) => setD(prev => ({ ...prev, [k]: v }))
   return (
     <div className="mg-row mg-row-edit">
@@ -1018,6 +1155,192 @@ function FunctionEditor({ fn, s, onSave, onCancel }) {
       <label>{s.mgFnDesc}
         <textarea rows="2" value={d.desc} onChange={e => set('desc', e.target.value)} />
       </label>
+
+      <div className="mg-subs-box mg-titles-box">
+        <div className="mg-subs-head">{s.mgResps}
+          <button type="button" className="mg-add"
+            onClick={() => set('resps', [...d.resps, ''])}>{s.mgAddResp}</button>
+        </div>
+        {d.resps.map((r, i) => (
+          <div key={i} className="mg-sub-row">
+            <span className="mg-sub-autocode">{'R' + String(i + 1).padStart(2, '0')}</span>
+            <input placeholder={s.mgRespPh} value={r}
+              onChange={e => set('resps', d.resps.map((x, j) => j === i ? e.target.value : x))} />
+            <button type="button" className="mg-sub-del" title={s.mgDelete}
+              onClick={() => set('resps', d.resps.filter((_, j) => j !== i))}>×</button>
+          </div>
+        ))}
+      </div>
+
+      <div className="mg-edit-btns">
+        <button className="btn btn-primary btn-xs" onClick={() => onSave(d)}>{s.mgSave}</button>
+        <button className="btn btn-ghost btn-xs" onClick={onCancel}>{s.mgCancel}</button>
+      </div>
+    </div>
+  )
+}
+
+/* ========================= GOVERNANCE BODIES =========================
+   Dynamic governance levels (Strategic / Tactical / Operational seeded,
+   renameable and extendable) with bodies added one by one: auto codes
+   (level prefix + position), purpose, meeting frequency, and chair +
+   members picked from Roles · People. */
+function GovernanceTab({ doc, mutate, canEdit, s }) {
+  const [editing, setEditing] = useState(null)     // body id
+  const [levelEdit, setLevelEdit] = useState(null) // level id
+  const pById = useMemo(
+    () => Object.fromEntries(doc.people.map(p => [p.id, p])), [doc.people])
+
+  const levelTitle = (lv) => lv.title || (lv.tkey ? s.mgGovLevels[lv.tkey] : '') || '—'
+
+  const addBody = (lid) => {
+    let newId = null
+    mutate(d => {
+      const lv = d.gov.levels.find(x => x.id === lid); if (!lv) return
+      newId = 'gb' + uid()
+      lv.bodies.push({ id: newId, name: '', purpose: '', freq: '', chair: null, members: [] })
+    })
+    if (newId) setEditing(newId)
+  }
+  const saveBody = (lid, gid, draft) => {
+    mutate(d => {
+      const lv = d.gov.levels.find(x => x.id === lid); if (!lv) return
+      const gb = lv.bodies.find(x => x.id === gid); if (!gb) return
+      gb.name = draft.name.trim(); gb.purpose = draft.purpose; gb.freq = draft.freq
+      gb.chair = draft.chair || null
+      gb.members = draft.members
+    })
+    setEditing(null)
+  }
+  const delBody = (lid, gid) => {
+    if (!window.confirm(s.mgDelBodyConfirm)) return
+    if (editing === gid) setEditing(null)
+    mutate(d => {
+      const lv = d.gov.levels.find(x => x.id === lid); if (!lv) return
+      lv.bodies = lv.bodies.filter(x => x.id !== gid)
+    })
+  }
+  const addLevel = () => {
+    const t = window.prompt(s.mgLevelTitle); if (!t?.trim()) return
+    mutate(d => {
+      d.gov.levels.push({ id: 'g' + uid(), title: t.trim(),
+        color: PALETTE[(d.gov.levels.length + 3) % PALETTE.length], bodies: [] })
+    })
+  }
+  const saveLevel = (lid, draft) => {
+    mutate(d => {
+      const lv = d.gov.levels.find(x => x.id === lid); if (!lv) return
+      lv.title = draft.title; delete lv.tkey
+      if (draft.pref?.trim()) lv.pref = draft.pref.trim().toUpperCase()
+      if (draft.color) lv.color = draft.color
+    })
+    setLevelEdit(null)
+  }
+  const delLevel = (lid) => {
+    const lv = doc.gov.levels.find(x => x.id === lid)
+    if (lv?.bodies?.length) { window.alert(s.mgDelLevelBlocked); return }
+    setLevelEdit(null)
+    mutate(d => { d.gov.levels = d.gov.levels.filter(x => x.id !== lid) })
+  }
+
+  return (
+    <div className="mg-govs">
+      <p className="proj-meta mg-map-hint">{s.mgGovHint}</p>
+
+      {doc.gov.levels.map(lv => (
+        <section key={lv.id} className="mg-band" style={{ '--pb': lv.color }}>
+          {levelEdit === lv.id && canEdit ? (
+            <BandEditor band={lv} title={levelTitle(lv)} s={s} titleLabel={s.mgLevelTitle}
+              onSave={(draft) => saveLevel(lv.id, draft)}
+              onDelete={() => delLevel(lv.id)}
+              onCancel={() => setLevelEdit(null)} />
+          ) : (
+            <div className="mg-band-head">
+              <h3 {...(canEdit ? { className: 'mg-band-tit-edit', title: s.mgLevelEditHint, onClick: () => setLevelEdit(lv.id) } : {})}>
+                {levelTitle(lv)}
+              </h3>
+              {canEdit && <button className="mg-add" onClick={() => addBody(lv.id)}>{s.mgAddBody}</button>}
+            </div>
+          )}
+
+          {lv.bodies.length === 0 ? <p className="mg-band-empty">{s.mgBodiesEmpty}</p> : (
+            <div className="mg-gov-grid">
+              {lv.bodies.map(gb => (
+                editing === gb.id && canEdit ? (
+                  <BodyEditor key={gb.id} body={gb} people={doc.people} s={s}
+                    onSave={(draft) => saveBody(lv.id, gb.id, draft)}
+                    onCancel={() => setEditing(null)} />
+                ) : (
+                  <div key={gb.id} className="mg-card mg-gov-card">
+                    {canEdit && (
+                      <div className="mg-tools">
+                        <button title={s.mgEdit} onClick={() => setEditing(gb.id)}>✎</button>
+                        <button title={s.mgDelete} onClick={() => delBody(lv.id, gb.id)}>×</button>
+                      </div>
+                    )}
+                    <div className="mg-code">{gb.code}</div>
+                    <div className="mg-name">{gb.name || s.mgNoName}</div>
+                    {!!gb.freq?.trim() && <div className="mg-row-meta">🗓 {gb.freq}</div>}
+                    {gb.chair && <div className="mg-resp">👑 {pById[gb.chair]?.name || s.mgNoName}</div>}
+                    {gb.members.length > 0 && (
+                      <div className="mg-gov-members">
+                        {gb.members.map(id => (
+                          <span key={id} className="mg-chip">{pById[id]?.name || s.mgNoName}</span>
+                        ))}
+                      </div>
+                    )}
+                    {!!gb.purpose?.trim() && <div className="mg-desc">{gb.purpose}</div>}
+                  </div>
+                )
+              ))}
+            </div>
+          )}
+        </section>
+      ))}
+
+      {canEdit && <button className="mg-band-add" onClick={addLevel}>{s.mgAddLevel}</button>}
+    </div>
+  )
+}
+
+function BodyEditor({ body, people, s, onSave, onCancel }) {
+  const [d, setD] = useState(() => ({
+    name: body.name || '', purpose: body.purpose || '', freq: body.freq || '',
+    chair: body.chair || '', members: [...(body.members || [])],
+  }))
+  const set = (k, v) => setD(prev => ({ ...prev, [k]: v }))
+  const toggleMember = (id) => set('members',
+    d.members.includes(id) ? d.members.filter(x => x !== id) : [...d.members, id])
+
+  return (
+    <div className="mg-card mg-card-edit mg-gov-edit">
+      <div className="mg-code" title={s.mgAutoCode}>{body.code}</div>
+      <label>{s.mgName}
+        <input autoFocus value={d.name} onChange={e => set('name', e.target.value)} />
+      </label>
+      <label>{s.mgPurpose}
+        <textarea rows="2" value={d.purpose} onChange={e => set('purpose', e.target.value)} />
+      </label>
+      <label>{s.mgFreq}
+        <input placeholder={s.mgFreqPh} value={d.freq} onChange={e => set('freq', e.target.value)} />
+      </label>
+      <label>{s.mgChair}
+        <select value={d.chair} onChange={e => set('chair', e.target.value)}>
+          <option value="">—</option>
+          {people.map(p => <option key={p.id} value={p.id}>{p.name || s.mgNoName}</option>)}
+        </select>
+      </label>
+      <div className="mg-phase-row mg-gov-people">
+        <span>{s.mgMembers}:</span>
+        {people.length === 0 ? <em className="mg-row-meta">{s.mgPeopleEmpty}</em>
+          : people.map(p => (
+            <label key={p.id} className="mg-phase-check">
+              <input type="checkbox" checked={d.members.includes(p.id)}
+                onChange={() => toggleMember(p.id)} />
+              {' '}{p.name || s.mgNoName}
+            </label>
+          ))}
+      </div>
       <div className="mg-edit-btns">
         <button className="btn btn-primary btn-xs" onClick={() => onSave(d)}>{s.mgSave}</button>
         <button className="btn btn-ghost btn-xs" onClick={onCancel}>{s.mgCancel}</button>
@@ -1029,7 +1352,7 @@ function FunctionEditor({ fn, s, onSave, onCancel }) {
 /* ============================ ORGANIZATION CHART ============================
    Built automatically from Roles · People: each person hangs from whom they
    report, showing their linked function under the name. */
-function OrgChart({ doc, s, onGoRoles }) {
+function OrgChart({ doc, s, account, onGoRoles }) {
   const fnById = useMemo(
     () => Object.fromEntries(doc.functions.map(f => [f.id, f])), [doc.functions])
   const kids = (pid) => doc.people.filter(p => (p.reportsTo || null) === pid)
@@ -1063,6 +1386,9 @@ function OrgChart({ doc, s, onGoRoles }) {
         </div>
       ) : (
         <div className="org-scroll">
+          {account?.logo_url && (
+            <div className="org-logo-row"><img className="org-logo" src={account.logo_url} alt="" /></div>
+          )}
           <ul className="org-tree org-top">
             {roots.map(p => <Node key={p.id} p={p} />)}
           </ul>

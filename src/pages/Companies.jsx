@@ -52,7 +52,7 @@ export default function Companies() {
     if (!supabase) return
     const [a, c, z, sb, g, p] = await Promise.all([
       supabase.from('accounts')
-        .select('id, name, vat, address, country, sector, crm_status, primary_contact')
+        .select('id, name, vat, address, country, sector, crm_status, primary_contact, logo_url')
         .order('name'),
       supabase.from('contacts')
         .select('id, first_name, last_name, email, phone, position, company_id, consent, marketing_consent, erasure_requested')
@@ -290,7 +290,12 @@ export default function Companies() {
             return (
               <div key={r.id} className="cp-item">
                 <div className="cp-head">
-                  <div>
+                  <div className="cp-head-id">
+                    <CompanyLogo company={r} s={s}
+                      canEdit={isSuper || r.id === profile?.company_id}
+                      onChanged={(url) => setRows(prev =>
+                        prev.map(x => x.id === r.id ? { ...x, logo_url: url } : x))} />
+                    <div>
                     <b>{r.name}</b>
                     {(!r.vat || !r.address || !r.primary_contact) &&
                       <span className="badge-partial">{s.coPartial}</span>}
@@ -298,6 +303,7 @@ export default function Companies() {
                     <span className={['active','success'].includes(r.crm_status) ? 'name-active' : ''}>
                       {contactName(r.primary_contact)}
                     </span>
+                    </div>
                   </div>
                   <div className="pm-actions">
                     <span className={`pill pill-${r.crm_status}`}>{s.crmStatus[r.crm_status] || r.crm_status}</span>
@@ -439,5 +445,45 @@ export default function Companies() {
         </section>
       </div>
     </PmShell>
+  )
+}
+
+/* ---------- company logo (stored in the company-logos public bucket) ---------- */
+function CompanyLogo({ company, canEdit, s, onChanged }) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState(false)
+
+  async function onPick(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file || !supabase) return
+    setBusy(true); setErr(false)
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase()
+    const path = `${company.id}/logo-${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('company-logos')
+      .upload(path, file, { upsert: true, contentType: file.type || undefined })
+    if (error) { setBusy(false); setErr(true); return }
+    const { data } = supabase.storage.from('company-logos').getPublicUrl(path)
+    const url = data?.publicUrl || null
+    const { error: e2 } = await supabase.from('accounts')
+      .update({ logo_url: url }).eq('id', company.id)
+    setBusy(false)
+    if (e2) { setErr(true); return }
+    onChanged(url)
+  }
+
+  return (
+    <span className="cp-logo-wrap" title={err ? s.cpLogoErr : s.cpLogo}>
+      {company.logo_url
+        ? <img className="cp-logo" src={company.logo_url} alt="" />
+        : <span className="cp-logo cp-logo-empty">{(company.name || '?').slice(0, 1)}</span>}
+      {canEdit && (
+        <label className={'cp-logo-btn' + (busy ? ' busy' : '')} title={s.cpLogoUpload}>
+          {busy ? '…' : '✎'}
+          <input type="file" accept="image/*" style={{ display: 'none' }}
+            disabled={busy} onChange={onPick} />
+        </label>
+      )}
+    </span>
   )
 }

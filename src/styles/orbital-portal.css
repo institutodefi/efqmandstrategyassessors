@@ -851,3 +851,67 @@
   .mg-act-row, .mg-risk-row { grid-template-columns: 1fr 1fr; }
   .mg-act-headrow { display: none; }
 }
+
+/* ---------- Company logo (Companies zone + Management header) ---------- */
+.cp-head-id { display: flex; align-items: center; gap: 12px; }
+.cp-logo-wrap { position: relative; flex: none; }
+.cp-logo {
+  width: 42px; height: 42px; border-radius: 10px; object-fit: contain;
+  background: #fff; border: 1px solid var(--line-on-dark, rgba(255,255,255,0.14));
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.cp-logo-empty {
+  font-weight: 800; font-size: 1rem; color: var(--muted-on-dark, var(--muted));
+  background: color-mix(in srgb, var(--white) 6%, transparent);
+}
+.cp-logo-btn {
+  position: absolute; bottom: -5px; inset-inline-end: -5px;
+  width: 19px; height: 19px; border-radius: 50%;
+  background: var(--glow, #52d3a2); color: #0d1512; font-size: 0.62rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.cp-logo-btn.busy { opacity: 0.6; cursor: wait; }
+.mg-head-co { display: inline-flex; align-items: center; gap: 8px; }
+.mg-co-logo {
+  width: 28px; height: 28px; border-radius: 7px; object-fit: contain; background: #fff;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.14));
+}
+.org-logo-row { display: flex; justify-content: center; margin-bottom: 6px; }
+.org-logo {
+  width: 54px; height: 54px; border-radius: 12px; object-fit: contain; background: #fff;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.14));
+}
+
+/* ---------- Roles: responsibilities + titles record ---------- */
+.mg-resps {
+  flex-basis: 100%; margin: 2px 0 0; padding-inline-start: 18px;
+  font-size: 0.74rem; color: var(--muted-on-dark, var(--muted));
+  display: flex; flex-direction: column; gap: 2px;
+}
+.mg-titles { display: flex; gap: 5px; flex-wrap: wrap; }
+.mg-title-chip {
+  border: 1px dashed var(--line-on-dark, rgba(255,255,255,0.2)); border-radius: 999px;
+  background: transparent; color: var(--muted-on-dark, var(--muted));
+  padding: 2px 9px; font-size: 0.66rem; font-weight: 700; font-family: inherit;
+  white-space: nowrap;
+}
+.mg-title-chip.has-doc { border-style: solid; border-color: var(--glow); color: var(--glow); cursor: pointer; }
+.mg-title-chip.has-doc:hover { background: color-mix(in srgb, var(--glow) 10%, transparent); }
+.mg-person-edit .mg-titles-box, .mg-row-edit .mg-titles-box { flex-basis: 100%; }
+.mg-attach-btn {
+  border: 1px dashed var(--line-on-dark, rgba(255,255,255,0.2)); border-radius: 7px;
+  color: var(--muted-on-dark, var(--muted)); padding: 5px 9px; font-size: 0.68rem;
+  font-weight: 700; cursor: pointer; white-space: nowrap;
+}
+.mg-attach-btn:hover { border-color: var(--glow); color: var(--glow); }
+
+/* ---------- Governance bodies ---------- */
+.mg-gov-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;
+}
+.mg-gov-card .mg-desc { border-top: 1px dashed var(--line-on-dark, rgba(255,255,255,0.12)); }
+.mg-gov-members { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.mg-gov-members .mg-chip { --glow: var(--pb); color: var(--pb);
+  border-color: color-mix(in srgb, var(--pb) 55%, transparent); }
+.mg-gov-edit { grid-column: 1 / -1; }
+.mg-gov-people { align-items: flex-start; }
