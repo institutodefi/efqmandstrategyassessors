@@ -271,7 +271,10 @@ export default function Portal() {
                       {active.filter(p => p.account_id === cid).map(p => (
                         <button key={p.id} className="dash-proj-chip"
                                 onClick={() => navigate(p.zone_code === 'assessment'
-                                  ? '/portal/assessment' : `/portal/${p.zone_code}`)}>
+                                  ? '/portal/assessment'
+                                  : p.zone_code === 'governance'
+                                    ? `/portal/management/${p.id}`
+                                    : `/portal/${p.zone_code}`)}>
                           <span className={`dash-dot dot-${p.status}`} />
                           {p.code || projTitle(p)}
                           <em>{s.projStatus[p.status] || p.status}</em>
@@ -296,6 +299,12 @@ export default function Portal() {
                   <li key={p.id}>
                     <div className="proj-top">
                       <b>{projTitle(p)}</b>
+                      {p.zone_code === 'governance' && (
+                        <button className="btn btn-ghost btn-xs"
+                                onClick={() => navigate(`/portal/management/${p.id}`)}>
+                          {s.open} →
+                        </button>
+                      )}
                       {canManageMembers ? (
                         <select className="pj-status" value={p.status}
                                 onChange={(e) => setProjectStatus(p.id, e.target.value)}>
@@ -437,6 +446,11 @@ function NewProject({ zones, lang, s, scopes, staff, fixedZone, onCreated }) {
       const { data: a } = await supabase.from('assessments')
         .select('id').eq('project_id', data.id).maybeSingle()
       if (a) { setBusy(false); onCreated(data); navigate(`/portal/assessment/${a.id}`); return }
+    }
+    if (data.zone_code === 'governance') {
+      setBusy(false); onCreated(data)
+      navigate(`/portal/management/${data.id}`)
+      return
     }
     setBusy(false)
     setStatus({ ok: true, msg: `${s.npCreated} · ${data.code}` })

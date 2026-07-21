@@ -24,6 +24,7 @@ const Account = lazy(() => import('./pages/Account.jsx'))
 const Contacts = lazy(() => import('./pages/Contacts.jsx'))
 const Companies = lazy(() => import('./pages/Companies.jsx'))
 const Assessment = lazy(() => import('./pages/Assessment.jsx'))
+const Management = lazy(() => import('./pages/Management.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 function Fallback() {
@@ -134,6 +135,22 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <Assessment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portal/management/:id"
+              element={
+                <ProtectedRoute>
+                  <Management />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portal/management/:id/:tab"
+              element={
+                <ProtectedRoute>
+                  <Management />
                 </ProtectedRoute>
               }
             />

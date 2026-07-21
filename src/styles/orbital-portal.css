@@ -499,3 +499,158 @@
 .acc-company-now { margin: 4px 0; padding: 11px 14px; border-radius: 10px;
   border: 1px dashed rgba(82,211,162,0.45); font-size: 0.9rem; }
 .acc-company-now b { color: var(--glow, #52d3a2); }
+
+/* ---------- Management & Governance · Process map (Camarena structure) ---------- */
+.mg-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.mg-head h1 { margin: 0; }
+.mg-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 18px; }
+.mg-tab {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.14)); border-radius: 999px;
+  background: transparent; color: var(--muted-on-dark, var(--muted));
+  padding: 6px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.mg-tab:hover { color: var(--glow); border-color: var(--glow); }
+.mg-tab.active {
+  color: var(--glow); border-color: var(--glow);
+  background: color-mix(in srgb, var(--glow) 12%, transparent);
+}
+.mg-readonly { margin: -8px 0 14px; }
+.mg-soon p { color: var(--muted-on-dark, var(--muted)); }
+
+.mg-map-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.mg-map-hint { flex: 1; margin: 0; }
+.mg-save { font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.mg-save-saving { color: var(--muted-on-dark, var(--muted)); }
+.mg-save-saved  { color: var(--glow, #52d3a2); }
+.mg-save-error  { color: #e06a8a; }
+
+.mg-band {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.12));
+  border-inline-start: 5px solid var(--pb);
+  border-radius: 14px; padding: 14px 16px 16px; margin-bottom: 14px;
+  background: color-mix(in srgb, var(--white) 3%, transparent);
+}
+.mg-band-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.mg-band-head h3 {
+  margin: 0; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--pb);
+}
+.mg-band-tit-edit { cursor: pointer; }
+.mg-band-tit-edit:hover { text-decoration: underline; }
+.mg-add {
+  margin-inline-start: auto; border: 1px dashed var(--pb); color: var(--pb);
+  background: transparent; border-radius: 8px; padding: 4px 11px;
+  font-size: 0.76rem; cursor: pointer; font-family: inherit;
+}
+.mg-add:hover { background: color-mix(in srgb, var(--pb) 12%, transparent); }
+.mg-subs-head .mg-add { margin-inline-start: auto; }
+
+.mg-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-flow: row dense;
+  gap: 10px; min-height: 64px; border-radius: 10px;
+}
+.mg-grid.drop-active { background: color-mix(in srgb, var(--pb) 8%, transparent); }
+.mg-fase-head {
+  font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--pb); text-align: center; border-bottom: 2px solid var(--pb);
+  padding-bottom: 5px; opacity: 0.85;
+}
+.mg-band-empty { grid-column: 1 / span 3; margin: 4px 0 0; font-size: 0.8rem;
+  color: var(--muted-on-dark, var(--muted)); }
+
+.mg-card {
+  position: relative; border: 1.5px solid var(--pb); border-radius: 11px;
+  padding: 10px 12px 12px; background: color-mix(in srgb, var(--white) 5%, transparent);
+}
+.mg-card[draggable="true"] { cursor: grab; }
+.mg-card.drop-hint { outline: 2px dashed var(--pb); outline-offset: 3px; }
+.mg-code {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em; color: var(--pb);
+}
+.mg-name { font-size: 0.82rem; line-height: 1.35; margin-top: 4px; }
+.mg-resp { font-size: 0.7rem; font-weight: 700; color: var(--pb); margin-top: 5px; }
+.mg-desc {
+  font-size: 0.72rem; line-height: 1.45; color: var(--muted-on-dark, var(--muted));
+  margin-top: 5px; border-top: 1px dashed var(--line-on-dark, rgba(255,255,255,0.12));
+  padding-top: 5px; white-space: pre-wrap;
+}
+.mg-tools { position: absolute; top: 5px; inset-inline-end: 6px; display: flex; gap: 3px; }
+.mg-tools button {
+  border: none; background: transparent; cursor: pointer; font-size: 0.72rem;
+  color: var(--muted-on-dark, var(--muted)); padding: 2px;
+}
+.mg-tools button:hover { color: var(--pb); }
+
+.mg-subs {
+  margin-top: 7px; border-top: 1px dashed var(--line-on-dark, rgba(255,255,255,0.12));
+  padding-top: 7px; display: flex; flex-direction: column; gap: 4px;
+}
+.mg-sub {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  border: 1px solid var(--pb); border-inline-start-width: 4px; border-radius: 8px;
+  padding: 4px 8px; background: color-mix(in srgb, var(--pb) 8%, transparent);
+}
+.mg-sub-code { font-size: 0.6rem; font-weight: 800; color: var(--pb); }
+.mg-sub-name { font-size: 0.72rem; font-weight: 700; }
+.mg-sub-resp { font-size: 0.64rem; color: var(--muted-on-dark, var(--muted)); }
+
+.mg-band-add {
+  display: block; width: 100%; border: 2px dashed var(--line-on-dark, rgba(255,255,255,0.16));
+  background: transparent; border-radius: 14px; padding: 12px; font-size: 0.84rem;
+  font-weight: 700; color: var(--muted-on-dark, var(--muted)); cursor: pointer; font-family: inherit;
+}
+.mg-band-add:hover { border-color: var(--glow); color: var(--glow); }
+
+/* editors */
+.mg-card-edit { cursor: default; display: flex; flex-direction: column; gap: 8px; }
+.mg-card-edit label, .mg-band-editor label {
+  display: flex; flex-direction: column; gap: 3px;
+  font-size: 0.66rem; font-weight: 700; color: var(--muted-on-dark, var(--muted));
+}
+.mg-card-edit input, .mg-card-edit textarea, .mg-card-edit select,
+.mg-band-editor input {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.16)); border-radius: 7px;
+  padding: 6px 8px; font-size: 0.82rem; font-family: inherit; resize: vertical;
+  background: color-mix(in srgb, var(--white) 6%, transparent); color: inherit;
+}
+.mg-card-edit select option { color: var(--ink, #111); }
+.mg-phase-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  font-size: 0.7rem; color: var(--muted-on-dark, var(--muted));
+}
+.mg-phase-check { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; cursor: pointer; }
+.mg-subs-box {
+  border: 1px dashed var(--line-on-dark, rgba(255,255,255,0.16));
+  border-radius: 9px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px;
+}
+.mg-subs-head {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted-on-dark, var(--muted));
+}
+.mg-sub-row { display: flex; align-items: center; gap: 6px; }
+.mg-sub-row input {
+  flex: 1; min-width: 0;
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.16)); border-radius: 7px;
+  padding: 5px 8px; font-size: 0.78rem; font-family: inherit;
+  background: color-mix(in srgb, var(--white) 6%, transparent); color: inherit;
+}
+.mg-sub-autocode { font-size: 0.6rem; font-weight: 800; color: var(--pb); white-space: nowrap; }
+.mg-sub-del {
+  border: none; background: transparent; color: var(--muted-on-dark, var(--muted));
+  cursor: pointer; font-size: 0.9rem; padding: 0 4px;
+}
+.mg-sub-del:hover { color: #e06a8a; }
+.mg-edit-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 2px; }
+.mg-band-del { color: #e06a8a; }
+.mg-band-editor { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;
+  padding: 10px 12px; border: 1px dashed var(--pb); border-radius: 10px; }
+.mg-swatches { display: flex; gap: 6px; }
+.mg-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.mg-swatch.active { border-color: #fff; }
+
+@media (max-width: 640px) {
+  .mg-grid { grid-template-columns: 1fr; }
+  .mg-fase-head { display: none; }
+  .mg-grid .mg-card { grid-column: 1 / span 1 !important; }
+}
