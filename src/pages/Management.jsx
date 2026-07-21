@@ -32,8 +32,9 @@ const useS = () => {
   return [PORTAL_STRINGS[lang] || PORTAL_STRINGS.en, lang]
 }
 
-const MG_TABS = ['map', 'org', 'roles', 'bodies']
+const MG_TABS = ['map', 'org', 'roles', 'raci', 'bodies']
 const PHASES = ['pre', 'ongoing', 'post']
+const RACI = ['R', 'A', 'C', 'I']
 const PALETTE = ['#52d3a2', '#5aa9e6', '#e5a54b', '#b07ae0', '#e06a8a', '#39c2c9', '#8fd14f', '#f0c34e']
 const STANDARDS = ['iso9001', 'iso14001', 'iso27001', 'iso45001']
 const ISO_LABEL = { iso9001: 'ISO 9001', iso14001: 'ISO 14001', iso27001: 'ISO 27001', iso45001: 'ISO 45001' }
@@ -111,8 +112,12 @@ function normalize(doc) {
     f.code = 'FN-' + String(i + 1).padStart(2, '0')
     f.name = f.name || ''
     f.desc = f.desc || ''
-    f.resps = (Array.isArray(f.resps) ? f.resps : [])
-      .map(r => typeof r === 'string' ? r : (r?.text || ''))
+    f.resps = (Array.isArray(f.resps) ? f.resps : []).map(r =>
+      typeof r === 'string'
+        ? { text: r, raci: 'R' }
+        : { text: r?.text || '', raci: RACI.includes(r?.raci) ? r.raci : 'R' })
+    f.reqTitles = (Array.isArray(f.reqTitles) ? f.reqTitles : [])
+      .map(t => typeof t === 'string' ? t : (t?.name || ''))
   })
 
   if (!Array.isArray(d.people)) d.people = []
@@ -365,6 +370,8 @@ function ManagementProject({ projectId, tab, subId }) {
               onOpenSub={(sid) => navigate(`/portal/management/${projectId}/sub/${sid}`)} />
           )
           : activeTab === 'roles' ? <RolesTab doc={doc} mutate={mutate} canEdit={canEdit} s={s} projectId={projectId} />
+          : activeTab === 'raci' ? <RaciTab doc={doc} s={s}
+                                      onGoRoles={() => navigate(`/portal/management/${projectId}/roles`, { replace: true })} />
           : activeTab === 'bodies' ? <GovernanceTab doc={doc} mutate={mutate} canEdit={canEdit} s={s} />
           : activeTab === 'org'   ? <OrgChart doc={doc} s={s} account={account}
                                       onGoRoles={() => navigate(`/portal/management/${projectId}/roles`, { replace: true })} />
@@ -933,7 +940,10 @@ function RolesTab({ doc, mutate, canEdit, s, projectId }) {
     mutate(d => {
       const f = d.functions.find(x => x.id === fid); if (!f) return
       f.name = draft.name.trim(); f.desc = draft.desc
-      f.resps = draft.resps.map(r => r.trim()).filter(Boolean)
+      f.resps = draft.resps
+        .map(r => ({ text: r.text.trim(), raci: RACI.includes(r.raci) ? r.raci : 'R' }))
+        .filter(r => r.text)
+      f.reqTitles = draft.reqTitles.map(t => t.trim()).filter(Boolean)
     })
     setEditing(null)
   }
@@ -1005,6 +1015,23 @@ function RolesTab({ doc, mutate, canEdit, s, projectId }) {
                         ))}
                       </span>
                     )}
+                    {(() => {
+                      const fn = p.functionId ? fnById[p.functionId] : null
+                      const met = (req) => (p.titles || []).some(t => {
+                        const a = (t.name || '').trim().toLowerCase()
+                        const b = req.trim().toLowerCase()
+                        return a && b && (a === b || a.includes(b) || b.includes(a))
+                      })
+                      const missing = (fn?.reqTitles || []).filter(r => !met(r))
+                      return missing.length > 0 && (
+                        <span className="mg-titles">
+                          {missing.map((r, i) => (
+                            <span key={i} className="mg-title-chip missing"
+                              title={s.mgMissingTitle}>⚠ 🎓 {r}</span>
+                          ))}
+                        </span>
+                      )
+                    })()}
                     {canEdit && (
                       <span className="mg-row-tools">
                         <button title={s.mgEdit} onClick={() => setEditing(p.id)}>✎</button>
@@ -1034,8 +1061,21 @@ function RolesTab({ doc, mutate, canEdit, s, projectId }) {
                     {!!f.desc?.trim() && <span className="mg-row-meta mg-row-desc">{f.desc}</span>}
                     {(f.resps || []).length > 0 && (
                       <ul className="mg-resps">
-                        {f.resps.map((r, i) => <li key={i}>{r}</li>)}
+                        {f.resps.map((r, i) => (
+                          <li key={i}>
+                            <b className={'mg-raci-letter mg-raci-' + r.raci}
+                              title={s.mgRaciNames[r.raci]}>{r.raci}</b> {r.text}
+                          </li>
+                        ))}
                       </ul>
+                    )}
+                    {(f.reqTitles || []).length > 0 && (
+                      <span className="mg-titles mg-row-desc">
+                        <span className="mg-row-meta">{s.mgReqTitles}:</span>
+                        {f.reqTitles.map((t, i) => (
+                          <span key={i} className="mg-title-chip">🎓 {t}</span>
+                        ))}
+                      </span>
                     )}
                     {canEdit && (
                       <span className="mg-row-tools">
@@ -1049,6 +1089,12 @@ function RolesTab({ doc, mutate, canEdit, s, projectId }) {
             </div>
           )
       )}
+
+      <datalist id="mgResps">
+        {[...new Set(doc.functions.flatMap(f =>
+          (f.resps || []).map(r => r.text?.trim()).filter(Boolean)))]
+          .map(t => <option key={t} value={t} />)}
+      </datalist>
     </div>
   )
 }
@@ -1143,7 +1189,8 @@ function PersonEditor({ person, functions, people, s, projectId, onSave, onCance
 function FunctionEditor({ fn, s, onSave, onCancel }) {
   const [d, setD] = useState(() => ({
     name: fn.name || '', desc: fn.desc || '',
-    resps: [...(fn.resps || [])],
+    resps: (fn.resps || []).map(r => ({ ...r })),
+    reqTitles: [...(fn.reqTitles || [])],
   }))
   const set = (k, v) => setD(prev => ({ ...prev, [k]: v }))
   return (
@@ -1158,16 +1205,38 @@ function FunctionEditor({ fn, s, onSave, onCancel }) {
 
       <div className="mg-subs-box mg-titles-box">
         <div className="mg-subs-head">{s.mgResps}
+          <span className="mg-row-meta mg-raci-hint-inline">{s.mgRaciInline}</span>
           <button type="button" className="mg-add"
-            onClick={() => set('resps', [...d.resps, ''])}>{s.mgAddResp}</button>
+            onClick={() => set('resps', [...d.resps, { text: '', raci: 'R' }])}>{s.mgAddResp}</button>
         </div>
         {d.resps.map((r, i) => (
           <div key={i} className="mg-sub-row">
             <span className="mg-sub-autocode">{'R' + String(i + 1).padStart(2, '0')}</span>
-            <input placeholder={s.mgRespPh} value={r}
-              onChange={e => set('resps', d.resps.map((x, j) => j === i ? e.target.value : x))} />
+            <input list="mgResps" placeholder={s.mgRespPh} value={r.text}
+              onChange={e => set('resps', d.resps.map((x, j) => j === i ? { ...x, text: e.target.value } : x))} />
+            <select className="mg-raci-select" value={r.raci}
+              title={s.mgRaciNames[r.raci]}
+              onChange={e => set('resps', d.resps.map((x, j) => j === i ? { ...x, raci: e.target.value } : x))}>
+              {RACI.map(l => <option key={l} value={l}>{l} · {s.mgRaciNames[l]}</option>)}
+            </select>
             <button type="button" className="mg-sub-del" title={s.mgDelete}
               onClick={() => set('resps', d.resps.filter((_, j) => j !== i))}>×</button>
+          </div>
+        ))}
+      </div>
+
+      <div className="mg-subs-box mg-titles-box">
+        <div className="mg-subs-head">{s.mgReqTitles}
+          <button type="button" className="mg-add"
+            onClick={() => set('reqTitles', [...d.reqTitles, ''])}>{s.mgAddReqTitle}</button>
+        </div>
+        {d.reqTitles.map((t, i) => (
+          <div key={i} className="mg-sub-row">
+            <span className="mg-sub-autocode">🎓</span>
+            <input placeholder={s.mgReqTitlePh} value={t}
+              onChange={e => set('reqTitles', d.reqTitles.map((x, j) => j === i ? e.target.value : x))} />
+            <button type="button" className="mg-sub-del" title={s.mgDelete}
+              onClick={() => set('reqTitles', d.reqTitles.filter((_, j) => j !== i))}>×</button>
           </div>
         ))}
       </div>
@@ -1175,6 +1244,79 @@ function FunctionEditor({ fn, s, onSave, onCancel }) {
       <div className="mg-edit-btns">
         <button className="btn btn-primary btn-xs" onClick={() => onSave(d)}>{s.mgSave}</button>
         <button className="btn btn-ghost btn-xs" onClick={onCancel}>{s.mgCancel}</button>
+      </div>
+    </div>
+  )
+}
+
+/* ============================== RACI MATRIX ==============================
+   Read-only view built from Roles · Functions: rows are the distinct
+   responsibilities (matched by text, case-insensitive), columns are the
+   functions, and each cell shows the RACI letter(s) that function holds
+   for that responsibility. Reusing the same responsibility text across
+   functions is what fills the matrix. */
+function RaciTab({ doc, s, onGoRoles }) {
+  const fns = doc.functions
+  const rows = []
+  const seen = new Map()
+  fns.forEach(f => (f.resps || []).forEach(r => {
+    const key = (r.text || '').trim().toLowerCase()
+    if (!key) return
+    if (!seen.has(key)) { seen.set(key, rows.length); rows.push({ text: r.text.trim(), cells: {} }) }
+    const row = rows[seen.get(key)]
+    const cur = row.cells[f.id] || []
+    if (!cur.includes(r.raci)) cur.push(r.raci)
+    row.cells[f.id] = cur
+  }))
+
+  return (
+    <div className="mg-raci">
+      <p className="proj-meta mg-map-hint">{s.mgRaciHint}</p>
+
+      {rows.length === 0 || fns.length === 0 ? (
+        <div className="mg-band-empty mg-org-empty">
+          <p>{s.mgRaciEmpty}</p>
+          <button className="btn btn-ghost btn-xs" onClick={onGoRoles}>{s.mgRolesTabs.functions} →</button>
+        </div>
+      ) : (
+        <div className="org-scroll">
+          <table className="mg-raci-table">
+            <thead>
+              <tr>
+                <th className="mg-raci-first">{s.mgResps}</th>
+                {fns.map(f => (
+                  <th key={f.id} title={f.name || s.mgNoName}>
+                    <span className="mg-code">{f.code}</span>
+                    <span className="mg-raci-fn">{f.name || s.mgNoName}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i}>
+                  <td className="mg-raci-first">{row.text}</td>
+                  {fns.map(f => (
+                    <td key={f.id}>
+                      {(row.cells[f.id] || []).map(l => (
+                        <b key={l} className={'mg-raci-letter mg-raci-' + l}
+                          title={s.mgRaciNames[l]}>{l}</b>
+                      ))}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="mg-raci-legend">
+        {RACI.map(l => (
+          <span key={l}>
+            <b className={'mg-raci-letter mg-raci-' + l}>{l}</b> {s.mgRaciNames[l]}
+          </span>
+        ))}
       </div>
     </div>
   )

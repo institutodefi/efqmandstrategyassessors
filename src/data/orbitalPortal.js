@@ -339,7 +339,7 @@ export const PORTAL_STRINGS = {
     /* ---------- Management & Governance ---------- */
     mgZone: 'Management & Governance',
     mgNotFound: 'Project not found or you do not have access to it.',
-    mgTabs: { map: 'Process map', org: 'Organization chart', roles: 'Roles', bodies: 'Governance bodies' },
+    mgTabs: { map: 'Process map', org: 'Organization chart', roles: 'Roles', raci: 'RACI matrix', bodies: 'Governance bodies' },
     mgSoon: 'This tab is next in the build plan.',
     mgReadOnly: 'Read-only view — you can browse the map but not change it.',
     mgMapHint: 'Add processes one by one with “+ process”. Codes are automatic (band prefix + position) and recompute on every reorder. Drag a card to move it, press ✎ to edit and × to delete.',
@@ -438,6 +438,14 @@ export const PORTAL_STRINGS = {
     mgBodiesEmpty: 'No bodies at this level yet — add the first one.',
     mgDelBodyConfirm: 'Delete this governance body?',
     mgDelLevelBlocked: 'Move or delete its bodies first — only empty levels can be deleted.',
+    mgReqTitles: 'Required titles',
+    mgAddReqTitle: '+ required title',
+    mgReqTitlePh: 'Required title (e.g. MBA, Lead Auditor…)',
+    mgMissingTitle: 'Required by the linked function and not found in this person\u2019s titles',
+    mgRaciInline: 'each with its RACI letter',
+    mgRaciNames: { R: 'Responsible', A: 'Accountable', C: 'Consulted', I: 'Informed' },
+    mgRaciHint: 'Built automatically from Roles \u2192 Functions: rows are the responsibilities, columns the functions, and each cell the RACI letter that function holds. Reuse the same responsibility text in several functions (the field suggests existing ones) to fill the matrix.',
+    mgRaciEmpty: 'No responsibilities yet \u2014 add them in Roles \u2192 Functions with their RACI letter and the matrix will draw itself.',
   },
   ar: {
     welcomeA: 'مرحباً بكم في ',
@@ -719,7 +727,7 @@ export const PORTAL_STRINGS = {
     /* ---------- Management & Governance ---------- */
     mgZone: 'الإدارة والحوكمة',
     mgNotFound: 'المشروع غير موجود أو لا تملكون صلاحية الوصول إليه.',
-    mgTabs: { map: 'خريطة العمليات', org: 'الهيكل التنظيمي', roles: 'الأدوار', bodies: 'هيئات الحوكمة' },
+    mgTabs: { map: 'خريطة العمليات', org: 'الهيكل التنظيمي', roles: 'الأدوار', raci: 'مصفوفة RACI', bodies: 'هيئات الحوكمة' },
     mgSoon: 'هذه الصفحة هي التالية في خطة البناء.',
     mgReadOnly: 'عرض للقراءة فقط — يمكنكم تصفح الخريطة دون تعديلها.',
     mgMapHint: 'أضيفوا العمليات واحدة تلو الأخرى عبر «+ عملية». الترميز تلقائي (بادئة النطاق + الموضع) ويُعاد حسابه عند كل إعادة ترتيب. اسحبوا البطاقة لنقلها، واضغطوا ✎ للتعديل و × للحذف.',
@@ -818,6 +826,14 @@ export const PORTAL_STRINGS = {
     mgBodiesEmpty: 'لا توجد هيئات في هذا المستوى بعد — أضيفوا الأولى.',
     mgDelBodyConfirm: 'حذف هذه الهيئة؟',
     mgDelLevelBlocked: 'انقلوا هيئاته أو احذفوها أولاً — لا تُحذف إلا المستويات الفارغة.',
+    mgReqTitles: 'المؤهلات المطلوبة',
+    mgAddReqTitle: '+ مؤهل مطلوب',
+    mgReqTitlePh: 'المؤهل المطلوب (مثل MBA أو مدقق رئيسي…)',
+    mgMissingTitle: 'مطلوب في الوظيفة المرتبطة وغير موجود ضمن مؤهلات هذا الشخص',
+    mgRaciInline: 'لكل منها حرف RACI',
+    mgRaciNames: { R: 'منفّذ', A: 'مسؤول', C: 'مستشار', I: 'مُطّلع' },
+    mgRaciHint: 'تُبنى تلقائياً من الأدوار ← الوظائف: الصفوف هي المسؤوليات والأعمدة هي الوظائف وكل خلية تعرض حرف RACI لتلك الوظيفة. أعيدوا استخدام نص المسؤولية نفسه في عدة وظائف (الحقل يقترح الموجود) لملء المصفوفة.',
+    mgRaciEmpty: 'لا توجد مسؤوليات بعد — أضيفوها في الأدوار ← الوظائف مع حرف RACI وستُرسم المصفوفة تلقائياً.',
   },
 }
 

@@ -915,3 +915,39 @@
   border-color: color-mix(in srgb, var(--pb) 55%, transparent); }
 .mg-gov-edit { grid-column: 1 / -1; }
 .mg-gov-people { align-items: flex-start; }
+
+/* ---------- RACI: letters, matrix, required titles ---------- */
+.mg-raci-letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 5px; font-size: 0.62rem; font-weight: 800;
+  margin-inline-end: 2px; color: #0d1512;
+}
+.mg-raci-R { background: #52d3a2; }
+.mg-raci-A { background: #b07ae0; }
+.mg-raci-C { background: #5aa9e6; }
+.mg-raci-I { background: #e5a54b; }
+.mg-resps li { display: flex; align-items: center; gap: 6px; list-style: none; }
+.mg-resps { padding-inline-start: 2px; }
+.mg-raci-select { max-width: 190px; }
+.mg-raci-hint-inline { text-transform: none; letter-spacing: 0; font-weight: 600; }
+.mg-title-chip.missing {
+  border-style: solid; border-color: #e5a54b; color: #e5a54b; cursor: help;
+}
+
+.mg-raci-table { border-collapse: collapse; min-width: 100%; }
+.mg-raci-table th, .mg-raci-table td {
+  border: 1px solid var(--line-on-dark, rgba(255,255,255,0.12));
+  padding: 7px 10px; text-align: center; font-size: 0.76rem; vertical-align: middle;
+}
+.mg-raci-table th { background: color-mix(in srgb, var(--white) 5%, transparent); }
+.mg-raci-table th .mg-code { --pb: var(--glow, #52d3a2); display: block; }
+.mg-raci-fn { display: block; font-size: 0.66rem; font-weight: 700; max-width: 130px; }
+.mg-raci-first { text-align: start !important; min-width: 220px; font-weight: 600; }
+.mg-raci-table tbody tr:nth-child(odd) td {
+  background: color-mix(in srgb, var(--white) 2%, transparent);
+}
+.mg-raci-legend {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px;
+  font-size: 0.72rem; color: var(--muted-on-dark, var(--muted));
+}
+.mg-raci-legend span { display: inline-flex; align-items: center; gap: 5px; }
