@@ -490,3 +490,8 @@
 .aud-ro .as-aud-lvl { cursor: default; }
 .ct-role-stack { display: grid; gap: 4px; }
 .ct-role-stack select { font-size: 0.76rem; }
+
+.pm-company-static { display: block; text-align: center; font-weight: 700;
+  color: var(--glow, #52d3a2); border-style: dashed; }
+.pm-myroles { display: block; font-size: 0.66rem; color: #7d968e;
+  margin-top: 4px; line-height: 1.5; }

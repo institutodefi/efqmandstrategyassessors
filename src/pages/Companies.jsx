@@ -12,7 +12,7 @@ const EMPTY = { id: null, name: '', vat: '', address: '', country: '', sector: '
 
 /** /portal/companies — company profiles + product funnel + user access. */
 export default function Companies() {
-  const { role } = useAuth()
+  const { role, profile } = useAuth()
   const { lang } = useLang()
   const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
   const isSuper = role === 'superadmin'
@@ -182,12 +182,13 @@ export default function Companies() {
 
   return (
     <PmShell>
-      <h1>{s.cpTitle}</h1>
-      <p className="sub">{s.cpSub}</p>
+      <h1>{isSuper ? s.cpTitle : s.navMyCompany}</h1>
+      <p className="sub">{isSuper ? s.cpSub : s.cpMyCompanySub}</p>
       {status && <p className={`form-status ${status.ok ? 'ok' : 'err'}`} role="status">{status.msg}</p>}
 
       <div className="portal-panels">
-        {/* ---------------- form ---------------- */}
+        {/* ---------------- form (create: superadmin · edit: own company for admin) ---------------- */}
+        {(isSuper || form.id) && (
         <section className="portal-card wide2">
           <h3>{form.id ? s.coEdit : s.cpNew}</h3>
           <form className="np-form" onSubmit={save} noValidate>
@@ -209,6 +210,7 @@ export default function Companies() {
                      aria-invalid={errors.address || undefined} required />
             </div>
             <div className="np-row">
+              {isSuper && (<>
               <div className="field">
                 <label htmlFor="cp-primary">{s.cpPrimary}</label>
                 <select id="cp-primary" value={form.primary_contact} onChange={set('primary_contact')}>
@@ -224,6 +226,7 @@ export default function Companies() {
                   {Object.entries(s.crmStatus).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                 </select>
               </div>
+              </>)}
             </div>
             <div className="pm-actions">
               <button className="btn btn-primary" disabled={busy} type="submit">{s.cpSave}</button>
@@ -237,7 +240,11 @@ export default function Companies() {
 
         {/* ---------------- list ---------------- */}
         <section className="portal-card wide2">
-          {rows.length === 0 ? <p>{s.cpNone}</p> : rows.map(r => {
+          {(() => {
+            const visible = isSuper ? rows
+              : rows.filter(r => r.id === profile?.company_id
+                  || subs.some(x => x.account_id === r.id))
+            return visible.length === 0 ? <p>{s.cpNone}</p> : visible.map(r => {
             const rSubs = subs.filter(x => x.account_id === r.id)
             const rGrants = grants.filter(x => x.account_id === r.id)
             const open = openId === r.id
@@ -255,7 +262,8 @@ export default function Companies() {
                   </div>
                   <div className="pm-actions">
                     <span className={`pill pill-${r.crm_status}`}>{s.crmStatus[r.crm_status] || r.crm_status}</span>
-                    {isSuper && <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>}
+                    {(isSuper || r.id === profile?.company_id) &&
+                      <button className="btn btn-ghost btn-xs" onClick={() => edit(r)}>{s.coEdit}</button>}
                     <button className="btn btn-ghost btn-xs"
                             onClick={() => setOpenId(open ? null : r.id)}>
                       {s.cpProducts} {open ? '▴' : '▾'}
@@ -386,7 +394,8 @@ export default function Companies() {
                 )}
               </div>
             )
-          })}
+          })
+          })()}
         </section>
       </div>
     </PmShell>

@@ -311,6 +311,10 @@ export const PORTAL_STRINGS = {
     designPermit: 'Design',
     designPermits: { admin: 'Design admin', manager: 'Design view', none: '—' },
     asReadOnly: 'read-only',
+    cpMyCompanySub: 'Your company profile — edit its details.',
+    navMyData: 'My data',
+    navMine: 'My space',
+    pmNoCompany: 'No company assigned',
     crmStatus: {
       lead: 'Lead', prospect: 'Prospect', active: 'Active',
       success: 'Success', on_hold: 'On hold', closed: 'Closed',
@@ -573,6 +577,10 @@ export const PORTAL_STRINGS = {
     designPermit: 'التصميم',
     designPermits: { admin: 'مصمم', manager: 'عرض التصميم', none: '—' },
     asReadOnly: 'للقراءة فقط',
+    cpMyCompanySub: 'ملف شركتكم — عدّلوا بياناته.',
+    navMyData: 'بياناتي',
+    navMine: 'مساحتي',
+    pmNoCompany: 'لا توجد شركة مسندة',
     crmStatus: {
       lead: 'عميل محتمل', prospect: 'فرصة', active: 'نشط',
       success: 'نجاح', on_hold: 'معلّق', closed: 'مغلق',

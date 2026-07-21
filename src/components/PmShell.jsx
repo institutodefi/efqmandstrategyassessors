@@ -42,6 +42,12 @@ export default function PmShell({ children }) {
   const isStaff = ['superadmin', 'admin', 'account_manager', 'consultant'].includes(role)
   useEffect(() => {
     if (!supabase || !user || role === 'superadmin') return
+    supabase.from('user_product_access')
+      .select('account_id, zone_code, access_level')
+      .eq('user_id', user.id)
+      .then(({ data }) => setMyGrants(data ?? [])).catch(() => {})
+    supabase.rpc('my_design_permit')
+      .then(({ data }) => setDesignPermit(data || 'none')).catch(() => {})
     supabase.rpc('my_companies').then(({ data }) => {
       const list = data ?? []
       setMyCompanies(list)
@@ -63,6 +69,8 @@ export default function PmShell({ children }) {
   const [zones, setZones] = useState(ZONE_FALLBACK)
   const [myZones, setMyZones] = useState(null)
   const [myCompanies, setMyCompanies] = useState([])
+  const [myGrants, setMyGrants] = useState([])
+  const [designPermit, setDesignPermit] = useState(null)
   const [activeCompany, setActiveCompany] = useState(
     () => localStorage.getItem('o360.company') || '')   // null = unknown yet
 
@@ -114,11 +122,15 @@ export default function PmShell({ children }) {
             </NavLink>
           ))}
 
+          <div className="pm-sec">{s.navMine}</div>
           {role === 'admin' && (
             <NavLink to="/portal/companies" className="pm-link">
               <span className="pm-dot" />{s.navMyCompany}
             </NavLink>
           )}
+          <NavLink to="/portal/account" className="pm-link">
+            <span className="pm-dot" />{s.navMyData}
+          </NavLink>
           {isAdmin && (
             <>
               <p className="pm-sec">{s.administration}</p>
@@ -129,14 +141,20 @@ export default function PmShell({ children }) {
         </nav>
 
         <div className="pm-foot">
-          {myCompanies.length > 1 && (
-            <select className="pm-company" value={activeCompany}
-                    aria-label={s.pmCompanyCtx}
-                    onChange={(e) => pickCompany(e.target.value)}>
-              {myCompanies.map(c => (
-                <option key={c.account_id} value={c.account_id}>{c.name}</option>
-              ))}
-            </select>
+          {role !== 'superadmin' && (
+            myCompanies.length > 1 ? (
+              <select className="pm-company" value={activeCompany}
+                      aria-label={s.pmCompanyCtx}
+                      onChange={(e) => pickCompany(e.target.value)}>
+                {myCompanies.map(c => (
+                  <option key={c.account_id} value={c.account_id}>{c.name}</option>
+                ))}
+              </select>
+            ) : (
+              <span className="pm-company pm-company-static">
+                {myCompanies[0]?.name || s.pmNoCompany}
+              </span>
+            )
           )}
           <div className="pm-langs">
             <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>EN</button>
@@ -145,6 +163,18 @@ export default function PmShell({ children }) {
           <Link to="/portal/account" className="pm-user">
             <b>{name}</b>
             {roleLabel && <span className="role-badge">{roleLabel}</span>}
+            {role !== 'superadmin' && (
+              <span className="pm-myroles">
+                {myGrants
+                  .filter(g => !activeCompany || g.account_id === activeCompany
+                          || myCompanies.length <= 1)
+                  .map(g => s.productRoles?.[g.access_level] || g.access_level)
+                  .filter((v, i, a) => a.indexOf(v) === i)
+                  .join(' · ')}
+                {designPermit && designPermit !== 'none' &&
+                  ` · ${s.designPermits?.[designPermit] || designPermit}`}
+              </span>
+            )}
           </Link>
           <button className="btn btn-ghost portal-signout" onClick={signOut}>{s.signOut}</button>
         </div>
