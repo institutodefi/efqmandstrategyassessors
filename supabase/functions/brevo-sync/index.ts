@@ -85,6 +85,7 @@ Deno.serve(async (req) => {
     }
     const ok = r.ok || r.status === 204;
     const detail = ok ? null : await r.text();
+    if (!ok) console.log("brevo-fail", r.status, detail);   // visible in Logs
     return json({ ok, status: r.status, detail });
   } catch (e) {
     return json({ error: String(e) }, 500);

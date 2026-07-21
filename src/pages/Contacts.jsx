@@ -196,18 +196,22 @@ export default function Contacts() {
     const list = contacts.filter(r => r.marketing_consent && !r.erasure_requested)
     setBusy(true); setStatus(null)
     let okCount = 0
+    let firstErr = null
     for (const r of list) {
       const res = await brevoUpsert({
         email: r.email, first_name: r.first_name, last_name: r.last_name,
         phone: r.phone, company: companyName(r.company_id, r.company_name),
       })
       if (res.ok) okCount++
+      else if (!firstErr) firstErr = res.error || res.detail || `status ${res.status}`
+      console.log('[brevo]', r.email, res)
     }
     if (okCount) await supabase.from('contacts')
       .update({ brevo_synced_at: new Date().toISOString() })
       .in('id', list.map(r => r.id))
     setStatus({ ok: okCount === list.length,
-                msg: `${okCount}/${list.length} · ${okCount === list.length ? s.coSyncOk : s.coSyncErr}` })
+                msg: `${okCount}/${list.length} · ${okCount === list.length ? s.coSyncOk
+                      : `${s.coSyncErr} ${firstErr ?? ''}`}` })
     setBusy(false); load()
   }
 
