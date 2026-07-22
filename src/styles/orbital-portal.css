@@ -951,3 +951,33 @@
   font-size: 0.72rem; color: var(--muted-on-dark, var(--muted));
 }
 .mg-raci-legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+/* ---------- Orbital360 animated brand (sidebar) ---------- */
+.pm-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.o360-orb { position: relative; width: 38px; height: 38px; flex: none; perspective: 120px; }
+.o360-core {
+  position: absolute; inset: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #8ef2cd 0%, #52d3a2 55%, #1d8f68 100%);
+  box-shadow: 0 0 14px rgba(82, 211, 162, 0.45);
+}
+.o360-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(82, 211, 162, 0.65);
+  transform: rotateX(68deg) rotate(0deg);
+  animation: o360orbit 7s linear infinite;
+}
+.o360-sat {
+  position: absolute; top: -2.5px; left: 50%; margin-left: -2.5px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #8ef2cd; box-shadow: 0 0 6px #8ef2cd;
+}
+@keyframes o360orbit {
+  from { transform: rotateX(68deg) rotate(0deg); }
+  to   { transform: rotateX(68deg) rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) { .o360-ring { animation: none; } }
+.o360-word {
+  font-size: 1.06rem; font-weight: 500; letter-spacing: 0.02em;
+  color: var(--white, #fff); white-space: nowrap;
+}
+.o360-word b { font-weight: 800; color: var(--glow, #52d3a2); }

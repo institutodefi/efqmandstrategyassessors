@@ -67,6 +67,14 @@ export function Nav() {
               >
                 العربية
               </button>
+              <button
+                className={`lang-opt ${lang === 'es' ? 'on' : ''}`}
+                onClick={() => setLang('es')}
+                aria-pressed={lang === 'es'}
+                lang="es"
+              >
+                Español
+              </button>
             </div>
           </li>
           <li>

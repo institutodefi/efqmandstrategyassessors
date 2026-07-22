@@ -7,7 +7,7 @@ import { POSTS_AR } from '../data/posts_ar.js'
 import { useSeo } from '../lib/seo.js'
 
 const fmt = (d, lang) =>
-  d.toLocaleDateString(lang === 'ar' ? 'ar-AE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  d.toLocaleDateString(lang === 'ar' ? 'ar-AE' : lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 
 export default function Blog() {
   const { lang, t } = useLang()

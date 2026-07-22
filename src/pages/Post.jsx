@@ -9,7 +9,7 @@ import PostContact from '../components/PostContact.jsx'
 import ShareBar from '../components/ShareBar.jsx'
 
 const fmt = (d, lang) =>
-  d.toLocaleDateString(lang === 'ar' ? 'ar-AE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  d.toLocaleDateString(lang === 'ar' ? 'ar-AE' : lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 
 export default function Post() {
   const { slug } = useParams()

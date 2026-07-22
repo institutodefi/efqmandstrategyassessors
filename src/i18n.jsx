@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { SITE_ES } from './data/i18nES.js'
 
 /* ------------------------------------------------------------------
    Site UI dictionary — English / Arabic (MSA).
@@ -527,10 +528,28 @@ export const STRINGS = {
   },
 }
 
+/* Deep-merge: Spanish over English, so any key not yet translated falls back
+   to English instead of crashing the UI. */
+function deepMerge(base, over) {
+  if (Array.isArray(over)) return over
+  if (over && typeof over === 'object' && base && typeof base === 'object') {
+    const out = { ...base }
+    for (const k of Object.keys(over)) out[k] = deepMerge(base[k], over[k])
+    return out
+  }
+  return over === undefined ? base : over
+}
+STRINGS.es = deepMerge(STRINGS.en, SITE_ES)
+
+const VALID_LANGS = ['en', 'ar', 'es']
+
 const LangContext = createContext({ lang: 'en', t: STRINGS.en, setLang: () => {} })
 
 export function LangProvider({ children }) {
-  const [lang, setLangState] = useState(() => localStorage.getItem('lang') || 'en')
+  const [lang, setLangState] = useState(() => {
+    const saved = localStorage.getItem('lang')
+    return VALID_LANGS.includes(saved) ? saved : 'en'
+  })
 
   useEffect(() => {
     const t = STRINGS[lang]
@@ -539,7 +558,7 @@ export function LangProvider({ children }) {
     localStorage.setItem('lang', lang)
   }, [lang])
 
-  const setLang = (l) => setLangState(l)
+  const setLang = (l) => { if (VALID_LANGS.includes(l)) setLangState(l) }
 
   return (
     <LangContext.Provider value={{ lang, t: STRINGS[lang], setLang }}>

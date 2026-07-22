@@ -1,3 +1,4 @@
+import { ORBITAL_ES } from './orbitalES.js'
 // ------------------------------------------------------------------
 // Orbital360 — the AI project-management tool clients work in.
 // Bilingual content for /orbital360.
@@ -164,3 +165,5 @@ export const ORBITAL = {
     ctaBtn: 'اطلبوا عرضاً تفصيلياً',
   },
 }
+
+ORBITAL.es = ORBITAL_ES

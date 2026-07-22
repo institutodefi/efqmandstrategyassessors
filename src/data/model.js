@@ -1,3 +1,4 @@
+import { MODEL_ES } from './modelES.js'
 // The EFQM Model 2025 - criteria & sub-criteria content (EN/AR)
 export const MODEL = {
  "en": [
@@ -501,3 +502,5 @@ export const MODEL = {
   }
  ]
 }
+
+MODEL.es = MODEL_ES

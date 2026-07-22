@@ -1,3 +1,4 @@
+import { POSTS_ES } from './posts_es.js'
 // 90-day EFQM blog programme — one concept a day, written by Alejandro San Nicolás.
 // Publication is scheduled by date: the blog only shows posts whose date <= today.
 
@@ -1152,7 +1153,8 @@ Thank you for reading. If your organisation is ready to turn any of this from re
    missing.
 ------------------------------------------------------------------- */
 export function localisePost(post, lang, dict) {
-  if (lang !== 'ar' || !dict || !dict[post.slug]) return post
-  const tr = dict[post.slug]
+  const d = lang === 'ar' ? dict : lang === 'es' ? POSTS_ES : null
+  if (!d || !d[post.slug]) return post
+  const tr = d[post.slug]
   return { ...post, title: tr.title, body: tr.body }
 }

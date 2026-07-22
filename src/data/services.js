@@ -6,6 +6,18 @@
 // Kept out of i18n.jsx so the pages can be code-split.
 // ------------------------------------------------------------------
 
+import { SERVICES_ES } from './servicesES.js'
+
+function _merge(base, over) {
+  if (Array.isArray(over)) return over
+  if (over && typeof over === 'object' && base && typeof base === 'object') {
+    const out = { ...base }
+    for (const k of Object.keys(over)) out[k] = _merge(base[k], over[k])
+    return out
+  }
+  return over === undefined ? base : over
+}
+
 export const SERVICES = {
   en: {
     tabs: { assessments: 'Assessments', consultancy: 'Consultancy as a Service', training: 'Workshops & Training' },
@@ -359,3 +371,5 @@ export const SERVICES = {
     },
   },
 }
+
+SERVICES.es = _merge(SERVICES.en, SERVICES_ES)

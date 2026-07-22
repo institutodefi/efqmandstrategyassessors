@@ -1,3 +1,4 @@
+import { LEGAL_ES } from './legalES.js'
 // ------------------------------------------------------------------
 // Legal & compliance content — English + Arabic.
 // Structured as ordered sections so the same renderer handles every
@@ -638,3 +639,5 @@ export const LEGAL = {
 
 // Order in which legal pages appear in the footer / index.
 export const LEGAL_ORDER = ['privacy', 'cookies', 'terms', 'notice', 'accessibility']
+
+LEGAL.es = LEGAL_ES

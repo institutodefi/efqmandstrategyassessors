@@ -61,10 +61,16 @@ function render({ title, desc, url, image, type = 'website', published, jsonld }
   h = setTag(h, /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/,
     `<link rel="canonical" href="${esc(url)}" />`)
 
+  // Facebook legacy + explicit image metadata (helps LinkedIn pick the card fast)
+  h = h.replace('</head>',
+    `  <meta property="og:image:secure_url" content="${esc(img)}" />\n  </head>`)
+
   // article timestamp for blog posts
   if (published) {
     h = h.replace('</head>',
-      `  <meta property="article:published_time" content="${published}" />\n  </head>`)
+      `  <meta property="article:published_time" content="${published}" />\n` +
+      `  <meta property="article:author" content="Alejandro San Nicolás" />\n` +
+      `  <meta property="article:section" content="EFQM & ISO excellence" />\n  </head>`)
   }
   if (jsonld) {
     h = h.replace('</head>',

@@ -98,8 +98,12 @@ export default function PmShell({ children }) {
   return (
     <div className="pm" dir={isAr ? 'rtl' : 'ltr'}>
       <aside className="pm-side">
-        <Link to="/portal" className="pm-logo">
-          <img src="/orbital360/logo-on-dark.svg" alt="Orbital360 PM Tool" />
+        <Link to="/portal" className="pm-logo" aria-label="Orbital360 PM Tool">
+          <span className="o360-orb" aria-hidden="true">
+            <span className="o360-core" />
+            <span className="o360-ring"><span className="o360-sat" /></span>
+          </span>
+          <span className="o360-word">Orbital<b>360</b></span>
         </Link>
 
         <nav className="pm-nav">
@@ -159,6 +163,7 @@ export default function PmShell({ children }) {
           <div className="pm-langs">
             <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>EN</button>
             <button className={lang === 'ar' ? 'on' : ''} onClick={() => setLang('ar')}>ع</button>
+            <button className={lang === 'es' ? 'on' : ''} onClick={() => setLang('es')}>ES</button>
           </div>
           <Link to="/portal/account" className="pm-user">
             <b>{name}</b>

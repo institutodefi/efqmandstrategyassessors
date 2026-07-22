@@ -48,6 +48,18 @@ export const ROLE_LABEL = {
   },
 }
 
+import { PORTAL_ES } from './portalES.js'
+
+function _merge(base, over) {
+  if (Array.isArray(over)) return over
+  if (over && typeof over === 'object' && base && typeof base === 'object') {
+    const out = { ...base }
+    for (const k of Object.keys(over)) out[k] = _merge(base[k], over[k])
+    return out
+  }
+  return over === undefined ? base : over
+}
+
 export const PORTAL_STRINGS = {
   en: {
     welcomeA: 'Welcome to ',
@@ -868,3 +880,5 @@ export function validateCompany(c) {
   if (!c.address?.trim()) errs.address = true
   return errs
 }
+
+PORTAL_STRINGS.es = _merge(PORTAL_STRINGS.en, PORTAL_ES)
