@@ -981,3 +981,18 @@
   color: var(--white, #fff); white-space: nowrap;
 }
 .o360-word b { font-weight: 800; color: var(--glow, #52d3a2); }
+
+
+/* ---------- Orbital360 · PMTool animated logo ---------- */
+.pm-logo-tile {
+  display: block; background: #fff; border-radius: 16px; padding: 4px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28); overflow: hidden;
+}
+.pm-logo-tile img { display: block; width: 100%; height: auto; border-radius: 12px; }
+
+.portal-hero-logo {
+  display: block; width: 180px; max-width: 60%; margin: 0 auto 14px;
+  background: #fff; border-radius: 20px; padding: 6px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+}
+@media (max-width: 700px) { .portal-hero-logo { width: 140px; } }

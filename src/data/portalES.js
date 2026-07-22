@@ -187,7 +187,7 @@ export const PORTAL_ES = {
   asBack: 'Volver a evaluaciones',
   asDownload: 'Descargar',
   asDesign: 'Diseñar modelo',
-  asDesignSub: 'Edita el modelo de evaluación — preguntas, contextos, evidencias y niveles (EN/AR).',
+  asDesignSub: 'Edita el modelo de evaluación — preguntas, contextos, evidencias y niveles (EN/AR/ES).',
   asLevelsHint: 'Un nivel por línea — exactamente 6 líneas (0, 20, 40, 60, 80, 100).',
   asSave: 'Guardar pregunta',
   asLevels6: 'Cada idioma necesita exactamente 6 niveles.',

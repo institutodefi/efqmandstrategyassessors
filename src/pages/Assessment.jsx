@@ -24,7 +24,14 @@ const useS = () => {
   const { lang } = useLang()
   return [PORTAL_STRINGS[lang] || PORTAL_STRINGS.en, lang]
 }
-const L = (row, base, lang) => (lang === 'ar' ? row[`${base}_ar`] : row[`${base}_en`]) || row[`${base}_en`]
+const L = (row, base, lang) =>
+  (lang === 'ar' ? row[`${base}_ar`]
+   : lang === 'es' ? row[`${base}_es`]
+   : row[`${base}_en`]) || row[`${base}_en`]
+const LV = (q, lang) =>
+  (lang === 'ar' ? q.levels_ar
+   : lang === 'es' && Array.isArray(q.levels_es) && q.levels_es.length === 6 ? q.levels_es
+   : q.levels_en) || q.levels_en
 
 function useAssessCaps(assessmentId) {
   const { user, role } = useAuth()
@@ -574,7 +581,7 @@ function Questionnaire({ assessmentId }) {
 
             <p className="as-level-lbl">{s.asLevel}</p>
             <div className="as-levels" role="radiogroup">
-              {(lang === 'ar' ? q.levels_ar : q.levels_en).map((lvl, i) => (
+              {LV(q, lang).map((lvl, i) => (
                 <label key={i} className={`as-level ${an.level === i ? 'on' : ''}`}>
                   <input type="radio" name={`lvl-${q.code}`} checked={an.level === i}
                          disabled={!canEdit}
@@ -635,7 +642,7 @@ function Questionnaire({ assessmentId }) {
                   {[0, 1, 2, 3, 4, 5].map(i => (
                     <label key={i}
                            className={`as-aud-lvl ${audScores[q.code]?.level === i ? 'on' : ''}`}
-                           title={(lang === 'ar' ? q.levels_ar : q.levels_en)[i]}>
+                           title={LV(q, lang)[i]}>
                       <input type="radio" name={`aud-${q.code}`}
                              checked={audScores[q.code]?.level === i}
                              disabled={!isAssessor}
@@ -720,7 +727,8 @@ function ModelDesigner() {
     const f = e.target
     const lvEn = f.levels_en.value.split('\n').map(x => x.trim()).filter(Boolean)
     const lvAr = f.levels_ar.value.split('\n').map(x => x.trim()).filter(Boolean)
-    if (lvEn.length !== 6 || lvAr.length !== 6) {
+    const lvEs = f.levels_es.value.split('\n').map(x => x.trim()).filter(Boolean)
+    if (lvEn.length !== 6 || lvAr.length !== 6 || (lvEs.length !== 0 && lvEs.length !== 6)) {
       setState({ ok: false, msg: s.asLevels6 }); return
     }
     const { error } = await supabase.from('assessment_questions').update({
@@ -734,6 +742,11 @@ function ModelDesigner() {
       evidence_ar: f.evidence_ar.value.trim() || null,
       levels_en: lvEn,
       levels_ar: lvAr,
+      question_es: f.question_es.value.trim() || null,
+      block_es: f.block_es.value.trim() || null,
+      context_es: f.context_es.value.trim() || null,
+      evidence_es: f.evidence_es.value.trim() || null,
+      levels_es: lvEs.length === 6 ? lvEs : null,
     }).eq('code', q.code)
     setState(error ? { ok: false, msg: error.message } : { ok: true, msg: s.accSaved })
     if (!error) load()
@@ -782,6 +795,10 @@ function ModelDesigner() {
                   <label>السؤال (AR)</label>
                   <input name="question_ar" defaultValue={q.question_ar} dir="rtl" required />
                 </div>
+                <div className="field">
+                  <label>Pregunta (ES)</label>
+                  <input name="question_es" defaultValue={q.question_es || ''} />
+                </div>
               </div>
               <div className="np-row">
                 <div className="field">
@@ -791,6 +808,10 @@ function ModelDesigner() {
                 <div className="field">
                   <label>المحور (AR)</label>
                   <input name="block_ar" defaultValue={q.block_ar} dir="rtl" required />
+                </div>
+                <div className="field">
+                  <label>Bloque (ES)</label>
+                  <input name="block_es" defaultValue={q.block_es || ''} />
                 </div>
               </div>
               <div className="np-row">
@@ -802,6 +823,10 @@ function ModelDesigner() {
                   <label>السياق (AR)</label>
                   <textarea name="context_ar" rows="2" defaultValue={q.context_ar || ''} dir="rtl" />
                 </div>
+                <div className="field">
+                  <label>Contexto (ES)</label>
+                  <textarea name="context_es" rows="2" defaultValue={q.context_es || ''} />
+                </div>
               </div>
               <div className="np-row">
                 <div className="field">
@@ -811,6 +836,10 @@ function ModelDesigner() {
                 <div className="field">
                   <label>الأدلة المقترحة (AR)</label>
                   <textarea name="evidence_ar" rows="4" defaultValue={q.evidence_ar || ''} dir="rtl" />
+                </div>
+                <div className="field">
+                  <label>Evidencias sugeridas (ES)</label>
+                  <textarea name="evidence_es" rows="4" defaultValue={q.evidence_es || ''} />
                 </div>
               </div>
               <p className="proj-meta">{s.asLevelsHint}</p>
@@ -822,6 +851,10 @@ function ModelDesigner() {
                 <div className="field">
                   <label>المستويات (AR)</label>
                   <textarea name="levels_ar" rows="7" defaultValue={(q.levels_ar || []).join('\n')} dir="rtl" required />
+                </div>
+                <div className="field">
+                  <label>Niveles (ES)</label>
+                  <textarea name="levels_es" rows="7" defaultValue={(q.levels_es || []).join('\n')} />
                 </div>
               </div>
               {canEditDesign && <button className="btn btn-primary btn-xs" type="submit">{s.asSave}</button>}

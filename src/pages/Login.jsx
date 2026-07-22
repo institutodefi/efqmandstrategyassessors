@@ -36,12 +36,19 @@ function PasswordField({ id, name, label, autoComplete, showLbl, hideLbl }) {
 function friendlyAuthError(err, a) {
   console.error('[auth]', err)   // real error for debugging (F12 → Console)
   let m = (typeof err?.message === 'string' && err.message) ? err.message.trim() : ''
-  if (/^[{\[]?[}\]]?$/.test(m) || m === 'Failed to fetch') m = ''   // '{}', '[]', empty bodies
+  if (/^[{\[]?[}\]]?$/.test(m)) m = ''   // '{}', '[]', empty bodies
+  if (m === 'Failed to fetch') return a.errNet || a.failed
   const low = m.toLowerCase()
   if (low.includes('invalid login credentials')) return a.errCreds
   if (low.includes('already registered') || low.includes('already exists')) return a.errExists
   if (low.includes('rate limit') || err?.status === 429) return a.errRate
   if (low.includes('at least 8') || low.includes('password should be')) return a.passShort
+  if (low.includes('signups not allowed') || low.includes('signup') && low.includes('disabled'))
+    return a.errSignupsOff || m
+  if (low.includes('sending') && (low.includes('email') || low.includes('mail')))
+    return a.errEmailSend || m
+  if (err?.name === 'AuthRetryableFetchError' || err instanceof TypeError)
+    return a.errNet || a.failed
   return m || a.failed || 'Something went wrong (server error). Check Supabase Auth logs or try again.'
 }
 
@@ -95,6 +102,7 @@ export default function Login() {
           email,
           password,
           options: {
+            emailRedirectTo: `${window.location.origin}/login`,
             data: {
               first_name: firstName,
               last_name: lastName,
