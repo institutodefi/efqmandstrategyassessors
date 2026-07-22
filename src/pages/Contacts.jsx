@@ -197,18 +197,19 @@ export default function Contacts() {
     setBusy(true); setStatus(null)
     let okCount = 0
     let firstErr = null
+    const okIds = []
     for (const r of list) {
       const res = await brevoUpsert({
         email: r.email, first_name: r.first_name, last_name: r.last_name,
         phone: r.phone, company: companyName(r.company_id, r.company_name),
       })
-      if (res.ok) okCount++
+      if (res.ok) { okCount++; okIds.push(r.id) }
       else if (!firstErr) firstErr = res.error || res.detail || `status ${res.status}`
       console.log('[brevo]', r.email, res)
     }
-    if (okCount) await supabase.from('contacts')
+    if (okIds.length) await supabase.from('contacts')
       .update({ brevo_synced_at: new Date().toISOString() })
-      .in('id', list.map(r => r.id))
+      .in('id', okIds)
     setStatus({ ok: okCount === list.length,
                 msg: `${okCount}/${list.length} · ${okCount === list.length ? s.coSyncOk
                       : `${s.coSyncErr} ${firstErr ?? ''}`}` })
@@ -312,6 +313,9 @@ export default function Contacts() {
 
       <div className="pm-actions">
         <button className="btn btn-ghost btn-xs" disabled={busy} onClick={importInquiries}>{s.coImport}</button>
+        <span className="chip" title="marketing consent sin sincronizar">
+          Brevo ⏳ {contacts.filter(r => r.marketing_consent && !r.erasure_requested && !r.brevo_synced_at).length}
+        </span>
         <button className="btn btn-primary btn-xs" disabled={busy} onClick={syncAll}
                 title={s.coExportNote}>{s.coSyncAll}</button>
         <button className="btn btn-ghost btn-xs" disabled={busy} onClick={exportBrevo}
