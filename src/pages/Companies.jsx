@@ -43,6 +43,7 @@ export default function Companies() {
   const [grants, setGrants] = useState([])
   const [profiles, setProfiles] = useState([])
   const [form, setForm] = useState(EMPTY)
+  const [view, setView] = useState('list')   // 'list' | 'form'
   const [errors, setErrors] = useState({})
   const [openId, setOpenId] = useState(null)
   const [status, setStatus] = useState(null)
@@ -111,10 +112,11 @@ export default function Companies() {
     }
     setBusy(false)
     if (error) setStatus({ ok: false, msg: error.message })
-    else { setStatus({ ok: true, msg: s.cpSaved }); setForm(EMPTY); setErrors({}); load() }
+    else { setStatus({ ok: true, msg: s.cpSaved }); setForm(EMPTY); setErrors({}); setView('list'); load() }
   }
 
   function edit(r) {
+    setView('form'); window.scrollTo({ top: 0 })
     setForm({ ...EMPTY, ...r, vat: r.vat || '', address: r.address || '',
               country: r.country || '', sector: r.sector || '',
               primary_contact: r.primary_contact || '' })
@@ -205,9 +207,26 @@ export default function Companies() {
       <p className="sub">{isSuper ? s.cpSub : s.cpMyCompanySub}</p>
       {status && <p className={`form-status ${status.ok ? 'ok' : 'err'}`} role="status">{status.msg}</p>}
 
+      {view === 'list' && isSuper && (
+        <div className="pm-actions">
+          <button className="btn btn-primary btn-xs"
+                  onClick={() => { setForm(EMPTY); setErrors({}); setView('form'); window.scrollTo({ top: 0 }) }}>
+            + {s.cpNew}
+          </button>
+        </div>
+      )}
+      {view === 'form' && (
+        <div className="pm-actions">
+          <button className="btn btn-ghost btn-xs"
+                  onClick={() => { setForm(EMPTY); setErrors({}); setView('list') }}>
+            ← {s.companies}
+          </button>
+        </div>
+      )}
+
       <div className="portal-panels">
-        {/* ---------------- form (create: superadmin · edit: own company for admin) ---------------- */}
-        {(isSuper || form.id) && (
+        {/* ---------------- form (dedicated view) ---------------- */}
+        {view === 'form' && (isSuper || form.id) && (
         <section className="portal-card wide2">
           <h3>{form.id ? s.coEdit : s.cpNew}</h3>
           <form className="np-form" onSubmit={save} noValidate>
@@ -251,7 +270,7 @@ export default function Companies() {
               <button className="btn btn-primary" disabled={busy} type="submit">{s.cpSave}</button>
               {form.id && (
                 <button type="button" className="btn btn-ghost"
-                        onClick={() => { setForm(EMPTY); setErrors({}) }}>✕</button>
+                        onClick={() => { setForm(EMPTY); setErrors({}); setView('list') }}>✕</button>
               )}
             </div>
           </form>
@@ -278,6 +297,7 @@ export default function Companies() {
         )}
 
         {/* ---------------- list ---------------- */}
+        {view === 'list' && (
         <section className="portal-card wide2">
           {(() => {
             const visible = isSuper ? rows
@@ -443,6 +463,7 @@ export default function Companies() {
           })
           })()}
         </section>
+        )}
       </div>
     </PmShell>
   )

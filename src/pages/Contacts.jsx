@@ -30,6 +30,7 @@ export default function Contacts() {
   const [zones, setZones] = useState(ZONE_FALLBACK)
   const [grants, setGrants] = useState([])
   const [form, setForm] = useState(EMPTY)
+  const [view, setView] = useState('list')   // 'list' | 'form'
   const [editUserId, setEditUserId] = useState(null)   // editing a user-only row
   const [newCompany, setNewCompany] = useState('')
   const [errors, setErrors] = useState({})
@@ -143,11 +144,12 @@ export default function Contacts() {
     if (error) setStatus({ ok: false, msg: error.message })
     else {
       setStatus({ ok: true, msg: s.coSaved })
-      setForm(EMPTY); setErrors({}); setNewCompany(''); setEditUserId(null); load()
+      setForm(EMPTY); setErrors({}); setNewCompany(''); setEditUserId(null); setView('list'); load()
     }
   }
 
   function edit(r) {
+    setView('form'); window.scrollTo({ top: 0 })
     if (r.kind === 'user-only') {
       setEditUserId(r.profile.id)
       setForm({ ...EMPTY, first_name: r.first_name, last_name: r.last_name,
@@ -311,7 +313,12 @@ export default function Contacts() {
       <h1>{s.coTitle}</h1>
       <p className="sub">{s.coMergedSub}</p>
 
+      {view === 'list' && (
       <div className="pm-actions">
+        <button className="btn btn-primary btn-xs"
+                onClick={() => { setForm(EMPTY); setErrors({}); setEditUserId(null); setView('form'); window.scrollTo({ top: 0 }) }}>
+          + {s.coNew}
+        </button>
         <button className="btn btn-ghost btn-xs" disabled={busy} onClick={importInquiries}>{s.coImport}</button>
         <span className="chip" title="marketing consent sin sincronizar">
           Brevo ⏳ {contacts.filter(r => r.marketing_consent && !r.erasure_requested && !r.brevo_synced_at).length}
@@ -321,10 +328,20 @@ export default function Contacts() {
         <button className="btn btn-ghost btn-xs" disabled={busy} onClick={exportBrevo}
                 title={s.coExportNote}>{s.coExportBrevo}</button>
       </div>
+      )}
+      {view === 'form' && (
+        <div className="pm-actions">
+          <button className="btn btn-ghost btn-xs"
+                  onClick={() => { setForm(EMPTY); setErrors({}); setEditUserId(null); setView('list') }}>
+            ← {s.tabContacts}
+          </button>
+        </div>
+      )}
       {status && <p className={`form-status ${status.ok ? 'ok' : 'err'}`} role="status">{status.msg}</p>}
 
       <div className="portal-panels">
-        {/* ---------------- form ---------------- */}
+        {/* ---------------- form (dedicated view) ---------------- */}
+        {view === 'form' && (
         <section className="portal-card wide2">
           <h3>{(form.id || editUserId) ? s.coEdit : s.coNew}
               {editUserId && <span className="proj-meta"> · {s.peUserOnly}</span>}</h3>
@@ -396,13 +413,15 @@ export default function Contacts() {
               <button className="btn btn-primary" disabled={busy} type="submit">{s.coSave}</button>
               {(form.id || editUserId) && (
                 <button type="button" className="btn btn-ghost"
-                        onClick={() => { setForm(EMPTY); setErrors({}); setEditUserId(null) }}>✕</button>
+                        onClick={() => { setForm(EMPTY); setErrors({}); setEditUserId(null); setView('list') }}>✕</button>
               )}
             </div>
           </form>
         </section>
+        )}
 
         {/* ---------------- ONE merged list ---------------- */}
+        {view === 'list' && (
         <section className="portal-card wide2">
           {rows.length === 0 && pending.length === 0 ? <p>{s.coNone}</p> : (
             <table className="portal-table">
@@ -560,6 +579,7 @@ export default function Contacts() {
             </table>
           )}
         </section>
+        )}
       </div>
     </PmShell>
   )
