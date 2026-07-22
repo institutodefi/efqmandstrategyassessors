@@ -188,11 +188,7 @@ export default function Portal() {
               <h1>{zoneText(zones.find(z => z.code === zoneParam) || {}, lang).name || zoneParam}</h1>
             </>
           ) : (
-            <>
-              <img className="portal-hero-logo" src="/orbital360/pmtool-animated.gif"
-                   alt="Orbital360 · PMTool" loading="lazy" />
-              <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
-            </>
+            <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
           )}
         </header>
 

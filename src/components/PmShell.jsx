@@ -98,8 +98,8 @@ export default function PmShell({ children }) {
   return (
     <div className="pm" dir={isAr ? 'rtl' : 'ltr'}>
       <aside className="pm-side">
-        <Link to="/portal" className="pm-logo pm-logo-tile" aria-label="Orbital360 PM Tool">
-          <img src="/orbital360/pmtool-animated-sm.gif" alt="Orbital360 · PMTool" loading="lazy" />
+        <Link to="/portal" className="pm-logo" aria-label="Orbital360 PM Tool">
+          <img className="pm-logo-img" src="/orbital360/pmtool-logo.png" alt="Orbital360 · PMTool" />
         </Link>
 
         <nav className="pm-nav">
