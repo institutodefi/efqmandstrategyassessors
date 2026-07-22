@@ -172,6 +172,7 @@ export const PORTAL_ES = {
   asLevel: 'Selecciona el nivel que mejor describe a tu organización',
   asJustification: 'Justificación',
   asJustPh: 'Explica por qué aplica este nivel, con referencia a tus evidencias…',
+  asOrgScore: 'Puntuación de la organización',
   asEvidence: 'Documentos de evidencia',
   asEvidenceExplain: 'Adjunta los documentos que respaldan el nivel elegido — planes, actas, informes, certificados, cuadros de mando… Puedes añadir a cada archivo una nota breve explicando qué demuestra.',
   asDocNotePh: '¿Qué demuestra este documento? (opcional)',

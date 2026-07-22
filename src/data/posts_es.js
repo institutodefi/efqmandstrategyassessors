@@ -860,4 +860,294 @@ Intención de lealtad: ¿nos elegirías otra vez, mañana, con alternativas disp
 La práctica sofisticada empareja la percepción declarada con el comportamiento observado y estudia las brechas. Los clientes que puntúan alto y compran menos te están diciendo algo que la cortesía oculta; los que puntúan bajo y se quedan son rehenes de los costes de cambio — rentables hoy, desaparecidos en cuanto aparezca una alternativa.
 
 Mide lo que predice, no lo que halaga. Mañana: hacer que los sistemas de escucha funcionen de verdad.` },
+
+'listening-systems-that-work': {
+  title: 'Sistemas de escucha que funcionan de verdad',
+  body: `Cerramos el subcriterio 6.1 con la maquinaria: un sistema de escucha del cliente digno de ese nombre.
+
+Primero el patrón de fracaso, porque es casi universal. Las encuestas se acumulan; las tasas de respuesta decaen a medida que los clientes aprenden que nada cambia; los informes circulan trimestralmente entre gente que no puede actuar sobre ellos; y la primera línea — que oye la verdad a diario — no tiene canal hacia el análisis. Medición sin consecuencia, ritualizada.
+
+La versión que funciona tiene otra anatomía. Múltiples puestos de escucha triangulados: encuestas, sí, pero también minería de quejas, analítica de reseñas, debriefs del equipo comercial, temas de las llamadas de soporte, entrevistas de baja. Velocidad ajustada a la decisión: el feedback transaccional llega al equipo responsable en días, mientras los estudios de relación corren anualmente. Bucles cerrados a dos niveles — el interior, donde un cliente concreto insatisfecho recibe respuesta y resolución; y el exterior, donde los temas recurrentes impulsan arreglos estructurales en los criterios 3 y 4. Y rendición de cuentas: métricas de percepción con dueños ejecutivos con nombre, tratadas con la misma seriedad que las financieras.
+
+Un hábito más distingue a los mejores: cuentan a los clientes qué cambió gracias a su feedback. Nos dijiste, hicimos. Cuesta una newsletter y duplica la tasa de respuesta de la siguiente encuesta — porque los clientes, como los empleados, solo siguen hablando donde hablar funciona.` },
+
+'people-perception-results': {
+  title: 'Percepción de las personas: el veredicto de dentro',
+  body: `El subcriterio 6.2 mide las percepciones de puertas adentro: lo que tu gente piensa y siente sobre trabajar para ti.
+
+El instrumental de medición ha madurado mucho más allá de la encuesta anual de clima. Índices de compromiso seguidos durante años; encuestas pulso que captan el movimiento entre lecturas anuales; medición en el onboarding y la salida, los momentos de máxima honestidad; eNPS — ¿recomendarías este empleador?; y correlatos de comportamiento como la rotación lamentada, la movilidad interna y las tendencias de ausencia, porque el comportamiento audita al sentimiento.
+
+Las disciplinas analíticas reflejan las del 6.1. La tendencia gana a la foto. La segmentación es donde vive la verdad: compromiso global estable mientras tus ingenieros críticos se deslizan no es estabilidad, es una cuenta atrás con buena media. Las comparaciones — benchmarks externos y dispersiones internas — dan significado a los números; la brecha entre tu mejor y tu peor unidad suele superar la brecha contigo y tus competidores, lo que convenientemente significa que la solución ya está en nómina.
+
+Y el fracaso perenne: medir sin respuesta visible. Cada encuesta que no produce cambio observable enseña a la plantilla que la honestidad es decorativa. Primero decaen las tasas de respuesta, después la franqueza, después la confianza. Si no estás preparado para actuar y rendir cuentas, lo más amable es no preguntar.
+
+Mañana: lo que tu gente te está diciendo de verdad entre líneas.` },
+
+'what-your-people-really-think': {
+  title: 'Leer lo que la gente piensa de verdad',
+  body: `Subcriterio 6.2, día dos — interpretar los datos de personas como un evaluador y no como un anotador.
+
+Algunas lecturas desde la experiencia. Satisfacción alta con puntuaciones bajas de desafío suele señalar comodidad, no salud: una plantilla contenta porque se le exige poco — agradable, y lentamente letal. Compromiso alto mientras cae la intención de quedarse describe a gente que ama el trabajo y se va igualmente: mira las carreras y la competitividad salarial. Las puntuaciones que suben tras un despido colectivo suelen ser cautela de supervivientes, no reparación cultural; las que bajan durante una transformación honesta pueden ser buena señal — la anestesia retirándose.
+
+Los verbatims pesan más que los números. Los comentarios de texto libre, tematizados sistemáticamente, te dicen por qué la aguja está donde está; mil comentarios contienen el plan de mejora que las puntuaciones solo insinúan. La analítica de texto moderna lo hace barato; leer una muestra personalmente mantiene honesto al liderazgo.
+
+Vigila también el silencio. ¿Qué unidades dejaron de responder? La participación en caída es en sí misma un resultado de percepción — a menudo el primero. Y triangula con los datos involuntarios: rotación lamentada, tasas de referidos (¿tu gente trae a sus amigos?), sentimiento en Glassdoor. La gente vota con los pies y las recomendaciones mucho antes de que las encuestas lo capten.
+
+El propósito de todo esto: no una puntuación que defender, sino una conversación sobre la que actuar.` },
+
+'business-governing-perceptions': {
+  title: 'Qué piensan de ti los propietarios y los reguladores',
+  body: `El subcriterio 6.3 mide las percepciones de los grupos de interés de negocio y de gobierno — propietarios, inversores, consejos, reguladores y autoridades cuya confianza licencia todo lo demás.
+
+Es el área de percepción que las organizaciones miden con menos sistemática, en gran parte porque estos grupos son pocos, poderosos y cercanos: la dirección asume que sabe lo que piensan. Las evaluaciones demuestran regularmente lo contrario — la retirada sorpresa de apoyo en la época de presupuestos, el regulador cuya paciencia era más fina de lo asumido.
+
+La medición sistemática es perfectamente posible. Percepción de inversores y propietarios: feedback estructurado tras las presentaciones de resultados, encuestas periódicas a través de asesores de relación con inversores, sentimiento de los analistas seguido en el tiempo y, en propiedad privada o familiar, conversaciones anuales honestas con rastro escrito. Percepción del consejo: revisiones de eficacia del consejo que incluyan cómo valoran los consejeros la transparencia, la capacidad de respuesta y el dominio estratégico de la dirección. Percepción del regulador: el patrón de hallazgos y su tono a lo largo de los ciclos, la velocidad de las aprobaciones, si te consultan sobre normas emergentes — que te pidan opinión es un resultado de percepción de primer orden.
+
+La tendencia a vigilar es la trayectoria de la confianza: ¿recibes cada año más beneficio de la duda, o menos? Esa sola línea predice lo cara que será tu próxima crisis, solicitud o ampliación de capital.
+
+Mañana: la confianza como activo gestionable.` },
+
+'owner-and-regulator-confidence': {
+  title: 'La confianza: el activo que no está en ningún balance',
+  body: `Subcriterio 6.3, día dos. Las percepciones de propietarios y reguladores se consolidan en un único activo estratégico: la confianza — y se comporta como el capital.
+
+Se acumula despacio, a base de promesas cumplidas: guías de resultados alcanzadas, riesgos comunicados antes de madurar, compromisos entregados a tiempo durante años. Paga interés compuesto: las organizaciones de alta confianza obtienen aprobaciones más rápidas, capital más barato, paciencia estratégica más larga, la primera llamada ante una oportunidad y trato más suave en los días ambiguos. Y se liquida al instante al descubrirse un ocultamiento — no de problemas, que los grupos sofisticados esperan, sino de problemas escondidos, que jamás perdonan.
+
+Gestionarla es, por tanto, una disciplina de calibración de la transparencia. El patrón excelente: cero sorpresas, nunca, en ninguna dirección — las malas noticias pronto y con plan adjunto, las buenas sin exagerar para que las declaraciones futuras sigan siendo creíbles. Consistencia entre audiencias, porque propietarios y reguladores acaban comparando notas, y la discrepancia se lee como manipulación. Y memoria institucional honrada: estos grupos recuerdan los compromisos al pie de la letra durante años; lleva registro de cada promesa hecha y su estado, porque ellos lo llevan.
+
+Un evaluador lee la confianza en evidencias pequeñas: el tono de las actas del consejo, el patrón de la correspondencia regulatoria, si el historial de guías muestra prima o descuento de credibilidad.
+
+Mañana — el jurado más amplio: la sociedad.` },
+
+'society-perception-results': {
+  title: 'Percepción de la sociedad: la reputación medida',
+  body: `El subcriterio 6.4 mide cómo percibe la sociedad a tu organización — comunidades, medios, opinión pública, las voces cívicas alrededor de tus operaciones.
+
+Esta era la más blanda de las áreas de percepción, gestionada a base de recuentos de recortes de prensa. Se ha endurecido considerablemente. Índices y rankings de reputación, seguidos durante años. Analítica de sentimiento en medios, ponderada por alcance y separando el elogio ganado de la presencia pagada. Escucha social, que es la sociedad percibiéndote en tiempo real. Encuestas a nivel de comunidad alrededor de las sedes significativas: ¿los vecinos te consideran un activo, una molestia o una amenaza? Percepción como empleador entre gente que aún no trabaja para ti — porque la visión que la sociedad tiene de ti llega a tu embudo de selección. Y las valoraciones de ONG y entidades cívicas, cuyo escrutinio suele ser el sistema de alerta más temprano disponible.
+
+Las claves analíticas se repiten: tendencia sobre foto, segmentación sobre media — la reputación nacional puede estar serena mientras el pueblo junto a tu mayor planta hierve — y comparación con los pares, porque la reputación es relativa.
+
+Un vínculo importa por encima de todo: el desfase entre percepción y realidad. La visión de la sociedad va años por detrás de tu conducta real en ambas direcciones. Las empresas que mejoran se sienten juzgadas injustamente; las que declinan se sienten queridas sin peligro. Ambos sentimientos son el desfase hablando. Mide la brecha, y gestiona la conducta, no la cobertura.` },
+
+'reputation-is-a-result': {
+  title: 'La reputación es un resultado, no un mensaje',
+  body: `Subcriterio 6.4, día dos — con la frase que más repito en los consejos: la reputación es un resultado, no un mensaje.
+
+El instinto, cuando la percepción de la sociedad decepciona, es comunicar más fuerte: campañas, patrocinios, un vídeo de propósito renovado. A veces la percepción realmente va por detrás de una realidad mejorada, y contar la historia es lo correcto. Pero cuando la percepción refleja con precisión la conducta, la comunicación no puede trabajar más que el comportamiento — las audiencias han aprendido a verificar, y el mensaje que corre más que la realidad agrava ahora el daño con el cargo de hipocresía. Pregúntale a cualquier víctima del greenwashing.
+
+La lógica RADAR aplica limpiamente. La reputación es el resultado. Los enfoques que la impulsan viven en el criterio 3.4 — implicación comunitaria real, contribución material — y en cómo tratas de verdad a clientes, empleados y proveedores, porque la sociedad los oye a todos. Arregla los enfoques; el resultado llega, con desfase.
+
+La gestión práctica, entonces: identifica las brechas de percepción que importan estratégicamente — donde la mala posición amenaza la licencia, el talento o la demanda. Diagnostica con honestidad si cada brecha es desfase de comunicación o déficit de conducta. Cierra los déficits de conducta con operaciones, no con adjetivos. Y comunica las mejoras con evidencia adjunta: datos publicados, verificación de terceros, compromisos con nombre y fecha.
+
+La sociedad perdona la imperfección con facilidad. Nunca perdona que la gestionen.
+
+Mañana: la percepción de quienes te suministran.` },
+
+'partner-supplier-perceptions': {
+  title: 'Qué piensan de ti tus partners y proveedores',
+  body: `El subcriterio 6.5 completa el conjunto de percepciones con una pregunta que pocas organizaciones se atreven a hacer: ¿qué piensan tus partners y proveedores de trabajar contigo?
+
+El silencio es revelador. Las empresas encuestan a los clientes sin descanso y a los proveedores casi nunca — porque en el papel de cliente, el poder está en nosotros, y el poder rara vez pide feedback a quienes tiene debajo. Y sin embargo la percepción del proveedor mueve resultados duros: quién recibe la capacidad escasa en los desabastecimientos, los problemas de quién reciben a los mejores ingenieros, quién oye hablar primero de las innovaciones, y quién recibe el aviso temprano honesto en lugar del mínimo contractual.
+
+La medición es sencilla en cuanto existe la voluntad. Encuestas estructuradas de satisfacción del proveedor, idealmente ejecutadas por un tercero para que las respuestas sobrevivan al miedo a las consecuencias. Sesiones de voz del proveedor integradas en las revisiones de relación. E indicadores de comportamiento que auditan el sentimiento: retención de proveedores en categorías estratégicas, disposición a co-invertir, respuesta cuando necesitas el favor imposible, si tus mejores proveedores te traen sus ideas nuevas o se las llevan a otro.
+
+Los temas que los proveedores puntúan, si preguntas: fiabilidad de pago, honestidad en las previsiones, negociación respetuosa, reparto justo del dolor y la ganancia, y la calidad de tu gente como interlocutores. Todos están totalmente bajo tu control.
+
+Mañana cerramos el criterio 6: convertirse en cliente preferente.` },
+
+'are-you-a-good-partner': {
+  title: 'Cliente preferente: ¿eres un buen partner?',
+  body: `Cerramos el criterio 6 con el premio estratégico detrás del subcriterio 6.5: ser cliente preferente — el comprador al que los proveedores prefieren, protegen y para el que innovan.
+
+El concepto invierte la mirada habitual. Las funciones de compras clasifican a los proveedores meticulosamente; la pregunta madura es cómo te clasifican los proveedores a ti. En mercados restringidos — y todo mercado acaba restringido — la asignación sigue a la preferencia. La pandemia y sus desabastecimientos lo enseñaron brutalmente: la capacidad, los chips, los contenedores y el talento fluyeron primero hacia los clientes que los proveedores querían salvar.
+
+La preferencia se gana por percepción, y sus motores son poco glamurosos. Pagar a tiempo, todas las veces — la señal de respeto más sonora que existe. Prever con honestidad y absorber tus propios errores de planificación en lugar de exportarlos aguas abajo. Negociar duro pero justo, dejando la relación intacta después del contrato. Compartir las ganancias cuando el trabajo conjunto las crea. Y ser operativamente fácil: especificaciones claras, decisiones ágiles, interlocutores competentes.
+
+La evidencia que busca un evaluador: datos de percepción del proveedor en tendencia ascendente; proveedores estratégicos renovando con ganas; co-inversión ocurriendo; y la anécdota que nunca miente — cuando todo escaseaba, a nosotros nos sirvieron.
+
+Criterio 6 completo: cinco veredictos de grupos de interés, medidos y respondidos. Mañana, el criterio final — donde la percepción se encuentra con el desempeño: los resultados que tu estrategia prometió.` },
+
+'criterion-7-strategic-operational-performance': {
+  title: 'Criterio 7: Desempeño Estratégico y Operativo',
+  body: `Llegamos al criterio final — el 7, Desempeño Estratégico y Operativo: los números duros que muestran si todo lo que describieron los seis criterios anteriores funciona de verdad.
+
+Donde el criterio 6 medía lo que los grupos de interés sienten, el 7 mide lo que la organización logra: resultados vinculados al propósito, la visión y la estrategia, junto al desempeño operativo de la actividad diaria. El Modelo 2025 lo organiza en cuatro categorías, que trataremos como 7.1 a 7.4: cumplimiento de las expectativas de los grupos de interés y su contribución; resultados económicos y financieros; resultados de desempeño y transformación; y resultados de sostenibilidad.
+
+¿Qué hace que unos resultados sean excelentes y no meramente reportados? RADAR es explícito. Relevancia: los indicadores cubren lo que la estrategia prometió — si la estrategia proclama liderazgo en innovación y no existe ningún resultado de innovación, el cuadro de mando es ficción. Tendencia: al menos tres años, moviéndose en la dirección correcta. Metas: fijadas con ambición, cumplidas con regularidad. Comparaciones: contra competidores y mejores de la clase, porque el contexto crea el significado. Y causalidad: la capacidad de rastrear los resultados hasta los enfoques — hicimos esto, y por eso aquello mejoró.
+
+Una sección de resultados que es un folleto de buenas noticias suspende al instante. La excelencia muestra también los fallos, con explicaciones y respuestas.
+
+Quedan once días. Mañana: entregar lo que los grupos de interés esperaban.` },
+
+'fulfilment-of-stakeholder-expectations': {
+  title: 'Entregar lo que los grupos de interés esperaban',
+  body: `El subcriterio 7.1 mide el cumplimiento de las expectativas de los grupos de interés — la contrapartida de desempeño de todo lo que el criterio 6 capturó como sentimiento.
+
+La lógica del emparejamiento es elegante. Para cada grupo, la percepción pregunta: ¿estáis contentos con nosotros? El desempeño pregunta: ¿os entregamos lo que os prometimos? Ambas importan porque cada una puede engañar por separado. Los clientes pueden sentirse satisfechos mientras los niveles de servicio se erosionan en silencio — el sentimiento retrasado respecto al hecho. O la entrega puede ser contractualmente perfecta mientras la relación se agria — el hecho perdiéndose lo que nunca se escribió.
+
+Así que el 7.1 recoge la evidencia de entrega por grupo. Para clientes: niveles de servicio cumplidos, tasas de entrega completa y a tiempo, desempeño de calidad, resultados de garantías y resolución de quejas. Para las personas: compromisos honrados en desarrollo, seguridad, carga de trabajo, reconocimiento — medidos, no afirmados. Para propietarios y reguladores: guías alcanzadas, obligaciones cumplidas, presentaciones limpias y puntuales. Para la sociedad: compromisos comunitarios entregados, metas de impacto alcanzadas. Para los partners: plazos de pago honrados, precisión de las previsiones, equidad contractual en la práctica.
+
+El contraste del evaluador es directo: pon los datos de entrega del 7.1 de cada grupo junto a su línea de percepción del criterio 6. Donde ambos son fuertes, excelencia. Donde la entrega es fuerte y la percepción débil, un problema de comunicación o de relación. Donde la percepción es fuerte y la entrega débil — disfrútalo brevemente; la realidad viene de camino.` },
+
+'delivering-what-you-promised': {
+  title: 'La disciplina de las promesas cumplidas',
+  body: `Subcriterio 7.1, día dos — porque bajo sus tablas de indicadores hay una única disciplina organizativa: llevar cuenta de lo que prometiste, para poder saber si lo cumpliste.
+
+Suena trivial. Es raro. Las promesas se acumulan por toda la organización en formas dispersas — contratos, niveles de servicio, declaraciones de estrategia, compromisos de town hall, obligaciones regulatorias, promesas a la comunidad — y la mayoría de las empresas no tiene una vista consolidada de ellas. La entrega se gestiona entonces por anécdota: las promesas ruidosas se vigilan, las silenciosas se olvidan hasta que detonan.
+
+Las organizaciones excelentes mantienen lo que yo llamo un libro mayor de promesas. Cada compromiso material con cada grupo de interés, capturado con su métrica, su dueño y su fecha. Revisado en la misma mesa que los resultados financieros, porque un compromiso incumplido es un pasivo lo diga o no la contabilidad. Y cerrado formalmente: entregado, renegociado abiertamente, o fallado con explicación — nunca simplemente desvanecido.
+
+El efecto cultural supera al administrativo. Las organizaciones que rastrean sus promesas hacen menos promesas casuales; los compromisos se vuelven deliberados, calibrados a la capacidad, y por tanto cumplibles. El efecto de marca del día 50 — la promesa que puedes cumplir — resulta descansar sobre esta contabilidad sin glamur.
+
+Mañana: la contribución que fluye en sentido contrario — lo que los grupos de interés te entregan a ti.` },
+
+'value-by-and-to-stakeholders': {
+  title: 'Contribución: lo que los grupos de interés te entregan',
+  body: `El subcriterio 7.1 lleva una frase fácil de pasar por alto: las expectativas y su contribución. El valor que fluye hacia los grupos de interés — y el valor que fluye de vuelta desde ellos. Hoy, el flujo de retorno.
+
+La lógica del Modelo desde el criterio 3 es que los grupos de interés son contribuyentes, no audiencias. El 7.1 pide la evidencia: resultados de contribución medibles por grupo.
+
+De los clientes: retención y valor de vida, cuota de cartera, ingresos originados por recomendación, participación en co-creación, disposición a ser referencia — clientes que contribuyen crecimiento más allá de sus facturas. De las personas: tendencias de productividad, ideas de mejora implantadas, movilidad interna cubriendo roles críticos, contrataciones por referido — la plantilla contribuyendo más allá de la asistencia. De los partners y proveedores: innovaciones aportadas, mejoras de coste compartidas, flexibilidad entregada en las crisis, co-inversión comprometida. De los propietarios: capital a coste competitivo, paciencia estratégica en las caídas, expertise y redes activadas. De la sociedad: talento atraído por la reputación, apoyo comunitario en las expansiones, la licencia para operar renovándose sin fricción.
+
+Medida así, la calidad de la relación se convierte en un resultado de desempeño — el retorno de todo el esfuerzo de implicación del criterio 3. Números de contribución débiles pese a puntuaciones de satisfacción fuertes revelan relaciones agradables pero superficiales: buena voluntad que nunca se ha convertido.
+
+Mañana, los números que todo consejo lee primero: los resultados económicos y financieros.` },
+
+'economic-and-financial-results': {
+  title: 'Resultados económicos y financieros',
+  body: `Subcriterio 7.2: resultados económicos y financieros — el cuadro de mando más antiguo del negocio, leído aquí con la disciplina particular del Modelo.
+
+Los indicadores en sí son familiares: ingresos y su crecimiento, márgenes a cada nivel, flujo de caja y su conversión, retornos sobre el capital, eficiencia en costes, cumplimiento presupuestario — más la contribución económica en sentido amplio: impuestos pagados, salarios distribuidos, compra local. EFQM no añade métricas exóticas. Lo que añade son estándares de evidencia.
+
+Tendencia: de tres a cinco años de series consistentes, porque cualquier año aislado es meteorología. Metas: resultados contra la ambición declarada — el beneficio que batió un presupuesto rebajado no impresiona a ningún evaluador. Comparaciones: desempeño contra los competidores relevantes y los benchmarks del sector, porque un crecimiento del seis por ciento es triunfo o crisis dependiendo enteramente del doce del mercado. Segmentación: resultados por negocio, geografía y gama, porque los números consolidados son donde se esconden los problemas. Y causalidad sobre todo: el vínculo demostrado de los enfoques al dinero — la iniciativa de precios visible en el margen, el programa de retención visible en la durabilidad de los ingresos.
+
+El patrón que suspende evaluaciones: financieros presentados como logros sin explicación, como si los resultados se cosecharan en lugar de causarse. El patrón que sobresale: las finanzas como autobiografía numérica de la estrategia — cada movimiento material trazable a una decisión.
+
+Mañana: la salud financiera como financiadora del futuro.` },
+
+'financial-health-funds-the-future': {
+  title: 'Salud financiera que financia el futuro',
+  body: `Subcriterio 7.2, día dos — leer los resultados financieros no como veredicto del pasado sino como capacidad de financiación del futuro.
+
+La frase del Modelo, crear valor sostenible, reformula en silencio qué significan unas buenas finanzas. El beneficio no es el propósito; es la condición habilitante — el mecanismo por el que una organización se gana el derecho a seguir invirtiendo en su propósito. Leídas así, las preguntas financieras cambian de textura.
+
+No solo cuánto ganamos, sino cuán durable es la ganancia: calidad de los ingresos — recurrentes frente a transaccionales, concentrados frente a diversificados, contratados frente a esperados. No solo qué retorna el capital, sino qué está construyendo el capital: el reparto de la inversión entre mantener el hoy y crear el mañana, la financiación de la transformación realmente desplegada frente a la anunciada. No solo si la caja es positiva, sino si la resiliencia es adecuada: colchones, vencimientos de la financiación, resultados de los tests de estrés — los amortiguadores financieros que permiten a la estrategia sobrevivir a la turbulencia sin amputaciones.
+
+Y un ratio que siempre calculo en las evaluaciones, informalmente: distribución frente a construcción. Las organizaciones que reparten consistentemente más de lo que construyen están consumiendo su futuro con educación. Las que construyen sin devolver nunca están poniendo a prueba la paciencia de sus propietarios. La excelencia sostiene ambos flujos a lo largo de los ciclos — que es lo que significa sostenible cuando modifica a valor.
+
+Mañana: medir el desempeño y la transformación — 7.3.` },
+
+'performance-and-transformation-results': {
+  title: 'Resultados de desempeño y transformación',
+  body: `El subcriterio 7.3 pide resultados sobre la doble agenda del criterio 5: el desempeño del motor de hoy y el avance de la transformación de mañana — medidos, con tendencia, comparados.
+
+La mitad de desempeño es el cuadro operativo clásico. Tendencias de productividad y eficiencia. Calidad: tasas de defecto, rendimiento a la primera, retrabajos. Entrega: tiempos de ciclo, puntualidad, niveles de servicio alcanzados. Capacidad de proceso donde importa competitivamente. Desempeño de los activos: disponibilidad, utilización, eficacia del mantenimiento — la administración responsable del 5.5 expresada numéricamente.
+
+La mitad de transformación es donde la mayoría de los cuadros de mando enmudece, y donde los evaluadores se inclinan hacia delante. Si la estrategia promete transformación digital, ¿dónde están los resultados de digitalización — tasas de adopción, procesos migrados, valor liberado? Si se proclama innovación, enseña la salida del pipeline: cuota de ingresos de las ofertas recientes, experimentos ejecutados, tiempo de la idea al lanzamiento. Si se financió construcción de capacidades, evidencia las capacidades: certificaciones logradas, cobertura de habilidades críticas, preparación de la sucesión en los roles críticos para la transformación.
+
+El estándar es incómodo a propósito: la transformación medida con el mismo rigor que las operaciones — líneas base, metas, tendencias — no narrada en informes de avance. El cambio anunciado que nunca llega a la sección de resultados fue, por definición del Modelo, teatro.
+
+Mañana: mantener honesta la transformación con hitos que no se pueden actuar.` },
+
+'measuring-transformation-progress': {
+  title: 'Medir la transformación sin engañarse',
+  body: `Subcriterio 7.3, día dos — el oficio de unas métricas de transformación que resistan el autoengaño.
+
+El reporte de transformación fracasa de formas predecibles. Actividad vestida de resultado: talleres celebrados, licencias desplegadas, gente formada — inputs consumidos, valor sin probar. Hitos definidos tan vagamente que no pueden fallarse: fase uno completa, el impulso crece. Y narración de supervivientes: las iniciativas que murieron en silencio excluidas del relato, de modo que el programa siempre triunfa sobre una definición menguante.
+
+La arquitectura honesta tiene tres capas. Indicadores adelantados de adopción: no sistemas instalados sino sistemas usados — tasas de uso activo, abandono del proceso antiguo, comportamiento observado. Indicadores retrasados de valor: los resultados de negocio que la transformación prometió al financiarse — coste liberado, ingreso creado, velocidad ganada — medidos contra la línea base original, no contra una revisada. Y evidencia de capacidad: ¿puede la organización hacer ahora lo que antes no podía, demostrado en trabajo real y no en certificados?
+
+Dos disciplinas protegen la verdad. Preservar la línea base: el business case que justificó la inversión sigue siendo la vara de medir, por incómoda que resulte. Y la revisión mata con el mismo respeto con que celebra: las transformaciones que se detienen limpiamente, con las lecciones cosechadas, son salud de cartera — no fracaso que esconder.
+
+Mañana llegamos a la última categoría de resultados: la sostenibilidad — 7.4.` },
+
+'sustainability-results': {
+  title: 'Resultados de sostenibilidad: la cuarta línea de fondo',
+  body: `El subcriterio 7.4 cierra la arquitectura de resultados con la categoría que el Modelo 2025 elevó deliberadamente: los resultados de sostenibilidad — desempeño ambiental, social y de gobernanza, evidenciado como todo lo demás.
+
+El libro ambiental: emisiones en todos los alcances, con tendencia y metas referenciadas a la ciencia. Consumo energético y su cuota renovable. Agua, residuos y tasas de circularidad. Cada vez más, biodiversidad y huella de la cadena de valor, porque las fronteras de la responsabilidad se han ensanchado estén o no de acuerdo las organizaciones.
+
+El libro social: los resultados de seguridad primero — la métrica de sostenibilidad más antigua y aún la de mayor carga moral. Resultados de diversidad e inclusión, equidad retributiva medida y no afirmada, inversión en formación realizada, impacto comunitario cuantificado, diligencia en derechos humanos en las cadenas de suministro.
+
+El libro de gobernanza: resultados de ética y cumplimiento, valoraciones de transparencia, eficacia del consejo, indicadores de fiscalidad responsable.
+
+El listón de la evidencia ha subido hasta igualar al reporte financiero: líneas base, tendencias plurianuales, aseguramiento externo, divulgación según marcos reconocidos. Los reguladores de la mayoría de las jurisdicciones han convertido esto de virtud voluntaria en reporte obligatorio — las directivas de la UE son solo el ejemplo más ruidoso.
+
+El test de vinculación del evaluador: ¿conectan estos resultados con el análisis de materialidad del día 12 y con la estrategia del criterio 1? Las métricas de sostenibilidad desancladas de la estrategia son decoración en una tipografía más verde.
+
+Mañana: evidencia frente a intención.` },
+
+'esg-evidence-not-intention': {
+  title: 'ESG: evidencia, no intención',
+  body: `Subcriterio 7.4, día final — sobre la disciplina que separa los resultados de sostenibilidad de la comunicación de sostenibilidad: la evidencia sobre la intención.
+
+El paisaje corporativo está abarrotado de compromisos: neutralidad para fechas lejanas, ambiciones de diversidad, visiones de circularidad. Los compromisos son enfoques — material de los criterios 1 y 5. El 7.4 hace la pregunta del evaluador: ¿qué se ha movido de verdad?
+
+Los estándares de evidencia imitan a las finanzas deliberadamente. Líneas base que no se mueven, porque el progreso contra una línea base reajustable es una cinta de correr. Hitos intermedios, porque una meta a 2050 sin punto de control en 2027 es una promesa hecha por gente que se habrá jubilado. Números absolutos junto a ratios de intensidad, porque la eficiencia por unidad puede mejorar mientras el impacto total crece. Honestidad de alcances: proclamar victorias de alcance 1 mientras el alcance 3 domina la huella es teatro aritmético. Y aseguramiento de terceros, porque los deberes autocorregidos tienen un sesgo conocido.
+
+La regulación está imponiendo lo que la excelencia anticipó: los regímenes de divulgación exigen ya datos de sostenibilidad de calidad auditable, y el greenwashing se ha convertido en categoría litigiosa, no solo reputacional. Las organizaciones que construyeron medición real pronto son conformes por herencia; el resto está descubriendo que las intenciones no cuadran.
+
+La posición del Modelo se enuncia simple: la sostenibilidad es ya una categoría de resultados. Y se puntúa como tal.
+
+Mañana: día 90 — el final del viaje, y qué hacer con él.` },
+
+'from-90-days-to-your-first-assessment': {
+  title: 'Día 90: de leer a evaluar',
+  body: `Hace noventa días prometí recorrer contigo el Modelo EFQM 2025 entero, un concepto al día. Hoy el recorrido está completo: tres bloques, siete criterios, todos los subcriterios — del propósito y el Círculo Dorado a la evidencia de sostenibilidad.
+
+Si un hilo atraviesa los noventa artículos, es este: la excelencia es coherencia. Un propósito que sobrevive al contacto con las actas del consejo. Una estrategia construida con señales reales del ecosistema y escucha honesta de los grupos de interés. Una cultura pilotada por lo que los líderes recompensan visiblemente. Grupos de interés implicados como contribuyentes. Valor diseñado, prometido y entregado como un solo acto continuo. Desempeño y transformación gestionados como obligaciones gemelas. Y resultados — de percepción y de desempeño — que se rastrean hasta sus causas, fallos incluidos.
+
+¿Y ahora qué? Sugiero el paso serio más pequeño: una autoevaluación. Toma los siete criterios y pregunta, por criterio, las preguntas RADAR del día 3 — qué enfoque, desplegado dónde, refinado cómo, evidenciado por qué resultados. Un taller de dirección sincero puede producir tu primer mapa de madurez en un día. Desde ahí, el camino del día 4 en adelante es tuyo: diagnóstico, mejora y, cuando la evidencia esté lista, evaluación externa y reconocimiento internacional.
+
+La excelencia es una disciplina, no un destino. Gracias por los noventa días. Si tu organización está lista para su espejo — ya sabes dónde encontrarnos.` },
+
+'iso-9001-quality-that-shows': {
+  title: 'ISO 9001: calidad que se ve en los resultados',
+  body: `Durante noventa días recorrimos el Modelo EFQM. Los próximos treinta quiero cambiar de registro: casos reales, un estándar cada vez, empezando por el que casi toda organización conoce primero — ISO 9001.
+
+ISO 9001 es el estándar de gestión más implantado del mundo, y también el más malinterpretado. Tratado como un certificado que colgar en recepción, se convierte en una carpeta de procedimientos que nadie lee. Tratado como un sistema, se convierte en la columna vertebral que hace la calidad repetible cuando el fundador está de vacaciones y el mejor operario se ha ido.
+
+La diferencia se ve en una sola pregunta que hago en cada auditoría: enséñame una decisión que este sistema haya cambiado. En las organizaciones excelentes la respuesta es inmediata — un proveedor descartado, un proceso rediseñado, un patrón de quejas arreglado en la raíz. En las de papel, silencio.
+
+Durante los próximos cuatro días, cuatro casos breves de trabajos reales — anonimizados — que muestran a ISO 9001 haciendo trabajo de verdad: una auditoría, una no conformidad, un proveedor, una revisión por la dirección.` },
+
+'iso-9001-case-the-audit-that-found-nothing': {
+  title: 'Caso: la auditoría interna que no encontró nada',
+  body: `Un fabricante me enseñó con orgullo un año de auditorías internas. Todas cerradas limpias: cero hallazgos. Esperaban un elogio. Les di una preocupación.
+
+Una auditoría interna que nunca encuentra nada no es evidencia de un sistema perfecto — es evidencia de una auditoría que no está mirando. Normalmente una de tres cosas es cierta: los auditores comprueban que los documentos existen en vez de si el trabajo coincide con ellos; auditan sus propias áreas y califican con cortesía; o la muestra se elige para aprobar.
+
+Cambiamos tres cosas. Rotamos a los auditores para que nadie auditara su propio proceso. La checklist pasó de "¿existe un procedimiento?" a "sigue un pedido real de punta a punta y enséñame dónde la realidad diverge". Y los hallazgos se reencuadraron como combustible, no como culpa.
+
+El ciclo siguiente produjo catorce hallazgos. El responsable de calidad se alarmó; yo me tranquilicé. En dos trimestres, la entrega puntual subió cuatro puntos. La auditoría por fin había empezado a hacer su trabajo: encontrar la verdad antes que el cliente.` },
+
+'iso-9001-case-nonconformity-as-a-gift': {
+  title: 'Caso: una no conformidad como regalo',
+  body: `Una empresa logística trataba las no conformidades como acusaciones. Levanta una y el problema eras tú. Así que la gente dejó de levantarlas — y los mismos errores se repetían en silencio, invisibles, caros.
+
+ISO 9001 pide el control de las no conformidades y, crucialmente, una acción correctiva que llegue a la causa raíz. Pero un sistema solo ve lo que la gente está dispuesta a reportar, y el reporte muere donde vive la culpa.
+
+Separamos a la persona del proceso, en voz alta y repetidamente. Una no conformidad pasó a ser un regalo: información gratuita sobre una debilidad antes de que llegara a un cliente. Hicimos fácil levantarla — treinta segundos, sin maratón de formularios — y convertimos el análisis de causa raíz en un ritual compartido y sin culpas, con una disciplina simple de los cinco porqués.
+
+Los reportes subieron con fuerza, lo que parece un deterioro y es lo contrario. Como ahora cada uno terminaba en un estándar que cambiaba, la recurrencia cayó. Un año después, las no conformidades repetidas habían bajado más de la mitad. La lección generaliza: no puedes arreglar lo que tu cultura no deja nombrar.` },
+
+'iso-9001-case-supplier-that-became-a-partner': {
+  title: 'Caso: el proveedor que se convirtió en partner',
+  body: `Un productor alimentario gestionaba a los proveedores con una sola palanca: el precio, renegociado cada año, con más dureza contra el más débil. Los incidentes de calidad seguían llegando exactamente de esos proveedores exprimidos. Nadie conectaba las dos cosas.
+
+El control de los procesos suministrados externamente de ISO 9001 suele reducirse a un certificado en el expediente y un scorecard anual. La gestión real de proveedores hace otra pregunta: qué relaciones son estratégicas, y las estamos gestionando como partners o como commodities.
+
+Segmentamos la base de proveedores. Las compras transaccionales siguieron ajustadas. Pero con un puñado de proveedores cuya calidad moldeaba el producto final, pasamos de exprimir a desarrollar — especificaciones compartidas entendidas igual a ambos lados, resolución conjunta de problemas, implicación temprana cuando cambiaba una receta.
+
+Un proveedor problemático, tratado como partner y no como culpable, redujo su tasa de defectos a un tercio en seis meses y nos trajo una idea de envasado que redujo el desperdicio. El estándar no exigía la alianza. Pero leído en serio, apuntaba directo a ella — y los resultados siguieron.` },
+
+'iso-9001-case-management-review-that-mattered': {
+  title: 'Caso: una revisión por la dirección que cambió el plan',
+  body: `En la mayoría de las organizaciones, la revisión por la dirección de ISO 9001 es teatro: una presentación leída en voz alta una vez al año, actas archivadas, nada decidido. La asistencia es a regañadientes. El requisito más potente del estándar, desperdiciado.
+
+Una empresa de servicios me dejó rediseñar la suya. Cortamos las diapositivas retrospectivas a un solo cuadro de mando y dedicamos el tiempo a tres preguntas que el estándar implica pero rara vez recibe: qué nos están diciendo los datos que estamos ignorando, qué deberíamos dejar de hacer, y qué único cambio mejoraría más la experiencia del cliente.
+
+La revisión dejó de ser un informe y se convirtió en una reunión de decisiones. Aquella primera sesión mató dos servicios de bajo valor, reasignó un equipo y fijó una única prioridad medible para el trimestre. La responsable de calidad, acostumbrada a presentar ante el silencio, vio a los ejecutivos discutir — buena señal.
+
+La revisión por la dirección, bien hecha, es donde un sistema de calidad se gana el sueldo: el momento en que la evidencia se convierte en estrategia. Cualquier cosa menor es un ritual anual con actas excelentes y sin consecuencias.` },
 }

@@ -1024,3 +1024,26 @@
 .pm-main textarea, .as-find-form textarea, .cp-inline textarea {
   font-family: inherit;
 }
+
+
+/* ---------- Marcador del cuestionario ---------- */
+.as-scoreboard { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.as-score-big { display: flex; flex-direction: column; align-items: center; min-width: 130px; }
+.as-score-num { font-size: 3.4rem; font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, #52d3a2, #2e9e8f);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.as-score-lbl { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; margin-top: 4px; text-align: center; }
+.as-score-rows { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 6px; }
+.as-score-row { display: flex; align-items: center; gap: 10px; background: none; border: 0;
+  padding: 3px 6px; border-radius: 8px; cursor: pointer; color: inherit; font-family: inherit; }
+.as-score-row:hover { background: rgba(82, 211, 162, 0.08); }
+.as-score-row.on .as-score-c { color: #52d3a2; }
+.as-score-c { width: 26px; font-weight: 700; font-size: 0.82rem; text-align: start; }
+.as-score-bar { flex: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
+.as-score-bar span { display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, #2e9e8f, #52d3a2); transition: width 0.3s; }
+.as-score-val { font-size: 0.78rem; opacity: 0.8; min-width: 74px; text-align: end; font-variant-numeric: tabular-nums; }
+
+/* código de finding */
+.as-find-code { font-size: 0.72rem; font-weight: 700; color: #52d3a2;
+  border: 1px solid rgba(82,211,162,0.5); border-radius: 6px; padding: 1px 6px; margin-inline-end: 6px; }

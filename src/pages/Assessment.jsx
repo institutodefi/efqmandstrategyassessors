@@ -541,9 +541,17 @@ function Questionnaire({ assessmentId }) {
     if (!body) return
     const { data, error } = await supabase.from('assessment_findings').insert({
       assessment_id: assessmentId, question_code: code, type, body, created_by: user.id,
-    }).select().single()
+    }).select()
     if (error) { setSaveState(`✕ ${error.message}`); return }
-    setFindings(prev => [...prev, data]); f.reset(); setSaveState(s.asSaved)
+    const row = data?.[0]
+    if (row) setFindings(prev => [...prev, row])
+    else {
+      // RETURNING filtrado por RLS (pre-migración-28): recarga la lista
+      const { data: fi } = await supabase.from('assessment_findings')
+        .select('*').eq('assessment_id', assessmentId).order('created_at')
+      setFindings(fi ?? [])
+    }
+    f.reset(); setSaveState(s.asSaved)
   }
 
   async function removeFinding(id) {
@@ -563,6 +571,39 @@ function Questionnaire({ assessmentId }) {
         {saveState && <em> · {saveState}</em>}
       </p>
       <div className="proj-bar as-progress"><span style={{ width: `${pct}%` }} /></div>
+
+      {(() => {
+        const scored = Object.values(answers).filter(a => a.level != null)
+        const overall = scored.length
+          ? Math.round(scored.reduce((t, a) => t + a.level * 20, 0) / scored.length) : null
+        return (
+          <section className="portal-card wide2 as-scoreboard">
+            <div className="as-score-big" title={s.asOrgScore}>
+              <span className="as-score-num">{overall ?? '—'}</span>
+              <span className="as-score-lbl">{s.asOrgScore}</span>
+            </div>
+            <div className="as-score-rows">
+              {criteria.map(c => {
+                const qs = questions.filter(q => q.criterion_code === c.code)
+                const done = qs.filter(q => answers[q.code]?.level != null)
+                const sc = done.length
+                  ? Math.round(done.reduce((t, q) => t + answers[q.code].level * 20, 0) / done.length) : 0
+                return (
+                  <button key={c.code} type="button"
+                          className={`as-score-row ${crit === c.code ? 'on' : ''}`}
+                          onClick={() => { setCrit(c.code); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+                    <span className="as-score-c">{c.code.toUpperCase()}</span>
+                    <span className="as-score-bar"><span style={{ width: `${sc}%` }} /></span>
+                    <span className="as-score-val">
+                      {done.length ? sc : '—'} · {done.length}/{qs.length}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </section>
+        )
+      })()}
 
       <div className="tab-row as-crit-tabs" role="tablist">
         {criteria.map(c => (
@@ -679,8 +720,13 @@ function Questionnaire({ assessmentId }) {
 
                 <h4 className="cp-h4">{s.asFindings}</h4>
                 <ul className="as-findings">
-                  {findings.filter(x => x.question_code === q.code).map(x => (
+                  {(() => {
+                    let nf = 0, nm = 0
+                    const codeOf = {}
+                    for (const x of findings) codeOf[x.id] = x.type === 'strength' ? `F${++nf}` : `AM${++nm}`
+                    return findings.filter(x => x.question_code === q.code).map(x => (
                     <li key={x.id} className={x.type}>
+                      <span className="as-find-code">{codeOf[x.id]}</span>
                       <span className="as-find-tag">
                         {x.type === 'strength' ? s.asStrength : s.asImprovement}
                       </span>
@@ -690,7 +736,8 @@ function Questionnaire({ assessmentId }) {
                                 onClick={() => removeFinding(x.id)}>✕</button>
                       )}
                     </li>
-                  ))}
+                    ))
+                  })()}
                 </ul>
                 {isAssessor && (
                 <div className="as-find-forms">
