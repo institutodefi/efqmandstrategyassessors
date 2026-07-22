@@ -180,3 +180,19 @@ perfil. Si ya era usuario, solo actualiza rol y datos. Despliegue:
 SMTP de Supabase configurado — sección 3 — para que llegue la invitación).
 Solo superadmin puede conceder roles admin. Los permisos de producto se
 gestionan después en Companies → Products & access, y el rol en Users.
+
+## Sincronización automática cada 10 minutos (brevo-sync-all)
+
+1. `supabase secrets set CRON_SECRET=<cadena larga aleatoria>` (una sola vez).
+2. `supabase functions deploy brevo-sync-all --no-verify-jwt`
+3. En migration-25-brevo-cron.sql sustituye `__PROJECT_REF__` (Settings →
+   General → Reference ID) y `__CRON_SECRET__` (la misma del paso 1) y
+   ejecútala en el SQL Editor.
+4. Verifica: `select * from cron.job where jobname='brevo-sync-10m';` y, tras
+   unos minutos, `cron.job_run_details` + la columna contacts.brevo_synced_at.
+
+La función sube en cada pasada (lotes de 200) los contactos con consentimiento
+de marketing nunca sincronizados o editados después de su última sincro; el
+botón manual de Contactos sigue funcionando igual para forzar una pasada.
+Recordatorio: la lista de "Authorized IPs" de Brevo debe seguir desactivada —
+bloquea tanto el SMTP como esta API.
