@@ -1047,3 +1047,35 @@
 /* código de finding */
 .as-find-code { font-size: 0.72rem; font-weight: 700; color: #52d3a2;
   border: 1px solid rgba(82,211,162,0.5); border-radius: 6px; padding: 1px 6px; margin-inline-end: 6px; }
+
+
+/* Marcador: comparación cliente / auditor */
+.as-score-duo { display: flex; gap: 18px; }
+.as-score-big.aud .as-score-num {
+  background: linear-gradient(135deg, #e8c469, #d19a3d);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.as-score-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.as-score-bars .as-score-bar { flex: none; }
+.as-score-bar.aud { height: 5px; }
+.as-score-bar.aud span { background: linear-gradient(90deg, #d19a3d, #e8c469); }
+.as-score-val b { color: #e8c469; font-weight: 700; }
+
+/* Chip de auditor premarcado con la respuesta del cliente (aún sin corregir) */
+.as-aud-lvl.pre { outline: 1px dashed rgba(232, 196, 105, 0.75); opacity: 0.9; }
+
+
+/* Marcador compacto FIJO (arriba a la derecha, visible al hacer scroll) */
+.as-score-fab {
+  position: fixed; top: 12px; inset-inline-end: 14px; z-index: 180;
+  display: flex; align-items: baseline; gap: 5px;
+  background: rgba(13, 22, 40, 0.92); border: 1px solid rgba(82, 211, 162, 0.45);
+  border-radius: 999px; padding: 6px 14px; cursor: pointer;
+  backdrop-filter: blur(6px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  font-family: inherit;
+}
+.as-score-fab .fab-num { font-size: 1.05rem; font-weight: 800; line-height: 1; }
+.as-score-fab .fab-num.cli { color: #52d3a2; }
+.as-score-fab .fab-num.aud { color: #e8c469; }
+.as-score-fab .fab-sep { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+@media (max-width: 900px) { .as-score-fab { top: 8px; padding: 5px 11px; } }

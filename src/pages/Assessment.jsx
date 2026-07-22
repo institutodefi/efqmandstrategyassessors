@@ -573,35 +573,58 @@ function Questionnaire({ assessmentId }) {
       <div className="proj-bar as-progress"><span style={{ width: `${pct}%` }} /></div>
 
       {(() => {
-        const scored = Object.values(answers).filter(a => a.level != null)
-        const overall = scored.length
-          ? Math.round(scored.reduce((t, a) => t + a.level * 20, 0) / scored.length) : null
+        // Puntuación por CONTRIBUCIÓN: cada pregunta sin responder cuenta 0,
+        // de modo que el marcador crece con el avance (1 respuesta ≠ 60 puntos).
+        const lvl = (q) => answers[q.code]?.level
+        const audLvl = (q) => {
+          const a = audScores[q.code]?.level
+          return a != null ? a : lvl(q)   // auditor hereda la respuesta del cliente hasta corregirla
+        }
+        const contrib = (qs, f) => qs.length
+          ? Math.round(qs.reduce((t, q) => t + ((f(q) ?? 0) * 20), 0) / qs.length) : null
+        const overall = contrib(questions, lvl)
+        const audOverall = canSeeAud ? contrib(questions, audLvl) : null
+        const audTouched = canSeeAud && Object.values(audScores).some(a => a?.level != null)
         return (
+          <>
+          <button type="button" className="as-score-fab"
+                  title={canSeeAud ? `${s.asOrgScore} / ${s.asAuditorScore}` : s.asOrgScore}
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <span className="fab-num cli">{overall ?? '—'}</span>
+            {canSeeAud && audTouched && (
+              <>
+                <span className="fab-sep">/</span>
+                <span className="fab-num aud">{audOverall}</span>
+              </>
+            )}
+          </button>
           <section className="portal-card wide2 as-scoreboard">
-            <div className="as-score-big" title={s.asOrgScore}>
-              <span className="as-score-num">{overall ?? '—'}</span>
-              <span className="as-score-lbl">{s.asOrgScore}</span>
-            </div>
             <div className="as-score-rows">
               {criteria.map(c => {
                 const qs = questions.filter(q => q.criterion_code === c.code)
-                const done = qs.filter(q => answers[q.code]?.level != null)
-                const sc = done.length
-                  ? Math.round(done.reduce((t, q) => t + answers[q.code].level * 20, 0) / done.length) : 0
+                const done = qs.filter(q => lvl(q) != null)
+                const sc = contrib(qs, lvl) ?? 0
+                const audSc = canSeeAud && audTouched ? (contrib(qs, audLvl) ?? 0) : null
                 return (
                   <button key={c.code} type="button"
                           className={`as-score-row ${crit === c.code ? 'on' : ''}`}
                           onClick={() => { setCrit(c.code); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
                     <span className="as-score-c">{c.code.toUpperCase()}</span>
-                    <span className="as-score-bar"><span style={{ width: `${sc}%` }} /></span>
+                    <span className="as-score-bars">
+                      <span className="as-score-bar"><span style={{ width: `${sc}%` }} /></span>
+                      {audSc != null && (
+                        <span className="as-score-bar aud"><span style={{ width: `${audSc}%` }} /></span>
+                      )}
+                    </span>
                     <span className="as-score-val">
-                      {done.length ? sc : '—'} · {done.length}/{qs.length}
+                      {sc}{audSc != null && <> / <b>{audSc}</b></>} · {done.length}/{qs.length}
                     </span>
                   </button>
                 )
               })}
             </div>
           </section>
+          </>
         )
       })()}
 
@@ -699,17 +722,21 @@ function Questionnaire({ assessmentId }) {
                   {s.asClientAnswer}: <b>{an.level != null ? an.level * 20 : s.asNoAnswer}</b>
                 </p>
                 <div className="as-aud-levels" role="radiogroup" aria-label={s.asAuditorLevel}>
-                  {[0, 1, 2, 3, 4, 5].map(i => (
+                  {(() => {
+                    const audLvl = audScores[q.code]?.level
+                    const effLvl = audLvl != null ? audLvl : an.level   // premarcado = respuesta del cliente
+                    return [0, 1, 2, 3, 4, 5].map(i => (
                     <label key={i}
-                           className={`as-aud-lvl ${audScores[q.code]?.level === i ? 'on' : ''}`}
+                           className={`as-aud-lvl ${effLvl === i ? (audLvl != null ? 'on' : 'on pre') : ''}`}
                            title={LV(q, lang)[i]}>
                       <input type="radio" name={`aud-${q.code}`}
-                             checked={audScores[q.code]?.level === i}
+                             checked={effLvl === i}
                              disabled={!isAssessor}
                              onChange={() => persistAud(q.code, { level: i })} />
                       {i * 20}
                     </label>
-                  ))}
+                    ))
+                  })()}
                 </div>
                 <div className="field">
                   <label>{s.asAuditorNote}</label>

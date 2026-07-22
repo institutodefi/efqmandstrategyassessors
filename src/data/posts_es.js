@@ -1150,4 +1150,258 @@ Una empresa de servicios me dejó rediseñar la suya. Cortamos las diapositivas 
 La revisión dejó de ser un informe y se convirtió en una reunión de decisiones. Aquella primera sesión mató dos servicios de bajo valor, reasignó un equipo y fijó una única prioridad medible para el trimestre. La responsable de calidad, acostumbrada a presentar ante el silencio, vio a los ejecutivos discutir — buena señal.
 
 La revisión por la dirección, bien hecha, es donde un sistema de calidad se gana el sueldo: el momento en que la evidencia se convierte en estrategia. Cualquier cosa menor es un ritual anual con actas excelentes y sin consecuencias.` },
+
+'iso-14001-environment-beyond-compliance': {
+  title: 'ISO 14001: medio ambiente más allá del cumplimiento',
+  body: `Los próximos cinco casos pasan a ISO 14001, la gestión ambiental — un estándar que a menudo se compra por exigencia de un cliente y luego se ejecuta como puro papeleo, perdiéndose la mayor parte de su valor.
+
+En su suelo, ISO 14001 te mantiene en la legalidad: aspectos e impactos identificados, permisos vigentes, vertidos controlados, emergencias ensayadas. Solo eso ya importa; un único incumplimiento puede costar una licencia. Pero tratado solo como defensa legal, el estándar se convierte en un ejercicio de archivo que aburre a todos y no cambia nada.
+
+Leído como sistema de gestión, hace más. Obliga a un mapa honesto de cómo tus operaciones tocan el mundo — energía, agua, materiales, residuos, emisiones — y convierte ese mapa en prioridades. Y aquí la lógica ambiental y la financiera convergen más a menudo de lo que los escépticos esperan: la misma tonelada de material desperdiciado es coste e impacto a la vez.
+
+Durante los próximos cuatro días: el aspecto que nadie había mapeado, un simulacro que se pagó solo, ahorros encontrados como subproducto, y cómo los permisos y los vertidos construyen — o rompen — en silencio la confianza de la comunidad.` },
+
+'iso-14001-case-the-aspect-nobody-mapped': {
+  title: 'Caso: el aspecto ambiental que nadie había mapeado',
+  body: `Una planta de acabado de metales tenía un registro de aspectos ISO 14001 impecable — energía, agua, las emisiones obvias. Todo controlado, todo documentado. Entonces un vecino se quejó de un olor intermitente, y el registro no tenía respuesta.
+
+El aspecto ausente era un pequeño proceso con disolventes, ejecutado ocasionalmente, nunca lo bastante significativo para entrar en la lista. Fuera del radar, no tenía controles, ni monitorización, y ahora sí un problema de relaciones con la comunidad y un regulador haciendo preguntas.
+
+ISO 14001 vive o muere por la exhaustividad de su análisis de aspectos e impactos. El modo de fallo es siempre el mismo: el registro captura lo rutinario y se pierde lo ocasional, lo pequeño, el "eso casi nunca lo hacemos". Pero al impacto no le importa la frecuencia con que haces algo.
+
+Reconstruimos el registro caminando la planta con los operarios, no desde un despacho — preguntando en cada paso qué entra, qué sale, qué podría salir mal. Afloraron once aspectos sin mapear. El olor quedó controlado en un mes. Un registro construido desde el suelo, no desde la oficina, es todo el juego.` },
+
+'iso-14001-case-the-spill-drill': {
+  title: 'Caso: el simulacro de derrame que se pagó solo',
+  body: `Un distribuidor químico tenía un procedimiento de preparación ante emergencias — exhaustivo, plastificado, jamás ensayado. ISO 14001 pide probar esos procedimientos; ellos lo trataban como formalidad y hacían un simulacro de casilla cada año.
+
+Les pedí ejecutar uno real: sin avisar, a mitad de turno, un derrame simulado de bidón junto a un desagüe. Salió mal. El kit antiderrames estaba bajo llave en una oficina que nadie podía abrir rápido. Dos empleados no sabían qué desagüe llevaba al cauce. El reloj corrió mucho más allá del punto en que un derrame real habría llegado al río.
+
+Nadie fue culpado — esa era la cuestión. El trabajo del simulacro es fracasar en el papel para no fracasar de verdad. Movimos los kits, entrenamos el mapa de desagües y repetimos el ejercicio cada trimestre.
+
+Ocho meses después ocurrió un derrame real. Se contuvo en minutos, muy lejos del desagüe. El regulador anotó la respuesta con aprobación. Un simulacro honesto había convertido una posible sanción penal en un no-suceso.` },
+
+'iso-14001-case-energy-as-a-by-product': {
+  title: 'Caso: el ahorro energético como subproducto',
+  body: `Una empresa de packaging implantó ISO 14001 para satisfacer a un gran cliente. Esperaban coste — auditorías, papeleo, un certificado que renovar. No esperaban que el estándar se pagara solo.
+
+Construir el registro de aspectos les obligó, por primera vez, a medir los flujos de energía y materiales con precisión y no como una única factura mensual. Medir aclara. Reveló fugas de aire comprimido funcionando las veinticuatro horas, hornos calentando noches improductivas y recortes desechados que un pequeño cambio de anidado habría salvado.
+
+Nada de esto era exótico. Simplemente era invisible hasta que el sistema ambiental hizo que alguien mirara. La disciplina de objetivos y metas convirtió después los hallazgos en acciones con dueño y plazo.
+
+El primer año, el consumo energético cayó un nueve por ciento y el desperdicio de material un siete — ahorros que empequeñecieron el coste de la certificación. El responsable ambiental dejó de verse como un gasto general y empezó a ser invitado a las reuniones de operaciones. La sostenibilidad y el coste, tantas veces enfrentados, resultaron estar leyendo el mismo contador.` },
+
+'iso-14001-case-permits-and-trust': {
+  title: 'Caso: permisos, vertidos y confianza de la comunidad',
+  body: `Día 100. Un procesador intensivo en agua estaba junto a una zona residencial que había aprendido, con los años, a desconfiar de él. Cada renovación de permiso era una pelea; cada rumor de vertido traía quejas. La relación era pura fricción.
+
+Su sistema ISO 14001 era técnicamente sólido — vertidos dentro de límites, permisos vigentes, control legal firme. Pero el cumplimiento y la confianza son monedas distintas. La comunidad no tenía los datos; tenía los recuerdos.
+
+Usamos el sistema ambiental como puente. Los datos de monitorización que ya existían para el regulador se publicaron, en llano, también para los vecinos — incluidos los días ordinarios en que todo estaba dentro de límites. Una nota abierta trimestral explicaba qué hacía la planta, qué vertía y qué estaba mejorando. Cuando hubo una superación, la reportaron ellos primero, con el arreglo adjunto.
+
+En los vertidos apenas cambió nada. La relación cambió por completo. Las renovaciones de permisos dejaron de ser emboscadas. La lección: el control legal ambiental te mantiene operando, pero la transparencia es lo que gana la licencia que el permiso solo nunca concede.` },
+
+'iso-27001-security-as-a-system': {
+  title: 'ISO 27001: la seguridad como sistema, no como firewall',
+  body: `Los próximos cinco casos giran hacia ISO 27001, la seguridad de la información — el estándar con más papeletas para confundirse con un proyecto de IT. No lo es. Es un sistema de gestión que resulta que protege información.
+
+La señal delatora es quién lo posee. Donde el 27001 lo lleva IT en solitario, se convierte en una pila de controles técnicos defendiendo contra las amenazas de ayer mientras las exposiciones reales — un proceso descuidado, un contratista con privilegios de más, un proveedor con tus datos — siguen intactas, porque no le toca a IT arreglarlas.
+
+Leído como es debido, el 27001 no empieza con firewalls sino con una pregunta: qué información importa, qué podría salirle mal, y qué haremos con cada riesgo — aceptar, mitigar, transferir o evitar. Los controles del Anexo A vienen después de ese análisis, elegidos porque un riesgo los exigió, no porque una checklist los listara.
+
+Siguen cuatro casos: un riesgo sin dueño, la continuidad probada de verdad, la capa humana, y controles del Anexo A que encajan con el negocio en vez de estrangularlo.` },
+
+'iso-27001-case-the-risk-nobody-owned': {
+  title: 'Caso: el riesgo de información sin dueño',
+  body: `Una firma de servicios profesionales tenía un registro de riesgos ISO 27001 de aspecto maduro. Docenas de entradas, puntuaciones pulcras, todas con tratamiento. Pero una de sus mayores exposiciones no estaba: la práctica de enviarse por email archivos sensibles de clientes a cuentas personales para trabajar desde casa.
+
+Todo el mundo sabía que ocurría. No estaba en el registro porque no era trabajo de nadie poseerla — ni de IT (el correo estaba técnicamente permitido), ni de los socios (ellos también lo hacían), ni de compliance (nadie la había levantado).
+
+La evaluación de riesgos del 27001 solo funciona cuando cada riesgo significativo tiene un dueño con nombre y con autoridad para actuar. Los riesgos huérfanos — conocidos, sin dueño — son donde nacen las brechas.
+
+Asignamos la propiedad a nivel de socio, proporcionamos una alternativa segura de trabajo remoto que era de hecho más fácil que el apaño, y el comportamiento cesó porque el camino seguro era el cómodo. El registro no es una lista de controles; es un mapa de quién responde por lo que puede salir mal. Rellena primero los huecos de propiedad.` },
+
+'iso-27001-case-continuity-tested-for-real': {
+  title: 'Caso: continuidad de negocio, probada de verdad',
+  body: `Una fintech tenía un plan de continuidad que se leía precioso. Objetivos de tiempo de recuperación, sitios de respaldo, árboles de llamadas — todo documentado para su certificación ISO 27001, nada ejercitado jamás en condiciones realistas.
+
+Pedí probarlo en serio: asume que el sistema primario está caído e irrecuperable, ahora, en horario de oficina. Guíame. En veinte minutos el plan se había deshecho. Las copias existían pero nadie había restaurado una en un año — y la última restauración, descubrimos, habría fallado. El árbol de llamadas listaba a un ingeniero clave que se había ido. El "sitio alternativo" requería accesos que nadie presente podía conceder.
+
+Nada de esto es inusual. Un plan de continuidad que nunca se ha probado es una hipótesis, no una capacidad. El estándar pide pruebas precisamente porque los planes de papel esconden estos huecos.
+
+Instauramos restauraciones trimestrales, arreglamos el árbol y ensayamos un failover completo. Seis meses después llegó una caída real. La recuperación tardó menos de una hora. El plan por fin describía lo que la organización podía hacer de verdad — porque lo había hecho.` },
+
+'iso-27001-case-the-human-layer': {
+  title: 'Caso: la capa humana de la seguridad',
+  body: `Un retailer había invertido fuerte en controles técnicos ISO 27001 — segmentación, cifrado, monitorización. Entonces un administrativo de finanzas transfirió una suma grande a un estafador que simplemente había escrito un email, haciéndose pasar por el CEO, con una petición urgente y plausible. Ningún firewall fue vulnerado. El humano sí.
+
+La mayoría de los incidentes reales que veo entran por las personas, no por los sistemas: un correo convincente, una contraseña reutilizada, un empleado amable sujetando una puerta. ISO 27001 lo sabe — la concienciación y los controles humanos están justo al lado de los técnicos — pero las organizaciones gastan en la capa visible y descuidan la humana porque la tecnología parece control y la cultura parece blanda.
+
+Desplazamos la inversión. Sesiones de concienciación cortas, frecuentes y realistas sustituyeron a la presentación anual. Una regla simple de verificación — todo cambio de pago confirmado por un segundo canal — se hizo innegociable y, crucialmente, se elogió en vez de ridiculizar cuando alguien la usó para frenar una petición real.
+
+El siguiente intento de suplantación fracasó en la comprobación del segundo canal. El control más fuerte costó casi nada: un hábito.` },
+
+'iso-27001-case-annex-a-that-fit': {
+  title: 'Caso: controles del Anexo A que encajan de verdad',
+  body: `Una pequeña empresa de software adoptó ISO 27001 y, aterrada de dejarse algo, implantó casi todos los controles del Anexo A a máxima intensidad. Pasaron dos cosas: los desarrolladores se ahogaron en proceso y las entregas se arrastraron. La seguridad se había convertido en enemiga del negocio que debía proteger.
+
+El Anexo A es un menú, no un mandato. La Declaración de Aplicabilidad existe precisamente para justificar qué aplicas y qué no, en proporción a tus riesgos reales. Aplicarlo todo al máximo no es rigor — es no haber hecho el análisis de riesgos que decide qué importa.
+
+Volvimos a los riesgos. Para una firma de software en la nube, la integridad del código fuente, la gestión de accesos y el desarrollo seguro importaban enormemente; ciertos controles físicos y heredados apenas aplicaban. Dimensionamos en consecuencia, documentamos el razonamiento y entregamos a los desarrolladores controles que encajaban con su forma real de trabajar.
+
+La certificación se mantuvo. La velocidad se recuperó. La seguridad mejoró, porque los controles con los que la gente puede vivir se usan. La proporción, no el maximalismo, es lo que el estándar pide en realidad.` },
+
+'iso-45001-safety-is-a-culture': {
+  title: 'ISO 45001: la seguridad es una cultura, no un póster',
+  body: `Los próximos cinco casos giran hacia ISO 45001, la seguridad y salud en el trabajo — el estándar donde la brecha entre el papeleo y la realidad se mide en lesiones.
+
+Toda organización que visito tiene pósters de seguridad. Muchas tienen manuales gruesos y cifras bajas de incidentes sobre el papel. Y sin embargo la realidad sentida en la planta puede ser completamente otra: cuasi-accidentes sin reportar, atajos normalizados, equipos de protección puestos para el auditor y quitados después. Una tasa registrada baja puede significar una planta segura — o una silenciosa.
+
+La revolución silenciosa de ISO 45001 es la participación de los trabajadores. La seguridad diseñada por un directivo en un despacho y emitida hacia abajo rara vez cuaja. La diseñada con las personas que afrontan el peligro sí, porque saben dónde se esconden los riesgos reales y sienten suyas las reglas que ayudaron a escribir.
+
+Siguen cuatro casos: un cuasi-accidente que por fin habló, trabajadores que rediseñaron su propia seguridad, el mantenimiento entendido como gestión de riesgos, y un simulacro que cambió el comportamiento en vez de marcar una casilla.` },
+
+'iso-45001-case-the-near-miss-that-spoke': {
+  title: 'Caso: el cuasi-accidente que habló',
+  body: `Un almacén llevaba dos años sin lesiones registrables y estaba orgulloso. Los números ISO 45001 lucían excelentes. Entonces un palé cayó desde altura, rozando a un trabajador, y la investigación reveló que el cuasi-accidente había estado a punto de ocurrir una docena de veces antes — sin reportar ninguna.
+
+¿Por qué sin reportar? Porque reportar un cuasi-accidente costaba un formulario, el ceño de un supervisor y la sospecha de que contaba contra tu equipo. Así que la gente callaba, y la organización volaba a ciegas hacia la lesión que claramente venía.
+
+Los cuasi-accidentes son lecciones gratis — el accidente sin el daño. Un sistema de seguridad que no los cosecha está esperando al de verdad. El proceso de incidentes de ISO 45001 existe para atrapar exactamente estos.
+
+Hicimos que reportar un cuasi-accidente costara treinta segundos y cero culpa, y — el movimiento clave — actuamos visiblemente sobre ellos, arreglando la estantería que llevaba tiempo casi-fallando. Los reportes saltaron de casi cero a docenas al mes. Eso parece una planta peor. Era una mucho más segura, por fin capaz de ver sus propios riesgos.` },
+
+'iso-45001-case-workers-who-design-safety': {
+  title: 'Caso: trabajadores que diseñan su propia seguridad',
+  body: `Una fábrica de alimentación acumulaba las mismas lesiones de mano en una máquina, pese a advertencias crecientes, reglas más estrictas y pósters más severos. La respuesta de la dirección era siempre más control desde arriba. Las lesiones continuaban.
+
+ISO 45001 pide la participación de los trabajadores no como cortesía sino porque funciona. Así que la probamos. En vez de emitir otra regla, metimos en una sala a los operarios que llevaban la máquina y les pedimos rediseñar la tarea de forma segura. Supieron al instante por qué se ignoraban las reglas: la protección hacía un ajuste frecuente desesperadamente lento, así que la gente metía la mano por encima bajo presión de tiempo.
+
+Los operarios propusieron una modificación simple de la protección que hacía que el camino seguro fuera también el rápido. Ingeniería la construyó. Las lesiones cesaron — no porque mejorara el cumplimiento, sino porque el conflicto entre seguro y rápido fue diseñado fuera por la gente que lo vivía.
+
+La seguridad impuesta hacia abajo pelea contra la naturaleza humana. La diseñada con los expuestos se alinea con ella. El estándar apunta de lleno a la segunda, y la segunda es la que aguanta.` },
+
+'iso-45001-case-maintenance-and-risk': {
+  title: 'Caso: el mantenimiento como gestión de riesgos',
+  body: `Un fabricante trataba mantenimiento y seguridad como departamentos separados con sistemas separados. Su ISO 45001 cubría procedimientos y EPIs; el mantenimiento era una línea de coste que minimizar. Entonces una reparación aplazada en una cinta transportadora causó una lesión grave, y los dos mundos chocaron.
+
+El fallo era predecible a posteriori. Un enclavamiento de protección llevaba semanas fallando de forma intermitente. Mantenimiento, presionado para recortar gasto, lo había ido aplazando como "no crítico". Nadie había conectado un defecto de equipo con un riesgo de seguridad, porque los sistemas que rastreaban cada cosa nunca se hablaban.
+
+ISO 45001 trata la integridad de la planta como asunto de seguridad, no solo de disponibilidad. Vinculamos ambos: cualquier defecto con dimensión de seguridad saltaba automáticamente la cola de mantenimiento, con un responsable de seguridad capaz de parar la línea.
+
+Las paradas subieron ligeramente; las lesiones y cuasi-accidentes cayeron con fuerza, y — la sorpresa agradable — las averías no planificadas bajaron también, porque el mantenimiento aplazado llevaba tiempo causándolas en silencio. El equipo seguro y el equipo fiable resultaron ser el mismo equipo.` },
+
+'iso-45001-case-the-drill-that-changed-behaviour': {
+  title: 'Caso: el simulacro de emergencia que cambió el comportamiento',
+  body: `Un centro logístico llevaba años haciendo su simulacro anual de incendio igual: anunciado, a media mañana, todos paseando hasta el aparcamiento, un tick en la casilla de ISO 45001. No demostraba nada salvo que la gente sabía andar.
+
+Hicimos uno distinto — sin avisar, con una salida bloqueada de forma realista. El resultado fue serio. La gente se apelotonó en la puerta bloqueada en vez de usar las alternativas. Dos visitantes fueron olvidados por completo. El recuento en el punto de encuentro no cuadró durante once minutos — once minutos en los que, en un incendio real, nadie habría sabido quién seguía dentro.
+
+El valor de un simulacro es exactamente esa incomodidad. Un simulacro cómodo no enseña nada; uno honesto expone lo que el plan asumía y el edificio desmiente.
+
+Arreglamos la señalización, entrenamos las rutas alternativas y dimos a los visitantes un responsable claro. El siguiente simulacro sin aviso cuadró en menos de tres minutos. El sentido de la preparación ante emergencias no es el documento; es el comportamiento bajo estrés — y el comportamiento solo cambia cuando la práctica se siente real.` },
+
+'iso-42001-governing-ai': {
+  title: 'ISO 42001: gobernar la IA antes de que te gobierne',
+  body: `Los próximos cinco casos giran hacia el estándar más nuevo de esta serie — ISO 42001, el primer sistema de gestión certificable para la inteligencia artificial. Llega exactamente cuando las organizaciones despliegan IA más rápido de lo que pueden gobernarla.
+
+El patrón es familiar de cada ola tecnológica anterior, solo que más veloz. Los equipos adoptan herramientas potentes localmente, informalmente, invisiblemente. El valor aparece rápido; la exposición también — un modelo tomando decisiones que nadie puede explicar, entrenado con datos que nadie revisó, derivando en silencio fuera de la precisión mientras todos confían en su salida.
+
+ISO 42001 hace las preguntas de gobernanza que el entusiasmo se salta: qué sistemas de IA ejecutamos realmente, en qué podría equivocarse cada uno y a quién dañaría, quién responde, y cómo supervisamos sistemas que aprenden y cambian. No para frenar la IA, sino para que una organización pueda escalarla sin caminar sonámbula hacia el daño.
+
+Siguen cuatro casos: el sistema de IA que nadie había listado, una evaluación de impacto antes del lanzamiento, supervisión humana que funcionó de verdad, y la gobernanza del dato como el cimiento real.` },
+
+'iso-42001-case-the-model-nobody-listed': {
+  title: 'Caso: el sistema de IA que nadie había listado',
+  body: `Una aseguradora mediana empezó su camino ISO 42001 convencida de que usaba IA en dos sitios: un chatbot y un modelo de precios. El ejercicio de inventario encontró nueve.
+
+Los otros siete se habían colado sin que nadie lo notara. Un equipo de marketing usando una herramienta generativa sobre datos de clientes. Una macro de hoja de cálculo silenciosamente ascendida a plugin de machine learning. Un filtro de selección incrustado en una plataforma de RRHH, cribando candidatos con criterios que nadie había revisado. Cada uno adoptado localmente, por buenas razones, sin gobernanza y sin nadie responsable.
+
+ISO 42001 empieza, como la mayoría de los sistemas de gestión, por saber qué tienes. No puedes gobernar, evaluar ni supervisar sistemas de IA que no sabes que existen — y la IA en la sombra prolifera precisamente porque estas herramientas son fáciles de encender e invisibles una vez en marcha.
+
+El filtro de selección fue la llamada de atención: resultó estar perjudicando en silencio a un colectivo protegido, una exposición legal y ética que nadie había elegido. Construir el inventario no fue burocracia. Fue el momento en que la organización pudo por fin ver, y gobernar, lo que ya estaba haciendo.` },
+
+'iso-42001-case-impact-before-launch': {
+  title: 'Caso: una evaluación de impacto antes del lanzamiento',
+  body: `Un banco estaba a semanas de lanzar un sistema de IA para marcar solicitudes de préstamo a revisión. Técnicamente funcionaba bien. Bajo ISO 42001, antes del despliegue, ejecutaron una evaluación de impacto — y pararon.
+
+La evaluación hacía preguntas llanas que la fase de construcción no había hecho: a quién afectan las decisiones de este sistema, cómo podría equivocarse, y quién asume el coste cuando lo hace. El modelo, se vio, había aprendido de decisiones históricas que arrastraban sesgo histórico. Sin examinar, habría automatizado y escalado ese sesgo, marcando a algunos solicitantes de forma desproporcionada mientras vestía la autoridad de las matemáticas objetivas.
+
+Para esto existe exactamente la evaluación de impacto: atrapar el daño antes del lanzamiento, cuando es barato de arreglar, y no después, cuando es un escándalo y una demanda. El equipo reentrenó con datos corregidos, añadió monitorización del impacto dispar y mantuvo una decisión humana en cada marca.
+
+El lanzamiento se retrasó seis semanas. Ese retraso fue el seguro más barato que el banco compró en todo el año. La gobernanza antes del despliegue no es fricción — es la diferencia entre una herramienta y un pasivo.` },
+
+'iso-42001-case-human-oversight-that-worked': {
+  title: 'Caso: supervisión humana que funcionó de verdad',
+  body: `"Siempre hay un humano en el circuito", me aseguró un proveedor sanitario sobre su herramienta de triaje con IA. Sobre el papel, cierto — una enfermera confirmaba cada recomendación. En la práctica, la supervisión estaba hueca.
+
+La herramienta acertaba tan a menudo que confirmarla se volvió reflejo. Cientos de veces por turno, la enfermera pulsaba aceptar. La supervisión humana genuina había degenerado en sellar por inercia — la conocida trampa de la automatización, donde un sistema fiable entrena a su supervisor para dejar de supervisar.
+
+ISO 42001 pide supervisión humana significativa, y significativa es la palabra clave. Un humano que no puede discrepar de forma realista no es supervisión; es decoración proporcionando un consuelo falso.
+
+La rediseñamos. La herramienta pasó a mostrar su confianza y su razonamiento, no solo un veredicto. Los casos de baja confianza o inusuales se marcaban para revisión genuina; los rutinarios fluían más rápido. La atención de la enfermera se gastaba donde el juicio importaba de verdad, y discrepar se hizo fácil y sin culpa.
+
+Las tasas de corrección subieron de casi cero a significativas — la prueba de que la supervisión por fin era real. La lección: un humano en el circuito no vale nada si el circuito no está diseñado para que importe.` },
+
+'iso-42001-case-data-governance-foundation': {
+  title: 'Caso: la gobernanza del dato como cimiento',
+  body: `La IA de previsión de demanda de un retailer llevaba meses degradándose en silencio. Las previsiones derivaban, las decisiones de stock empeoraban, y nadie lo notó hasta que las pérdidas asomaron en el inventario. El modelo no se había roto. Sus datos sí.
+
+Un proveedor había cambiado aguas arriba cómo se codificaba una categoría. El modelo, entrenado con la codificación antigua, siguió produciendo con confianza respuestas erróneas a partir de entradas recién carentes de sentido. Nadie vigilaba los datos que alimentaban el sistema, porque la gobernanza se había centrado por completo en el modelo y trataba sus entradas como un hecho dado.
+
+ISO 42001 vuelve una y otra vez a la gobernanza del dato porque los sistemas de IA solo son tan fiables como lo que fluye hacia ellos. Un modelo perfecto sobre datos que derivan es un mentiroso seguro de sí mismo. El fallo rara vez es dramático; es silencioso, gradual e invisible hasta que resulta caro.
+
+Instauramos monitorización de calidad del dato en las entradas del modelo — comprobaciones de esquema, alertas de distribución, un dueño por cada alimentación crítica. El siguiente cambio aguas arriba disparó una alerta en un día, no en un trimestre. Gobernar la IA, resulta, es sobre todo gobernar los datos que tiene debajo. Todo lo demás se apoya en ese cimiento.` },
+
+'iso-56001-innovation-as-a-system': {
+  title: 'ISO 56001: hacer repetible la innovación',
+  body: `Los cinco casos finales giran hacia ISO 56001, la gestión de la innovación — y hacia la paradoja de su corazón. ¿Puede algo tan indómito como la innovación sistematizarse de verdad sin matarla?
+
+La respuesta, bien hecha, es sí — porque el estándar no intenta sistematizar la chispa creativa. Sistematiza todo lo que la rodea: cómo se capturan las ideas para que no se pierdan, cómo se seleccionan sin política, cómo se financian proporcionalmente para probar barato, y cómo la organización aprende si algo de todo eso funcionó.
+
+A la mayoría de las organizaciones no le faltan ideas. Le falta la fontanería entre una idea y un resultado. Los buenos pensamientos mueren en bandejas de entrada, o en procesos de aprobación diseñados para ampliaciones de fábrica, o por falta de un presupuesto pequeño y una prueba rápida. ISO 56001 es esa fontanería.
+
+Siguen cuatro casos: ideas que por fin encontraron un hogar, una cartera de innovación en lugar de una apuesta, inteligencia estratégica que cambió el rumbo, y — en el día 120 — medir la innovación que de verdad importa, y unas palabras sobre dónde te dejan estos 120 días.` },
+
+'iso-56001-case-ideas-that-found-a-home': {
+  title: 'Caso: las ideas que por fin encontraron un hogar',
+  body: `Una ingeniería estaba segura de que su gente había dejado de innovar. Las cifras de sugerencias rondaban el cero. La dirección culpaba a la cultura y consideraba una campaña motivacional.
+
+La verdad, descubrimos, era más simple y más condenatoria. La gente tenía ideas de sobra. Simplemente había aprendido que plantear una no llevaba a ninguna parte: un buzón de sugerencias que alimentaba un agujero negro, sin respuesta, sin resultado visible, jamás. La organización había entrenado a su propia plantilla en el silencio, y luego confundió el silencio con apatía.
+
+El proceso de gestión de ideas de ISO 56001 existe precisamente para evitar esto. Un sistema de ideas que no responde es peor que ninguno — enseña cinismo activamente.
+
+Construimos el mínimo que funciona: una forma fácil de proponer, la promesa de respuesta en dos semanas y — la parte crucial — resultados visibles. Unas pocas ideas tempranas se financiaron, se probaron y se acreditaron públicamente a quienes las plantearon.
+
+Las propuestas pasaron de goteo a torrente en un trimestre. Las ideas siempre habían estado ahí. Lo que faltaba era la creencia de que plantear una importaba. Restaura eso, y el pipeline se llena solo.` },
+
+'iso-56001-case-a-portfolio-not-a-punt': {
+  title: 'Caso: una cartera de innovación, no una apuesta',
+  body: `Una empresa de gran consumo innovaba de la forma más peligrosa: grandes apuestas ocasionales, cada una apadrinada por un directivo, cada una financiada hasta arriba, cada una a todo o nada. Cuando una fallaba, como la mayoría, la pérdida era grande y el apetito por la siguiente menguaba.
+
+ISO 56001 anima a gestionar la innovación como cartera y no como serie de envites — un abanico de experimentos pequeños y baratos junto a menos apuestas grandes, con la financiación liberada por etapas a medida que la evidencia se acumula.
+
+Reestructuramos en consecuencia. En lugar de una gran apuesta anual, corrían docenas de experimentos pequeños con presupuestos modestos y criterios de cancelación claros. La mayoría se detuvo pronto y barato — lo que es éxito, no fracaso, cuando una idea equivocada muere al precio de un prototipo. Las pocas prometedoras se ganaron su siguiente tramo.
+
+En un año la empresa lanzó más, perdió menos en los fracasos y — como las pruebas pequeñas destapan sorpresas — tropezó con una línea de producto que ningún proceso de gran apuesta habría imaginado. Innovar no es apostar. Gestionada como cartera, se parece más a invertir con disciplina.` },
+
+'iso-56001-case-strategic-intelligence': {
+  title: 'Caso: inteligencia estratégica que cambió el rumbo',
+  body: `Un fabricante especialista presumía de expertise profunda en su nicho — una expertise que, sin que nadie lo notara, se había cuajado en punto ciego. Innovaban con diligencia, pero solo dentro de los supuestos de un mercado que se desplazaba en silencio bajo sus pies.
+
+ISO 56001 pide inteligencia estratégica: una exploración deliberada, mirando hacia fuera, de tendencias, tecnologías, clientes y mercados adyacentes que alimente las decisiones de innovación. Sin ella, las organizaciones optimizan brillantemente hacia un objetivo obsoleto — el destino clásico del experto que confunde el mapa de ayer con el territorio de hoy.
+
+Montamos un ritmo de inteligencia ligero y regular: un grupo pequeño y transversal explorando señales fuera del nicho cada trimestre y llevando los hallazgos a la cartera de innovación. Una exploración destapó un cambio en cómo los clientes querían comprar — un cambio que amenazaba el negocio principal en un plazo de cinco años.
+
+Como lo vieron pronto, pudieron actuar con deliberación en vez de reaccionar en crisis. La innovación más valiosa de aquel año no fue un producto. Fue darse cuenta, a tiempo, de que la propia dirección tenía que cambiar. La inteligencia es lo que apunta la innovación al problema correcto.` },
+
+'iso-56001-case-measuring-what-matters': {
+  title: 'Día 120: medir la innovación — y dónde te deja esto',
+  body: `El caso final, y el día final. Una empresa tecnológica medía la innovación con orgullo: número de ideas presentadas, proyectos lanzados, gasto en I+D. Los números subían cada año. Y sin embargo casi nada llegaba a los clientes ni movía los resultados. Medían actividad y la llamaban innovación.
+
+ISO 56001 empuja hacia métricas de resultado — valor creado, no movimiento generado. Cambiamos lo que contaban: ingresos de los productos lanzados en los últimos tres años, tiempo de la idea al mercado, la tasa a la que los experimentos producían aprendizaje utilizable. Números incómodos, al principio. Pero redirigieron el esfuerzo de parecer ocupados a crear valor, y en un año el pipeline contaba la verdad en lugar de una historia halagadora.
+
+Con esto se cierran 120 días. Noventa sobre el Modelo EFQM 2025 — del propósito a la sostenibilidad — y treinta sobre los estándares ISO haciendo trabajo real en organizaciones reales. Un hilo los atraviesa todos: un sistema de gestión solo se gana el sueldo cuando cambia una decisión. Todo lo demás es papeleo.
+
+Gracias por leer. Si tu organización está lista para convertir algo de esto de lectura en práctica — ya sabes dónde encontrarnos.` },
 }
