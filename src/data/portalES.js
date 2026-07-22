@@ -173,6 +173,8 @@ export const PORTAL_ES = {
   asJustification: 'Justificación',
   asJustPh: 'Explica por qué aplica este nivel, con referencia a tus evidencias…',
   asEvidence: 'Documentos de evidencia',
+  asEvidenceExplain: 'Adjunta los documentos que respaldan el nivel elegido — planes, actas, informes, certificados, cuadros de mando… Puedes añadir a cada archivo una nota breve explicando qué demuestra.',
+  asDocNotePh: '¿Qué demuestra este documento? (opcional)',
   asUpload: 'Subir evidencia',
   asSaved: 'Guardado',
   asSaving: 'Guardando…',

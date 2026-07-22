@@ -1004,3 +1004,23 @@
 .gdpr-check input { margin-top: 4px; accent-color: #52d3a2; flex: none; }
 .gdpr-check a { color: var(--glow, #52d3a2); text-decoration: underline; }
 .gdpr-fine { font-size: 0.78rem; opacity: 0.65; margin: 12px 0 0; }
+
+
+/* ---------- Evidencias: nota por documento ---------- */
+.as-docs { align-items: flex-start; }
+.as-docs-head { flex-basis: 100%; }
+.as-docs-hint { margin: 2px 0 6px; }
+.as-doc { display: flex; flex-direction: column; gap: 4px; min-width: 220px; max-width: 340px; }
+.as-doc-file { display: flex; align-items: center; gap: 4px; }
+.as-doc-note {
+  padding: 6px 9px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--white); color: var(--ink);
+  font-family: inherit; font-size: 0.8rem; width: 100%;
+}
+.as-doc-note-ro { font-size: 0.8rem; opacity: 0.75; font-style: italic; }
+
+/* Rubik en todo el quiz: los textarea (Findings, justificación, notas)
+   heredaban la fuente por defecto del navegador */
+.pm-main textarea, .as-find-form textarea, .cp-inline textarea {
+  font-family: inherit;
+}

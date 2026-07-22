@@ -501,6 +501,13 @@ function Questionnaire({ assessmentId }) {
     if (data?.signedUrl) window.open(data.signedUrl, '_blank')
   }
 
+  async function updateDocNote(doc, note) {
+    const clean = note.trim() || null
+    if ((doc.note || null) === clean) return
+    await supabase.from('assessment_documents').update({ note: clean }).eq('id', doc.id)
+    setDocs(prev => prev.map(d => d.id === doc.id ? { ...d, note: clean } : d))
+  }
+
   async function removeDoc(doc) {
     await supabase.storage.from('assessment-evidence').remove([doc.storage_path])
     await supabase.from('assessment_documents').delete().eq('id', doc.id)
@@ -607,12 +614,24 @@ function Questionnaire({ assessmentId }) {
             )}
 
             <div className="as-docs">
-              <b>{s.asEvidence}</b>
+              <div className="as-docs-head">
+                <b>{s.asEvidence}</b>
+                <p className="proj-meta as-docs-hint">{s.asEvidenceExplain}</p>
+              </div>
               {qDocs.map(d => (
-                <span key={d.id} className="as-doc">
-                  <button className="btn btn-ghost btn-xs" onClick={() => download(d)}>{d.filename}</button>
-                  <button className="btn btn-ghost btn-xs" onClick={() => removeDoc(d)}>✕</button>
-                </span>
+                <div key={d.id} className="as-doc">
+                  <span className="as-doc-file">
+                    <button className="btn btn-ghost btn-xs" onClick={() => download(d)}>{d.filename}</button>
+                    {canEdit && <button className="btn btn-ghost btn-xs" onClick={() => removeDoc(d)}>✕</button>}
+                  </span>
+                  {canEdit ? (
+                    <input className="as-doc-note" defaultValue={d.note || ''}
+                           placeholder={s.asDocNotePh} maxLength={240}
+                           onBlur={(e) => updateDocNote(d, e.target.value)} />
+                  ) : (
+                    d.note && <span className="as-doc-note-ro">{d.note}</span>
+                  )}
+                </div>
               ))}
               {canEdit && (
                 <label className="btn btn-ghost btn-xs as-upload">
