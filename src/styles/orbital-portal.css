@@ -986,3 +986,21 @@
 /* ---------- Orbital360 · PMTool logo (transparent, sidebar only) ---------- */
 .pm-logo-img { display: block; width: 128px; max-width: 100%; height: auto; }
 @media (max-width: 900px) { .pm-logo-img { width: 96px; } }
+
+
+/* ---------- Puerta de consentimiento RGPD ---------- */
+.gdpr-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(8, 13, 26, 0.82); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 18px;
+}
+.gdpr-card {
+  background: var(--panel, #101b2e); border: 1px solid rgba(82, 211, 162, 0.35);
+  border-radius: 18px; padding: 26px 26px 20px; max-width: 560px; width: 100%;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5);
+}
+.gdpr-card h2 { margin: 0 0 6px; }
+.gdpr-check { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0; cursor: pointer; }
+.gdpr-check input { margin-top: 4px; accent-color: #52d3a2; flex: none; }
+.gdpr-check a { color: var(--glow, #52d3a2); text-decoration: underline; }
+.gdpr-fine { font-size: 0.78rem; opacity: 0.65; margin: 12px 0 0; }

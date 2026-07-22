@@ -1,3 +1,4 @@
+import ConsentGate from './ConsentGate.jsx'
 import { Component, useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
@@ -182,6 +183,7 @@ export default function PmShell({ children }) {
       </aside>
 
       <main className="pm-main"><ContentBoundary s={s}>{children}</ContentBoundary></main>
+      <ConsentGate />
     </div>
   )
 }
