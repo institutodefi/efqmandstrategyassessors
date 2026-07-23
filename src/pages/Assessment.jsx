@@ -180,6 +180,7 @@ function AssessmentDetail({ assessmentId }) {
   const [entities, setEntities] = useState([])
   const [sites, setSites] = useState([])
   const [scores, setScores] = useState({ perCrit: [], total: null, audTotal: null, answered: 0, totalQ: 0 })
+  const [rep, setRep] = useState(null)   // { findings, qCrit, cli, critTitles }
   const [criteria, setCriteria] = useState([])
   const [saveState, setSaveState] = useState(null)
   const scopeTimer = useRef(null)
@@ -329,6 +330,59 @@ function AssessmentDetail({ assessmentId }) {
           </div>
         </section>
 
+        {/* ---------- Findings report (final) ---------- */}
+        {canSeeAud && rep && (
+          <section className="portal-card wide2" id="findings-report">
+            <div className="rep-head">
+              <h3>{s.asRepTitle}</h3>
+              <button className="btn btn-ghost btn-xs no-print" onClick={() => window.print()}>
+                🖨 {s.asRepPrint}
+              </button>
+            </div>
+            {rep.findings.length === 0 ? <p className="proj-meta">{s.asRepEmpty}</p> : (
+              (() => {
+                const counters = {}
+                const coded = rep.findings.map(x => {
+                  const cc = rep.qCrit[x.question_code] || 'C?'
+                  const pref = x.type === 'strength' ? 'STR' : 'AM'
+                  const key = `${cc}-${pref}`
+                  counters[key] = (counters[key] || 0) + 1
+                  return { ...x, cc, pref,
+                    code: `${rep.cli}-${cc}-${pref}${String(counters[key]).padStart(2, '0')}` }
+                })
+                const crits = [...new Set(coded.map(x => x.cc))].sort()
+                const tOf = (cc) => {
+                  const row = rep.critTitles.find(c => c.code.toUpperCase() === cc)
+                  if (!row) return cc
+                  const t = lang === 'ar' ? row.title_ar : lang === 'es' ? row.title_es : row.title_en
+                  return `${cc} · ${t || row.title_en}`
+                }
+                return crits.map(cc => (
+                  <div key={cc} className="rep-crit">
+                    <h4>{tOf(cc)}</h4>
+                    {['strength', 'improvement'].map(tp => {
+                      const list = coded.filter(x => x.cc === cc && x.type === tp)
+                      if (!list.length) return null
+                      return (
+                        <div key={tp} className={`rep-block ${tp}`}>
+                          <b>{tp === 'strength' ? s.asRepStrengths : s.asRepAOI}</b>
+                          <ul>
+                            {list.map(x => (
+                              <li key={x.id}>
+                                <span className="as-find-code">{x.code}</span> {x.body}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ))
+              })()
+            )}
+          </section>
+        )}
+
         {/* assessment team: add users with their roles */}
         <TeamPanel assessmentId={assessmentId} s={s}
                    canManage={caps.can_manage_members} />
@@ -463,6 +517,22 @@ function Questionnaire({ assessmentId }) {
       if (c.data?.length) setCrit(prev => prev ?? c.data[0].code)
     })
   }, [assessmentId])
+
+  const [aMeta, setAMeta] = useState(null)
+  useEffect(() => {
+    if (!supabase || !assessmentId) return
+    supabase.from('assessments')
+      .select('code, title, company_id, accounts:company_id (name)')
+      .eq('id', assessmentId).maybeSingle()
+      .then(({ data }) => setAMeta(data || null))
+  }, [assessmentId])
+  const cliLabel = useMemo(() => {
+    const raw = aMeta?.accounts?.name || aMeta?.code || aMeta?.title || 'CLI'
+    return String(raw).trim().split(/\s+/)[0].replace(/[^\w-]/g, '').slice(0, 12) || 'CLI'
+  }, [aMeta])
+  const qCritOf = useMemo(
+    () => Object.fromEntries(questions.map(q => [q.code, (q.criterion_code || '').toUpperCase()])),
+    [questions])
 
   const critQs = useMemo(
     () => questions.filter(q => q.criterion_code === crit), [questions, crit])
@@ -762,9 +832,15 @@ function Questionnaire({ assessmentId }) {
                 <h4 className="cp-h4">{s.asFindings}</h4>
                 <ul className="as-findings">
                   {(() => {
-                    let nf = 0, nm = 0
+                    const counters = {}
                     const codeOf = {}
-                    for (const x of findings) codeOf[x.id] = x.type === 'strength' ? `F${++nf}` : `AM${++nm}`
+                    for (const x of findings) {
+                      const cc = qCritOf[x.question_code] || 'C?'
+                      const pref = x.type === 'strength' ? 'STR' : 'AM'
+                      const key = `${cc}-${pref}`
+                      counters[key] = (counters[key] || 0) + 1
+                      codeOf[x.id] = `${cliLabel}-${cc}-${pref}${String(counters[key]).padStart(2, '0')}`
+                    }
                     return findings.filter(x => x.question_code === q.code).map(x => (
                     <li key={x.id} className={x.type}>
                       <span className="as-find-code">{codeOf[x.id]}</span>

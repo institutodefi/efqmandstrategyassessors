@@ -1134,3 +1134,26 @@
 .gantt-row.st-done .gantt-label { opacity: 0.55; text-decoration: line-through; }
 .gantt-add input[type="date"] { max-width: 140px; }
 @media (max-width: 700px) { .gantt-label { flex-basis: 130px; } }
+
+
+/* ---------- Informe de hallazgos ---------- */
+.rep-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.rep-crit { margin-top: 14px; }
+.rep-crit h4 { margin: 0 0 6px; color: #52d3a2; }
+.rep-block { margin: 6px 0 10px; }
+.rep-block ul { margin: 4px 0 0; padding-inline-start: 18px; }
+.rep-block li { margin: 3px 0; }
+.rep-block.improvement b { color: #e8c469; }
+
+@media print {
+  body * { visibility: hidden !important; }
+  #findings-report, #findings-report * { visibility: visible !important; }
+  #findings-report {
+    position: absolute; inset: 0; width: 100%;
+    background: #fff !important; color: #111 !important;
+    border: 0; box-shadow: none; padding: 24px;
+  }
+  #findings-report h3, #findings-report h4, #findings-report b { color: #111 !important; }
+  #findings-report .as-find-code { color: #0a7a5c; border-color: #0a7a5c; }
+  .no-print { display: none !important; }
+}
