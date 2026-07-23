@@ -1,0 +1,808 @@
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { supabase } from '../lib/supabase.js'
+import { useAuth } from '../context/AuthContext.jsx'
+import { Icon } from '../components/Chrome.jsx'
+import PmShell from '../components/PmShell.jsx'
+import { useLang } from '../i18n.jsx'
+import { ZONE_FALLBACK, PORTAL_STRINGS, zoneText } from '../data/orbitalPortal.js'
+
+/**
+ * Orbital 360 portal — role-aware hub.
+ *
+ *  superadmin / admin  → everything (zones + CRM + all projects)
+ *  account_manager     → CRM + status of all projects (read)
+ *  consultant          → designs projects (list + quick create)
+ *  client              → interacts with their projects (progress + activity)
+ */
+export default function Portal() {
+  const { user, role, profile } = useAuth()
+  const { zone: zoneParam } = useParams()
+  const navigate = useNavigate()
+  const { lang } = useLang()
+  const s = PORTAL_STRINGS[lang] || PORTAL_STRINGS.en
+  const isAr = lang === 'ar'
+
+  const [zones, setZones] = useState(ZONE_FALLBACK)
+  const [myZones, setMyZones] = useState(null)
+  const [accounts, setAccounts] = useState([])
+  const [projects, setProjects] = useState([])
+  const [showNew, setShowNew] = useState(false)
+  const [pmTab, setPmTab] = useState('all')
+  const [myCos, setMyCos] = useState([])
+  const [coSel, setCoSel] = useState('')
+  const [myTasks, setMyTasks] = useState([])
+  const [myLeadIds, setMyLeadIds] = useState([])
+  const [activity, setActivity] = useState([])
+
+  const canSeeCRM = ['superadmin', 'admin', 'account_manager'].includes(role)
+  const isConsultant = role === 'consultant'
+  const isClient = role === 'client' || !role
+
+  /* ---------- data ---------- */
+  useEffect(() => {
+    if (!supabase || !user) return
+
+    if (!canSeeCRM && role !== 'consultant') {
+      supabase.rpc('my_product_zones')
+        .then(({ data }) => setMyZones((data ?? []).map(r => r?.my_product_zones ?? r)))
+        .catch(() => setMyZones([]))
+    }
+
+    supabase.from('zones')
+      .select('code, name_en, name_ar, desc_en, desc_ar, sort_order')
+      .eq('is_active', true)
+      .order('sort_order')
+      .then(({ data }) => {
+        if (data?.length) {
+          const icons = Object.fromEntries(ZONE_FALLBACK.map(z => [z.code, z.icon]))
+          setZones(data.map(z => ({ ...z, icon: icons[z.code] || 'doc' })))
+        }
+      })
+
+    // Projects: RLS already limits rows to what this role may see.
+    supabase.from('projects')
+      .select('id, code, title_en, title_ar, zone_code, status, progress, due_date, account_id, kind, start_date')
+      .order('updated_at', { ascending: false })
+      .limit(12)
+      .then(({ data }) => setProjects(data ?? []))
+
+    if (canSeeCRM) {
+      supabase.from('accounts')
+        .select('id, name, name_ar, crm_status, country')
+        .order('updated_at', { ascending: false })
+        .limit(12)
+        .then(({ data }) => setAccounts(data ?? []))
+    }
+  }, [user, role]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!supabase || !user || !isClient || projects.length === 0) return
+    supabase.from('project_activity')
+      .select('id, project_id, kind, body, created_at')
+      .in('project_id', projects.map(p => p.id))
+      .order('created_at', { ascending: false })
+      .limit(8)
+      .then(({ data }) => setActivity(data ?? []))
+  }, [user, isClient, projects])
+
+  const accountById = useMemo(
+    () => Object.fromEntries(accounts.map(a => [a.id, a])), [accounts])
+
+  /* ---------- minimal KPI strip ---------- */
+  const [stats, setStats] = useState(null)
+  useEffect(() => {
+    if (!supabase || !user) return
+    const count = (table, filter) => {
+      let q = supabase.from(table).select('*', { count: 'exact', head: true })
+      if (filter) q = filter(q)
+      return q.then(({ count: c }) => c ?? 0).catch(() => 0)
+    }
+    Promise.all([
+      count('projects'),
+      count('assessments'),
+      role === 'superadmin' ? count('accounts') : Promise.resolve(null),
+      role === 'superadmin' ? count('profiles') : Promise.resolve(null),
+      role === 'superadmin'
+        ? count('subscriptions', (q) => q.in('status', ['trial', 'active']))
+        : Promise.resolve(null),
+    ]).then(([pj, asmt, comp, ppl, subs]) =>
+      setStats({ pj, asmt, comp, ppl, subs }))
+  }, [user, role])
+
+  /* ---------- who can open projects & where ---------- */
+  const [scopes, setScopes] = useState([])
+  useEffect(() => {
+    if (!supabase || !user) return
+    supabase.rpc('my_project_scopes').then(({ data }) => setScopes(data ?? []))
+  }, [user])
+
+  /* ---------- project members ---------- */
+  const [membersFor, setMembersFor] = useState(null)
+  const [members, setMembers] = useState([])
+  const [memberErr, setMemberErr] = useState(null)
+  const [allUsers, setAllUsers] = useState([])
+  const canManageMembers = ['superadmin', 'admin', 'consultant'].includes(role)
+  const canCreateDelete = ['superadmin', 'admin'].includes(role)
+
+  useEffect(() => {
+    if (!supabase || !user || projects.length === 0) return
+    supabase.from('project_members')
+      .select('project_id, user_id, member_role')
+      .in('project_id', projects.map(p => p.id))
+      .then(({ data }) => setMembers(data ?? []))
+    if (canManageMembers) {
+      supabase.rpc('list_people_min')
+        .then(({ data }) => setAllUsers(data ?? []))
+    }
+  }, [user, projects, canManageMembers])
+
+  const memberName = (id) => {
+    const u = allUsers.find(x => x.id === id)
+    return u ? (u.full_name || u.email) : id.slice(0, 8)
+  }
+
+  async function addMember(projectId, e) {
+    e.preventDefault()
+    const f = e.target
+    if (!f.muser.value) return
+    setMemberErr(null)
+    const { error } = await supabase.from('project_members').upsert({
+      project_id: projectId, user_id: f.muser.value, member_role: f.mrole.value,
+    })
+    if (error) { setMemberErr(error.message); return }
+    f.reset()
+    const { data } = await supabase.from('project_members')
+      .select('project_id, user_id, member_role')
+      .in('project_id', projects.map(p => p.id))
+    setMembers(data ?? [])
+  }
+
+  async function setProjectStatus(projectId, newStatus) {
+    const { error } = await supabase.from('projects')
+      .update({ status: newStatus }).eq('id', projectId)
+    if (error) setMemberErr(error.message)
+    else setProjects(prev => prev.map(p => p.id === projectId ? { ...p, status: newStatus } : p))
+  }
+
+  async function deleteProject(p) {
+    if (!window.confirm(s.pjDeleteConfirm)) return
+    const { error } = await supabase.from('projects').delete().eq('id', p.id)
+    if (error) setMemberErr(error.message)
+    else setProjects(prev => prev.filter(x => x.id !== p.id))
+  }
+
+  async function removeMember(projectId, userId) {
+    await supabase.from('project_members').delete()
+      .eq('project_id', projectId).eq('user_id', userId)
+    setMembers(prev => prev.filter(m => !(m.project_id === projectId && m.user_id === userId)))
+  }
+
+  useEffect(() => {
+    if (!supabase || !user || zoneParam || role === 'superadmin') return
+    supabase.rpc('my_companies').then(({ data }) => {
+      const cos = data ?? []
+      setMyCos(cos)
+      setCoSel(prev => prev || profile?.company_id || cos[0]?.account_id || '')
+    })
+    supabase.from('project_members').select('project_id, member_role')
+      .eq('user_id', user.id).eq('member_role', 'lead_consultant')
+      .then(({ data }) => setMyLeadIds((data ?? []).map(m => m.project_id)))
+    supabase.from('project_tasks')
+      .select('id, title, due_date, status, project_id, projects(code, title_en, account_id)')
+      .eq('assignee', user.id).neq('status', 'done')
+      .then(({ data }) => setMyTasks(data ?? []))
+  }, [user, zoneParam, role, profile?.company_id])
+
+  const daysTo = (d) => d ? Math.ceil((new Date(d) - Date.now()) / 86400000) : null
+  const dueTasks = myTasks
+    .map(t => ({ ...t, days: daysTo(t.due_date) }))
+    .filter(t => t.days != null && t.days <= 30)
+    .sort((a, b) => a.days - b.days)
+
+  const projTitle = (p) => {
+    const t = (isAr && p.title_ar) ? p.title_ar : p.title_en
+    return p.code && t !== p.code ? `${p.code} · ${t}` : (p.code || t)
+  }
+
+  return (
+    <PmShell>
+      <div className="pm-content">
+        <header className="dash-head">
+          {zoneParam ? (
+            <>
+              <button className="btn btn-ghost btn-xs"
+                      onClick={() => navigate('/portal')}>← {s.dashboard}</button>
+              <h1>{zoneText(zones.find(z => z.code === zoneParam) || {}, lang).name || zoneParam}</h1>
+            </>
+          ) : (
+            <h1>{s.pmWelcome}<strong>{s.pmName}</strong></h1>
+          )}
+        </header>
+
+        {!zoneParam && role === 'admin' && profile?.company_id && (
+          <p className="dash-company">
+            {s.dsMyCompany}: <b>{accounts.find(a => a.id === profile.company_id)?.name || '…'}</b>
+          </p>
+        )}
+
+        {/* ---------------- KPI STRIP (numbers first) ---------------- */}
+        {!zoneParam && role === 'superadmin' && stats && (
+          <div className="dash-stats">
+            {stats.comp != null && <div className="dash-stat"><b>{stats.comp}</b><span>{s.dsCompanies}</span></div>}
+            {stats.ppl != null && <div className="dash-stat"><b>{stats.ppl}</b><span>{s.dsPeople}</span></div>}
+            {stats.subs != null && <div className="dash-stat"><b>{stats.subs}</b><span>{s.dsProducts}</span></div>}
+            <div className="dash-stat"><b>{stats.pj}</b><span>{s.dsProjects}</span></div>
+            <div className="dash-stat"><b>{stats.asmt}</b><span>{s.dsAssessments}</span></div>
+          </div>
+        )}
+
+        {!zoneParam && isClient && Array.isArray(myZones) && myZones.length === 0 && (
+          <section className="dash-empty">
+            <p><b>{s.pmNoProducts}</b> {s.pmNoProductsHint}</p>
+            <Link className="btn btn-ghost btn-xs" to="/portal/account">{s.pmMyAccount}</Link>
+          </section>
+        )}
+
+        {/* ---------------- PERSONAL DASHBOARD (non-superadmin) ---------------- */}
+        {!zoneParam && role !== 'superadmin' && (
+          <>
+            <div className="dash-stats pdash-summary">
+              <div className="dash-stat"><b>{myCos.length}</b><span>{s.pdCompanies}</span></div>
+              <div className="dash-stat"><b>{dueTasks.length}</b><span>{s.pdTasksDue}</span></div>
+            </div>
+            <div className="pdash">
+              <aside className="pdash-cos">
+                <h4>{s.pdMyCompanies}</h4>
+                {myCos.length === 0 ? <p className="proj-meta">—</p> : myCos.map(c => (
+                  <button key={c.account_id}
+                          className={`pdash-co ${coSel === c.account_id ? 'on' : ''}`}
+                          onClick={() => setCoSel(c.account_id)}>
+                    {c.name}
+                  </button>
+                ))}
+              </aside>
+              <div className="pdash-main">
+                {(() => {
+                  const coProjects = projects.filter(p => p.account_id === coSel && p.status !== 'archived')
+                  const lead = coProjects.filter(p => myLeadIds.includes(p.id))
+                  const coTasks = dueTasks.filter(t => t.projects?.account_id === coSel)
+                  const bucket = (min, max) => coTasks.filter(t => t.days > min && t.days <= max)
+                  const overdue = coTasks.filter(t => t.days <= 0)
+                  const b7 = bucket(0, 7), b15 = bucket(7, 15), b30 = bucket(15, 30)
+                  const TaskRow = ({ t }) => (
+                    <li className={`pdash-task d${t.days <= 0 ? 0 : t.days <= 7 ? 7 : t.days <= 15 ? 15 : 30}`}>
+                      <b>{t.title}</b>
+                      <span>{t.projects?.code || t.projects?.title_en || ''}</span>
+                      <em>{t.days <= 0 ? s.pdOverdue : `${t.days}d`}</em>
+                    </li>
+                  )
+                  return (
+                    <>
+                      <section className="portal-card">
+                        <h3>{s.pdActive}</h3>
+                        {coProjects.length === 0 ? <p>{s.projEmpty}</p> : (
+                          <div className="dash-client-projs">
+                            {coProjects.map(p => (
+                              <button key={p.id} className="dash-proj-chip"
+                                      onClick={() => navigate(p.zone_code === 'assessment'
+                                        ? '/portal/assessment'
+                                        : p.zone_code === 'governance'
+                                          ? `/portal/management/${p.id}`
+                                          : `/portal/${p.zone_code}`)}>
+                                <span className={`dash-dot dot-${p.status}`} />
+                                {p.code || p.title_en}
+                                <em>{s.projStatus[p.status] || p.status}</em>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </section>
+                      {lead.length > 0 && (
+                        <section className="portal-card">
+                          <h3>{s.pdLead}</h3>
+                          <div className="dash-client-projs">
+                            {lead.map(p => (
+                              <button key={p.id} className="dash-proj-chip"
+                                      onClick={() => navigate(`/portal/${p.zone_code}`)}>
+                                <span className={`dash-dot dot-${p.status}`} />
+                                {p.code || p.title_en}
+                              </button>
+                            ))}
+                          </div>
+                        </section>
+                      )}
+                      <section className="portal-card">
+                        <h3>{s.pdTasks}</h3>
+                        {coTasks.length === 0 && overdue.length === 0
+                          ? <p>{s.pdNoTasks}</p>
+                          : (
+                          <>
+                            {overdue.length > 0 && <>
+                              <h4 className="pdash-bucket b0">{s.pdOverdue}</h4>
+                              <ul className="pdash-tasks">{overdue.map(t => <TaskRow key={t.id} t={t} />)}</ul></>}
+                            {b7.length > 0 && <>
+                              <h4 className="pdash-bucket b7">≤ 7 {s.pdDays}</h4>
+                              <ul className="pdash-tasks">{b7.map(t => <TaskRow key={t.id} t={t} />)}</ul></>}
+                            {b15.length > 0 && <>
+                              <h4 className="pdash-bucket b15">≤ 15 {s.pdDays}</h4>
+                              <ul className="pdash-tasks">{b15.map(t => <TaskRow key={t.id} t={t} />)}</ul></>}
+                            {b30.length > 0 && <>
+                              <h4 className="pdash-bucket b30">≤ 30 {s.pdDays}</h4>
+                              <ul className="pdash-tasks">{b30.map(t => <TaskRow key={t.id} t={t} />)}</ul></>}
+                          </>
+                        )}
+                      </section>
+                    </>
+                  )
+                })()}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ---------------- PRODUCTS AS QUIET CHIPS ---------------- */}
+        {!zoneParam && <div className="dash-zones">
+          {zones.map((z) => {
+            const zt = zoneText(z, lang)
+            return (
+              <button key={z.code} className="dash-zone"
+                      onClick={() => navigate(`/portal/${z.code}`)}>
+                <span className="dash-zone-glyph"><Icon name={z.icon} /></span>
+                <span className="dash-zone-name">{zt.name}</span>
+                <span className="dash-zone-arrow">→</span>
+              </button>
+            )
+          })}
+        </div>}
+
+        <div className="portal-panels">
+          {/* ------------- CRM (superadmin / admin / account manager) ------------- */}
+          {!zoneParam && role === 'superadmin' && canSeeCRM && (
+            <section className="portal-card wide">
+              <h3>{s.crmTitle}</h3>
+              {accounts.length === 0 ? <p>{s.crmEmpty}</p> : (
+                <table className="portal-table">
+                  <tbody>
+                    {accounts.map(a => (
+                      <tr key={a.id}>
+                        <td><b>{(isAr && a.name_ar) || a.name}</b></td>
+                        <td>{a.country || '—'}</td>
+                        <td><span className={`pill pill-${a.crm_status}`}>
+                          {s.crmStatus[a.crm_status] || a.crm_status}
+                        </span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </section>
+          )}
+
+          {/* ------------- DASHBOARD: active projects by client ------------- */}
+          {!zoneParam && role === 'superadmin' && (
+            <section className="portal-card wide2">
+              <h3>{s.dsActiveByClient}</h3>
+              {(() => {
+                const active = projects.filter(p => p.status !== 'archived')
+                if (active.length === 0) return <p>{s.projEmpty}</p>
+                const clientIds = [...new Set(active.map(p => p.account_id))]
+                return clientIds.map(cid => (
+                  <div key={cid} className="dash-client">
+                    <span className="dash-client-name">
+                      {accountById[cid]?.name || '—'}
+                    </span>
+                    <span className="dash-client-projs">
+                      {active.filter(p => p.account_id === cid).map(p => (
+                        <button key={p.id} className="dash-proj-chip"
+                                onClick={() => navigate(p.zone_code === 'assessment'
+                                  ? '/portal/assessment'
+                                  : p.zone_code === 'governance'
+                                    ? `/portal/management/${p.id}`
+                                    : `/portal/${p.zone_code}`)}>
+                          <span className={`dash-dot dot-${p.status}`} />
+                          {p.code || projTitle(p)}
+                          <em>{s.projStatus[p.status] || p.status}</em>
+                        </button>
+                      ))}
+                    </span>
+                  </div>
+                ))
+              })()}
+            </section>
+          )}
+
+          {/* ------------- ZONE: full project management ------------- */}
+          {zoneParam && (
+          <section className="portal-card wide">
+            <h3>
+              {canSeeCRM ? s.statusTitle : isConsultant ? s.myProjects : s.clientProjects}
+            </h3>
+            {zoneParam === 'transformation' && (
+              <div className="tab-row pm-kind-tabs">
+                {['all', 'action_plan', 'transformation'].map(k => (
+                  <button key={k} className={`tab ${pmTab === k ? 'on' : ''}`}
+                          onClick={() => setPmTab(k)}>
+                    {k === 'all' ? s.pjKindAll : k === 'action_plan' ? s.pjKindAction : s.pjKindTransf}
+                  </button>
+                ))}
+              </div>
+            )}
+            {projects.filter(p => p.zone_code === zoneParam
+                && (zoneParam !== 'transformation' || pmTab === 'all' || (p.kind || 'project') === pmTab)
+              ).length === 0 ? <p>{s.projEmpty}</p> : (
+              <ul className="proj-list">
+                {projects.filter(p => p.zone_code === zoneParam
+                    && (zoneParam !== 'transformation' || pmTab === 'all' || (p.kind || 'project') === pmTab)
+                  ).map(p => (
+                  <li key={p.id}>
+                    <div className="proj-top">
+                      <b>{projTitle(p)}</b>
+                      {p.zone_code === 'governance' && (
+                        <button className="btn btn-ghost btn-xs"
+                                onClick={() => navigate(`/portal/management/${p.id}`)}>
+                          {s.open} →
+                        </button>
+                      )}
+                      {canManageMembers ? (
+                        <select className="pj-status" value={p.status}
+                                onChange={(e) => setProjectStatus(p.id, e.target.value)}>
+                          {Object.entries(s.projStatus).map(([k, v]) =>
+                            <option key={k} value={k}>{v}</option>)}
+                        </select>
+                      ) : (
+                        <span className={`pill pill-${p.status}`}>
+                          {s.projStatus[p.status] || p.status}
+                        </span>
+                      )}
+                      {canCreateDelete && (
+                        <button className="btn btn-ghost btn-xs"
+                                onClick={() => deleteProject(p)}>{s.pjDelete}</button>
+                      )}
+                    </div>
+                    <div className="proj-meta">
+                      <span>{zoneText(zones.find(z => z.code === p.zone_code) || {}, lang).name || p.zone_code}</span>
+                      {canSeeCRM && accountById[p.account_id] &&
+                        <span> · {accountById[p.account_id].name}</span>}
+                    </div>
+                    <div className="proj-bar" aria-label={`${s.progress}: ${p.progress}%`}>
+                      <span style={{ width: `${p.progress}%` }} />
+                    </div>
+                    {p.zone_code === 'transformation' && (
+                      <GanttMini project={p} s={s}
+                                 canEdit={canCreateDelete || myLeadIds.includes(p.id)} />
+                    )}
+
+                    <div className="proj-members">
+                      <button className="btn btn-ghost btn-xs"
+                              onClick={() => setMembersFor(membersFor === p.id ? null : p.id)}>
+                        {s.pjMembers} ({members.filter(m => m.project_id === p.id).length})
+                        {' '}{membersFor === p.id ? '▴' : '▾'}
+                      </button>
+                      {membersFor === p.id && (
+                        <div className="cp-detail">
+                          {memberErr && <p className="form-status err">{memberErr}</p>}
+                          {members.filter(m => m.project_id === p.id).length === 0
+                            ? <p className="proj-meta">{s.pjNoMembers}</p>
+                            : members.filter(m => m.project_id === p.id).map(m => (
+                              <div key={m.user_id} className="proj-top">
+                                <span>
+                                  <b>{memberName(m.user_id)}</b>
+                                  <span className="proj-meta"> · {s.productRoles[m.member_role] || m.member_role}</span>
+                                </span>
+                                {canManageMembers && (
+                                  <button className="btn btn-ghost btn-xs"
+                                          onClick={() => removeMember(p.id, m.user_id)}>
+                                    {s.pjRemove}
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          {canManageMembers && (
+                            <form className="cp-inline" onSubmit={(e) => addMember(p.id, e)}>
+                              <select name="muser" required>
+                                <option value="">—</option>
+                                {allUsers
+                                  .filter(u => !members.some(m => m.project_id === p.id && m.user_id === u.id))
+                                  .map(u => <option key={u.id} value={u.id}>{u.full_name || u.email}</option>)}
+                              </select>
+                              <select name="mrole" defaultValue="assessor">
+                                {Object.entries(s.productRoles).map(([k, v]) =>
+                                  <option key={k} value={k}>{v}</option>)}
+                              </select>
+                              <button className="btn btn-primary btn-xs" type="submit">{s.pjAddMember}</button>
+                            </form>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+          )}
+
+          {/* ------------- open a project (admin / superadmin, inside a zone) ------------- */}
+          {canCreateDelete && zoneParam && !showNew && (
+            <div className="pm-actions">
+              <button className="btn btn-primary btn-xs" onClick={() => setShowNew(true)}>
+                + {s.npBtn}
+              </button>
+            </div>
+          )}
+          {canCreateDelete && zoneParam && showNew && (
+            <>
+              <div className="pm-actions">
+                <button className="btn btn-ghost btn-xs" onClick={() => setShowNew(false)}>✕ {s.mgCancel || 'Cancel'}</button>
+              </div>
+              <NewProject zones={zones} lang={lang} s={s} scopes={scopes}
+                staff={true} fixedZone={zoneParam || ''}
+                onCreated={(p) => { setProjects(prev => [p, ...prev]); setShowNew(false) }} />
+            </>
+          )}
+
+          {/* ------------- CLIENT: activity ------------- */}
+          {isClient && projects.length > 0 && (
+            <ClientActivity
+              projects={projects} activity={activity} s={s} isAr={isAr}
+              projTitle={projTitle}
+              onPosted={(row) => setActivity(prev => [row, ...prev])}
+            />
+          )}
+        </div>
+      </div>
+    </PmShell>
+  )
+}
+
+/* =================== New project (lean) =================== */
+function NewProject({ zones, lang, s, scopes, staff, fixedZone, onCreated }) {
+  const { user, role, profile } = useAuth()
+  const navigate = useNavigate()
+  const isSuper = role === 'superadmin'
+  const [accounts, setAccounts] = useState([])
+  const [accountSel, setAccountSel] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [status, setStatus] = useState(null)
+  const [kindSel, setKindSel] = useState('project')
+  const zoneSel = fixedZone
+
+  useEffect(() => {
+    if (!supabase || !isSuper) return
+    supabase.from('accounts').select('id, name').order('name')
+      .then(({ data }) => setAccounts(data ?? []))
+  }, [isSuper])
+
+  const activeCompany = localStorage.getItem('o360.company') || ''
+  const companyId = isSuper ? accountSel : (activeCompany || profile?.company_id || '')
+  const companyName = !isSuper
+    ? undefined // shown from profile context below
+    : undefined
+
+  async function onSubmit(e) {
+    e.preventDefault()
+    if (!supabase || !companyId || !zoneSel) return
+    setBusy(true); setStatus(null)
+    const { data, error } = await supabase.from('projects').insert({
+      account_id: companyId,
+      zone_code: zoneSel,
+      created_by: user.id,
+      status: 'design',
+      kind: zoneSel === 'transformation' ? kindSel : 'project',
+    }).select().single()
+    if (error) {
+      setBusy(false)
+      setStatus({ ok: false, msg: error.message || s.npError })
+      return
+    }
+    await supabase.from('project_members').upsert({
+      project_id: data.id, user_id: user.id, member_role: 'admin',
+    })
+    if (data.zone_code === 'assessment') {
+      const { data: a } = await supabase.from('assessments')
+        .select('id').eq('project_id', data.id).maybeSingle()
+      if (a) { setBusy(false); onCreated(data); navigate(`/portal/assessment/${a.id}`); return }
+    }
+    if (data.zone_code === 'governance') {
+      setBusy(false); onCreated(data)
+      navigate(`/portal/management/${data.id}`)
+      return
+    }
+    setBusy(false)
+    setStatus({ ok: true, msg: `${s.npCreated} · ${data.code}` })
+    onCreated(data)
+    setAccountSel('')
+  }
+
+  return (
+    <section className="portal-card wide2 np-lean">
+      <h3>{s.newProject}</h3>
+      {status && <p className={`form-status ${status.ok ? 'ok' : 'err'}`}>{status.msg}</p>}
+      <form onSubmit={onSubmit}>
+        <div className="np-lean-row">
+          {isSuper ? (
+            <select aria-label={s.npAccount} required value={accountSel}
+                    onChange={(e) => setAccountSel(e.target.value)}>
+              <option value="">{s.npAccount} —</option>
+              {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </select>
+          ) : (
+            <span className="np-fixed-company">{s.npYourCompany}</span>
+          )}
+                {zoneSel === 'transformation' && (
+                  <div className="field">
+                    <label>{s.pjKindLabel}</label>
+                    <select value={kindSel} onChange={(e) => setKindSel(e.target.value)}>
+                      <option value="project">{s.pjKindProject}</option>
+                      <option value="action_plan">{s.pjKindAction}</option>
+                      <option value="transformation">{s.pjKindTransf}</option>
+                    </select>
+                  </div>
+                )}
+          <button className="btn btn-primary" disabled={busy || !companyId} type="submit">
+            {s.npCreate}
+          </button>
+        </div>
+        <p className="proj-meta">
+          {s.npCode} {s.npRolesInside}
+          {zoneSel === 'assessment' && <> {s.npOpenO360}</>}
+        </p>
+      </form>
+    </section>
+  )
+}
+
+/* ======================= Client: activity + comment ======================= */
+function ClientActivity({ projects, activity, s, isAr, projTitle, onPosted }) {
+  const { user } = useAuth()
+  const [busy, setBusy] = useState(false)
+
+  async function post(e) {
+    e.preventDefault()
+    const f = e.target
+    const body = f.body.value.trim()
+    if (!supabase || !body) return
+    setBusy(true)
+    const { data, error } = await supabase.from('project_activity').insert({
+      project_id: f.project.value, author: user.id, kind: 'comment', body,
+    }).select().single()
+    setBusy(false)
+    if (!error) { onPosted(data); f.reset() }
+  }
+
+  const byId = Object.fromEntries(projects.map(p => [p.id, p]))
+
+  return (
+    <section className="portal-card wide">
+      <h3>{s.activity}</h3>
+      {activity.length === 0 ? <p>{s.activityEmpty}</p> : (
+        <ul className="act-list">
+          {activity.map(a => (
+            <li key={a.id}>
+              <span className="act-proj">{byId[a.project_id] ? projTitle(byId[a.project_id]) : ''}</span>
+              <p>{a.body}</p>
+              <time>{new Date(a.created_at).toLocaleDateString(isAr ? 'ar' : 'en-GB')}</time>
+            </li>
+          ))}
+        </ul>
+      )}
+      <form className="act-form" onSubmit={post}>
+        <select name="project" required>
+          {projects.map(p => <option key={p.id} value={p.id}>{projTitle(p)}</option>)}
+        </select>
+        <textarea name="body" rows="2" placeholder={s.commentPh} required />
+        <button className="btn btn-primary" disabled={busy} type="submit">{s.send}</button>
+      </form>
+    </section>
+  )
+}
+
+/* =================== Mini Gantt (project_tasks) =================== */
+function GanttMini({ project, s, canEdit }) {
+  const { user } = useAuth()
+  const [open, setOpen] = useState(false)
+  const [tasks, setTasks] = useState(null)
+  const [err, setErr] = useState(null)
+
+  async function load() {
+    const { data, error } = await supabase.from('project_tasks')
+      .select('*').eq('project_id', project.id)
+      .order('start_date', { ascending: true, nullsFirst: false })
+    if (error) setErr(error.message)
+    else setTasks(data ?? [])
+  }
+  function toggle() {
+    const next = !open
+    setOpen(next)
+    if (next && tasks == null) load()
+  }
+  async function addTask(e) {
+    e.preventDefault()
+    const f = e.target
+    const title = f.gt_title.value.trim()
+    if (!title) return
+    const { data, error } = await supabase.from('project_tasks').insert({
+      project_id: project.id, title,
+      start_date: f.gt_start.value || null,
+      due_date: f.gt_due.value || null,
+      created_by: user.id, assignee: user.id,
+    }).select()
+    if (error) { setErr(error.message); return }
+    setErr(null)
+    if (data?.[0]) setTasks(prev => [...(prev ?? []), data[0]])
+    f.reset()
+  }
+  async function cycle(t) {
+    const next = t.status === 'todo' ? 'doing' : t.status === 'doing' ? 'done' : 'todo'
+    const { error } = await supabase.from('project_tasks')
+      .update({ status: next }).eq('id', t.id)
+    if (!error) setTasks(prev => prev.map(x => x.id === t.id ? { ...x, status: next } : x))
+  }
+  async function removeTask(t) {
+    const { error } = await supabase.from('project_tasks').delete().eq('id', t.id)
+    if (!error) setTasks(prev => prev.filter(x => x.id !== t.id))
+  }
+
+  const dated = (tasks ?? []).filter(t => t.start_date && t.due_date)
+  let min = null, max = null
+  for (const t of dated) {
+    const a = new Date(t.start_date), b = new Date(t.due_date)
+    if (!min || a < min) min = a
+    if (!max || b > max) max = b
+  }
+  const span = min && max ? Math.max(1, (max - min) / 86400000) : null
+  const pos = (t) => {
+    const a = new Date(t.start_date), b = new Date(t.due_date)
+    const left = ((a - min) / 86400000) / span * 100
+    const width = Math.max(2, ((b - a) / 86400000) / span * 100)
+    return { insetInlineStart: `${left}%`, width: `${width}%` }
+  }
+
+  return (
+    <div className="gantt-wrap">
+      <button className="btn btn-ghost btn-xs" onClick={toggle}>
+        {open ? '▾' : '▸'} {s.gtTitle}{tasks != null ? ` · ${tasks.length}` : ''}
+      </button>
+      {open && (
+        <div className="gantt">
+          {err && <p className="form-status err">{err}</p>}
+          {tasks == null ? <p className="proj-meta">…</p> : tasks.length === 0 ? (
+            <p className="proj-meta">{s.gtEmpty}</p>
+          ) : (
+            <ul className="gantt-rows">
+              {tasks.map(t => (
+                <li key={t.id} className={`gantt-row st-${t.status}`}>
+                  <span className="gantt-label" title={t.title}>
+                    <button className={`gantt-st st-${t.status}`} onClick={() => cycle(t)}
+                            title={s.gtStatus[t.status]} disabled={!canEdit && t.assignee !== user?.id}>
+                      {t.status === 'done' ? '✓' : t.status === 'doing' ? '◐' : '○'}
+                    </button>
+                    {t.title}
+                  </span>
+                  <span className="gantt-track">
+                    {t.start_date && t.due_date && span
+                      ? <span className={`gantt-bar st-${t.status}`} style={pos(t)}
+                              title={`${t.start_date} → ${t.due_date}`} />
+                      : <em className="proj-meta">{t.due_date || ''}</em>}
+                  </span>
+                  {canEdit && (
+                    <button className="btn btn-ghost btn-xs" onClick={() => removeTask(t)}>✕</button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {canEdit && (
+            <form className="cp-inline gantt-add" onSubmit={addTask}>
+              <input name="gt_title" placeholder={s.gtAddPh} required />
+              <input name="gt_start" type="date" title={s.gtStart} />
+              <input name="gt_due" type="date" title={s.gtDue} />
+              <button className="btn btn-ghost btn-xs" type="submit">+ {s.gtAdd}</button>
+            </form>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
