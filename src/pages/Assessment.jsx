@@ -28,6 +28,27 @@ const L = (row, base, lang) =>
   (lang === 'ar' ? row[`${base}_ar`]
    : lang === 'es' ? row[`${base}_es`]
    : row[`${base}_en`]) || row[`${base}_en`]
+const TIER_STEPS = [
+  ['white', 300], ['blue', 400], ['silver', 500], ['gold', 600],
+  ['platinum', 700], ['titanium', 800], ['ruby', Infinity],
+]
+const tierOf = (score100) => {
+  if (score100 == null) return null
+  const pts = Math.round(score100 * 10)          // escala EFQM 0–1000
+  const [key] = TIER_STEPS.find(([, max]) => pts < max)
+  return { key, pts }
+}
+const TierBadge = ({ score, s }) => {
+  const t = tierOf(score)
+  if (!t) return null
+  return (
+    <span className="tier-chip" title={`${t.pts} pts`}>
+      <img src={`/orbital360/tiers/orbital-${t.key}.svg`} alt="" />
+      {s.tiers?.[t.key] || t.key} · {t.pts}
+    </span>
+  )
+}
+
 const LV = (q, lang) =>
   (lang === 'ar' ? q.levels_ar
    : lang === 'es' && Array.isArray(q.levels_es) && q.levels_es.length === 6 ? q.levels_es
@@ -335,6 +356,14 @@ function AssessmentDetail({ assessmentId }) {
           <section className="portal-card wide2" id="findings-report">
             <div className="rep-head">
               <h3>{s.asRepTitle}</h3>
+              <div className="rep-scores">
+                <span>{s.asSelfScore}: <b className="cli">{scores.total ?? '—'}</b>
+                  <TierBadge score={scores.total} s={s} /></span>
+                {scores.audTotal != null && (
+                  <span>{s.asAuditorScore}: <b className="aud">{scores.audTotal}</b>
+                    <TierBadge score={scores.audTotal} s={s} /></span>
+                )}
+              </div>
               <button className="btn btn-ghost btn-xs no-print" onClick={() => window.print()}>
                 🖨 {s.asRepPrint}
               </button>
@@ -392,6 +421,7 @@ function AssessmentDetail({ assessmentId }) {
           <AssessorTools
             assessmentId={assessmentId} a={a} criteria={criteria}
             isAdmin={isAdmin} s={s} lang={lang} onChanged={load}
+            scores={scores}
           />
         )}
 
@@ -669,21 +699,15 @@ function Questionnaire({ assessmentId }) {
         const audOverall = canSeeAud ? contrib(questions, audLvl) : null
         const audTouched = canSeeAud && Object.values(audScores).some(a => a?.level != null)
         return (
-          <>
-          <button type="button" className="as-score-fab"
-                  title={canSeeAud ? `${s.asOrgScore} / ${s.asAuditorScore}` : s.asOrgScore}
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <span className="fab-num cli">{overall ?? '—'}</span>
-            {canSeeAud && audTouched && (
-              <>
-                <span className="fab-sep">/</span>
-                <span className="fab-num aud">{audOverall}</span>
-              </>
-            )}
-            <span className="fab-prog">{answered}/{questions.length}</span>
-          </button>
-          <section className="portal-card wide2 as-scoreboard">
-            <div className="as-score-rows">
+          <div className="as-score-dock">
+            <button type="button" className="dock-main"
+                    title={canSeeAud ? `${s.asOrgScore} / ${s.asAuditorScore}` : s.asOrgScore}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <span className="dock-num cli">{overall ?? '—'}</span>
+              {canSeeAud && audTouched && <span className="dock-num aud">{audOverall}</span>}
+              <span className="dock-prog">{answered}/{questions.length}</span>
+            </button>
+            <div className="dock-rows">
               {criteria.map(c => {
                 const qs = questions.filter(q => q.criterion_code === c.code)
                 const done = qs.filter(q => lvl(q) != null)
@@ -691,24 +715,20 @@ function Questionnaire({ assessmentId }) {
                 const audSc = canSeeAud && audTouched ? (contrib(qs, audLvl) ?? 0) : null
                 return (
                   <button key={c.code} type="button"
-                          className={`as-score-row ${crit === c.code ? 'on' : ''}`}
+                          className={`dock-row ${crit === c.code ? 'on' : ''}`}
+                          title={`${c.code.toUpperCase()} · ${done.length}/${qs.length}`}
                           onClick={() => { setCrit(c.code); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
-                    <span className="as-score-c">{c.code.toUpperCase()}</span>
-                    <span className="as-score-bars">
-                      <span className="as-score-bar"><span style={{ width: `${sc}%` }} /></span>
-                      {audSc != null && (
-                        <span className="as-score-bar aud"><span style={{ width: `${audSc}%` }} /></span>
-                      )}
+                    <span className="dock-c">{c.code.toUpperCase()}</span>
+                    <span className="dock-bar">
+                      <span style={{ width: `${sc}%` }} />
+                      {audSc != null && <i style={{ insetInlineStart: `${audSc}%` }} />}
                     </span>
-                    <span className="as-score-val">
-                      {sc}{audSc != null && <> / <b>{audSc}</b></>} · {done.length}/{qs.length}
-                    </span>
+                    <em>{sc}</em>
                   </button>
                 )
               })}
             </div>
-          </section>
-          </>
+          </div>
         )
       })()}
 
@@ -1051,9 +1071,12 @@ function ModelDesigner() {
 
 
 /* ================= ASSESSOR TOOLS: status · assignments · reviews ================= */
-function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged }) {
+function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged, scores }) {
   const [consultants, setConsultants] = useState([])
   const [assigned, setAssigned] = useState([])
+  const [me, setMe] = useState(null)
+  const [amAuditor, setAmAuditor] = useState(false)
+  const [repFind, setRepFind] = useState({ list: [], qCrit: {}, cli: 'CLI' })
   const [reviews, setReviews] = useState({})     // criterion_code → row
   const [busy, setBusy] = useState(false)
   const [saveState, setSaveState] = useState(null)
@@ -1068,6 +1091,24 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
     ])
     setAssigned((asg ?? []).map(x => x.consultant_id))
     setReviews(Object.fromEntries((rev ?? []).map(r => [r.criterion_code, r])))
+    const { data: { user: u } } = await supabase.auth.getUser()
+    setMe(u?.id || null)
+    if (u) {
+      const { data: mem } = await supabase.from('assessment_members')
+        .select('member_role').eq('assessment_id', assessmentId).eq('user_id', u.id)
+      setAmAuditor((mem ?? []).some(m => m.member_role === 'auditor'))
+    }
+    const [{ data: fnd }, { data: qs }, { data: am }] = await Promise.all([
+      supabase.from('assessment_findings').select('*')
+        .eq('assessment_id', assessmentId).order('created_at'),
+      supabase.from('assessment_questions').select('code, criterion_code'),
+      supabase.from('assessments').select('accounts:company_id (name), code')
+        .eq('id', assessmentId).maybeSingle(),
+    ])
+    const qCrit = Object.fromEntries((qs ?? []).map(x => [x.code, (x.criterion_code || '').toUpperCase()]))
+    const raw = am?.accounts?.name || am?.code || 'CLI'
+    const cli = String(raw).trim().split(/\s+/)[0].replace(/[^\w-]/g, '').slice(0, 12) || 'CLI'
+    setRepFind({ list: fnd ?? [], qCrit, cli })
     if (isAdmin) {
       const { data: cons } = await supabase.rpc('list_people_min')
       setConsultants(cons ?? [])
@@ -1112,6 +1153,7 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
         await supabase.from('assessment_criterion_reviews').upsert({
           assessment_id: assessmentId, criterion_code: code,
           strengths: cur.strengths ?? null, improvements: cur.improvements ?? null,
+          conclusions: cur.conclusions ?? null,
         })
       }
       setSaveState(s.asSaved)
@@ -1134,9 +1176,19 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
     consultants.find(c => c.id === id)?.full_name
     || consultants.find(c => c.id === id)?.email || id.slice(0, 8)
 
+  const mayEnter = isAdmin || (me && assigned.includes(me)) || amAuditor
+  if (!mayEnter) return null
+
   return (
     <section className="portal-card wide2 as-assessor">
       <h3>{s.asAuditorPanel} {saveState && <em className="proj-meta">· {saveState}</em>}</h3>
+
+      <div className="as-scores-clear">
+        <span>{s.asSelfScore}: <b className="cli">{scores?.total ?? '—'}</b>
+          <TierBadge score={scores?.total} s={s} /></span>
+        <span>{s.asAuditorScore}: <b className="aud">{scores?.audTotal ?? '—'}</b>
+          <TierBadge score={scores?.audTotal} s={s} /></span>
+      </div>
 
       <div className="pm-actions">
         <label className="proj-meta">{s.asChangeStatus}:</label>
@@ -1171,23 +1223,58 @@ function AssessorTools({ assessmentId, a, criteria, isAdmin, s, lang, onChanged 
       )}
 
       <h4 className="cp-h4">{s.asReviews}</h4>
-      {criteria.map(c => (
-        <details key={c.code} className="as-review">
-          <summary>C{c.num} · {L(c, 'title', lang)}</summary>
-          <div className="np-row">
-            <div className="field">
-              <label>{s.asRevStrengths}</label>
-              <textarea rows="8" className="as-review-ta" value={reviews[c.code]?.strengths || ''}
-                        onChange={(e) => saveReview(c.code, 'strengths', e.target.value)} />
-            </div>
-            <div className="field">
-              <label>{s.asRevImprovements}</label>
-              <textarea rows="8" className="as-review-ta" value={reviews[c.code]?.improvements || ''}
-                        onChange={(e) => saveReview(c.code, 'improvements', e.target.value)} />
-            </div>
-          </div>
-        </details>
-      ))}
+      {(() => {
+        const counters = {}
+        const coded = repFind.list.map(x => {
+          const cc = repFind.qCrit[x.question_code] || 'C?'
+          const pref = x.type === 'strength' ? 'STR' : 'AM'
+          const key = `${cc}-${pref}`
+          counters[key] = (counters[key] || 0) + 1
+          return { ...x, cc,
+            code: `${repFind.cli}-${cc}-${pref}${String(counters[key]).padStart(2, '0')}` }
+        })
+        return criteria.map(c => {
+          const cc = c.code.toUpperCase()
+          const p = (scores?.perCrit || []).find(x => (x.code || '').toUpperCase() === cc)
+          const strs = coded.filter(x => x.cc === cc && x.type === 'strength')
+          const ams = coded.filter(x => x.cc === cc && x.type === 'improvement')
+          return (
+            <details key={c.code} className="as-review">
+              <summary>
+                C{c.num} · {L(c, 'title', lang)}
+                <span className="rev-mini">
+                  <b className="cli">{p?.avg ?? '—'}</b> / <b className="aud">{p?.audAvg ?? '—'}</b>
+                </span>
+              </summary>
+              <div className="np-row rev-lists">
+                <div className="field">
+                  <label>{s.asRepStrengths} · {strs.length}</label>
+                  {strs.length === 0 ? <p className="proj-meta">—</p> : (
+                    <ul className="rev-find">
+                      {strs.map(x => <li key={x.id}><span className="as-find-code">{x.code}</span> {x.body}</li>)}
+                    </ul>
+                  )}
+                </div>
+                <div className="field">
+                  <label>{s.asRepAOI} · {ams.length}</label>
+                  {ams.length === 0 ? <p className="proj-meta">—</p> : (
+                    <ul className="rev-find">
+                      {ams.map(x => <li key={x.id}><span className="as-find-code">{x.code}</span> {x.body}</li>)}
+                    </ul>
+                  )}
+                </div>
+              </div>
+              <div className="field">
+                <label>{s.asRevConclusions}</label>
+                <textarea rows="5" className="as-review-ta"
+                          placeholder={s.asRevConclusionsPh}
+                          value={reviews[c.code]?.conclusions || ''}
+                          onChange={(e) => saveReview(c.code, 'conclusions', e.target.value)} />
+              </div>
+            </details>
+          )
+        })
+      })()}
     </section>
   )
 }

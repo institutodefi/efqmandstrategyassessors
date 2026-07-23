@@ -1157,3 +1157,57 @@
   #findings-report .as-find-code { color: #0a7a5c; border-color: #0a7a5c; }
   .no-print { display: none !important; }
 }
+
+
+/* ---------- Dock de puntuación: fijo, compacto, a la altura del título ---------- */
+.as-score-dock {
+  position: fixed; top: 14px; inset-inline-end: 16px; z-index: 180;
+  display: flex; align-items: stretch; gap: 10px;
+  background: rgba(13, 22, 40, 0.94); border: 1px solid rgba(82, 211, 162, 0.4);
+  border-radius: 14px; padding: 8px 12px;
+  backdrop-filter: blur(6px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  max-width: 320px;
+}
+.dock-main { background: none; border: 0; cursor: pointer; font-family: inherit;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; padding: 0 4px; border-inline-end: 1px solid rgba(255,255,255,0.1); padding-inline-end: 10px; }
+.dock-num.cli { font-size: 1.9rem; font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, #52d3a2, #2e9e8f);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dock-num.aud { font-size: 0.95rem; font-weight: 700; color: #e8c469; line-height: 1; }
+.dock-prog { font-size: 0.62rem; opacity: 0.7; letter-spacing: 0.04em; }
+.dock-rows { display: flex; flex-direction: column; gap: 2px; justify-content: center; }
+.dock-row { display: flex; align-items: center; gap: 6px; background: none; border: 0;
+  padding: 1px 2px; cursor: pointer; color: inherit; font-family: inherit; border-radius: 6px; }
+.dock-row:hover { background: rgba(82, 211, 162, 0.1); }
+.dock-row.on .dock-c { color: #52d3a2; }
+.dock-c { width: 20px; font-size: 0.62rem; font-weight: 700; text-align: start; opacity: 0.9; }
+.dock-bar { position: relative; width: 96px; height: 4px; border-radius: 999px;
+  background: rgba(255,255,255,0.1); overflow: visible; }
+.dock-bar span { display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, #2e9e8f, #52d3a2); transition: width 0.3s; }
+.dock-bar i { position: absolute; top: -2px; width: 2px; height: 8px; background: #e8c469; border-radius: 1px; }
+.dock-row em { font-style: normal; font-size: 0.62rem; font-variant-numeric: tabular-nums;
+  min-width: 18px; text-align: end; opacity: 0.85; }
+@media (max-width: 900px) {
+  .as-score-dock { top: 8px; padding: 6px 9px; gap: 7px; }
+  .dock-bar { width: 60px; }
+  .dock-num.cli { font-size: 1.5rem; }
+}
+
+
+/* ---------- Panel del auditor: puntuaciones claras + tiers + hallazgos ---------- */
+.as-scores-clear { display: flex; gap: 26px; flex-wrap: wrap; align-items: center;
+  margin: 6px 0 14px; font-size: 1.02rem; }
+.as-scores-clear b.cli, .rep-scores b.cli, .rev-mini b.cli { color: #52d3a2; font-size: 1.35em; }
+.as-scores-clear b.aud, .rep-scores b.aud, .rev-mini b.aud { color: #e8c469; font-size: 1.35em; }
+.tier-chip { display: inline-flex; align-items: center; gap: 6px; margin-inline-start: 8px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em;
+  border: 1px solid var(--line, rgba(255,255,255,0.18)); border-radius: 999px; padding: 3px 10px 3px 4px; }
+.tier-chip img { width: 26px; height: 28px; object-fit: contain; }
+.rev-mini { float: inline-end; font-size: 0.85rem; }
+.rev-lists .rev-find { list-style: none; margin: 4px 0 0; padding: 0; max-height: 240px; overflow: auto; }
+.rev-find li { margin: 4px 0; font-size: 0.88rem; }
+.rep-scores { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.as-review-ta { font-family: inherit; }
+@media print { .tier-chip img { width: 30px; height: 32px; } }
