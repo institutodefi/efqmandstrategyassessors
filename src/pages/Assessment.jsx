@@ -294,6 +294,19 @@ function AssessmentDetail({ assessmentId }) {
         )}
       </div>
 
+      <button type="button" className="as-score-fab"
+              title={canSeeAud ? `${s.asClientScore} / ${s.asAuditorScore}` : s.asClientScore}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <span className="fab-num cli">{scores.total ?? '—'}</span>
+        {canSeeAud && scores.audTotal != null && (
+          <>
+            <span className="fab-sep">/</span>
+            <span className="fab-num aud">{scores.audTotal}</span>
+          </>
+        )}
+        <span className="fab-prog">{scores.answered}/{scores.totalQ}</span>
+      </button>
+
       <div className="portal-panels">
         {/* score */}
         <section className="portal-card wide2">
@@ -597,6 +610,7 @@ function Questionnaire({ assessmentId }) {
                 <span className="fab-num aud">{audOverall}</span>
               </>
             )}
+            <span className="fab-prog">{answered}/{questions.length}</span>
           </button>
           <section className="portal-card wide2 as-scoreboard">
             <div className="as-score-rows">

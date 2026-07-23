@@ -1029,7 +1029,7 @@
 /* ---------- Marcador del cuestionario ---------- */
 .as-scoreboard { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
 .as-score-big { display: flex; flex-direction: column; align-items: center; min-width: 130px; }
-.as-score-num { font-size: 3.4rem; font-weight: 800; line-height: 1;
+.as-score-big .as-score-num { font-size: 3.4rem; font-weight: 800; line-height: 1;
   background: linear-gradient(135deg, #52d3a2, #2e9e8f);
   -webkit-background-clip: text; background-clip: text; color: transparent; }
 .as-score-lbl { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; margin-top: 4px; text-align: center; }
@@ -1079,3 +1079,58 @@
 .as-score-fab .fab-num.aud { color: #e8c469; }
 .as-score-fab .fab-sep { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
 @media (max-width: 900px) { .as-score-fab { top: 8px; padding: 5px 11px; } }
+
+
+/* Overview: puntuaciones comparadas minimalistas */
+.as-crit-row .as-score-num, .as-ov .as-score-num {
+  font-size: 0.85rem; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.as-score-fab .fab-prog {
+  font-size: 0.68rem; opacity: 0.75; margin-inline-start: 4px;
+  align-self: center; letter-spacing: 0.03em;
+}
+
+/* Logo centrado en la barra lateral */
+.pm-logo { display: flex; justify-content: center; }
+.pm-logo-img { margin-inline: auto; }
+
+/* Dashboard personal */
+.pdash { display: grid; grid-template-columns: 220px 1fr; gap: 16px; margin-bottom: 18px; }
+@media (max-width: 900px) { .pdash { grid-template-columns: 1fr; } }
+.pdash-cos h4 { margin: 0 0 8px; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
+.pdash-co { display: block; width: 100%; text-align: start; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line, rgba(255,255,255,0.12)); color: inherit; font-family: inherit;
+  border-radius: 10px; padding: 9px 12px; margin-bottom: 6px; cursor: pointer; }
+.pdash-co.on { border-color: #52d3a2; color: #52d3a2; background: rgba(82,211,162,0.08); }
+.pdash-main { display: flex; flex-direction: column; gap: 14px; }
+.pdash-bucket { margin: 10px 0 4px; font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.pdash-bucket.b0 { color: #e66; } .pdash-bucket.b7 { color: #e8c469; }
+.pdash-bucket.b15 { color: #7fd0c0; } .pdash-bucket.b30 { opacity: 0.7; }
+.pdash-tasks { list-style: none; margin: 0; padding: 0; }
+.pdash-task { display: flex; gap: 10px; align-items: baseline; padding: 5px 8px; border-radius: 8px; }
+.pdash-task span { opacity: 0.65; font-size: 0.8rem; flex: 1; }
+.pdash-task em { font-style: normal; font-weight: 700; font-size: 0.8rem; }
+.pdash-task.d0 em { color: #e66; } .pdash-task.d7 em { color: #e8c469; }
+.pdash-task.d15 em { color: #7fd0c0; } .pdash-task.d30 em { opacity: 0.7; }
+
+/* Pestañas de tipo + Gantt */
+.pm-kind-tabs { margin-bottom: 10px; }
+.gantt-wrap { margin-top: 6px; }
+.gantt { margin-top: 6px; border-top: 1px dashed var(--line, rgba(255,255,255,0.12)); padding-top: 8px; }
+.gantt-rows { list-style: none; margin: 0 0 8px; padding: 0; }
+.gantt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.gantt-label { flex: 0 0 200px; display: flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gantt-st { background: none; border: 1px solid var(--line, rgba(255,255,255,0.2));
+  border-radius: 6px; cursor: pointer; color: inherit; width: 22px; height: 22px; flex: none; }
+.gantt-st.st-done { color: #52d3a2; border-color: #52d3a2; }
+.gantt-st.st-doing { color: #e8c469; border-color: #e8c469; }
+.gantt-track { position: relative; flex: 1; height: 12px;
+  background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+.gantt-bar { position: absolute; top: 0; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, #2e9e8f, #52d3a2); }
+.gantt-bar.st-done { opacity: 0.5; }
+.gantt-bar.st-todo { opacity: 0.8; }
+.gantt-row.st-done .gantt-label { opacity: 0.55; text-decoration: line-through; }
+.gantt-add input[type="date"] { max-width: 140px; }
+@media (max-width: 700px) { .gantt-label { flex-basis: 130px; } }
